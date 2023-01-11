@@ -8,13 +8,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LimelightPhotonVision extends SubsystemBase {
 
-  // TODO: Decide whether to use a limelight running stock firmware, photonvision, or the jetson as a coproscessor
+    // TODO: Decide whether to use a limelight running stock firmware, photonvision,
+    // or the jetson as a coprocessor
 
-  /** Creates a new LimelightPhotonVision. */
-  public LimelightPhotonVision() {}
+    /** Creates a new LimelightPhotonVision. */
+    public LimelightPhotonVision() {
+    }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
+    @Override
+    public void periodic() {
+        // This method will be called once per scheduler run
+    }
 }
