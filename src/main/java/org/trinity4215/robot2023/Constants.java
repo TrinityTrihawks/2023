@@ -16,4 +16,17 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+  public static class DriveConstants {
+
+    // TODO: Make these constants the actual CAN IDs of the components
+    public static final int kLeftMotorId = 0;
+    public static final int kRightMotorId = 0;
+    public static final int kPigeonId = 0;
+    
+    // TODO: Tune these
+    public static final int kEncoderCPR = 0;
+    public static final double kSlewValue = 0;
+
+    public static final boolean kSquareJoystickValues = true;
+  }
 }
