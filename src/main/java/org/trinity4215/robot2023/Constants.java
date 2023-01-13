@@ -4,6 +4,8 @@
 
 package org.trinity4215.robot2023;
 
+import com.ctre.phoenix.motorcontrol.InvertType;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -24,8 +26,25 @@ public final class Constants {
     public static class DriveConstants {
 
         // TODO: Make these constants the actual CAN IDs of the components
-        public static final int kLeftMotorId = 0;
-        public static final int kRightMotorId = 0;
+
+        public static enum MotorTypeInstalled {
+            REV_SPARK_MAX,
+            CTRE_TALON_SRX
+        }
+
+        public class TALONSRX {
+            public static final int kLeftLeaderId = 0;
+            public static final int kLeftFollowerId = 0;
+            public static final int kRightLeaderId = 0;
+            public static final int kRightFollowerId = 0;
+        }
+        public class SPARKMAX {
+            public static final int kLeftLeaderId = 0;
+            public static final int kLeftFollowerId = 0;
+            public static final int kRightLeaderId = 0;
+            public static final int kRightFollowerId = 0;
+        }
+
         public static final int kPigeonId = 0;
 
         // TODO: Tune these
@@ -33,5 +52,12 @@ public final class Constants {
         public static final double kSlewValue = 0;
 
         public static final boolean kSquareJoystickValues = true;
+        public static final boolean kLeftMotorsInverted = true;
+        public static final boolean kRightMotorsInverted = true;
+
+        public static enum DriveType {
+            SINGLE,
+            DUAL
+        }
     }
 }
