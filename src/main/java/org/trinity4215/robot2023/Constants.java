@@ -6,6 +6,8 @@ package org.trinity4215.robot2023;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
 
+import edu.wpi.first.wpilibj.DigitalSource;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -52,8 +54,16 @@ public final class Constants {
         public static final double kSlewValue = 0;
 
         public static final boolean kSquareJoystickValues = true;
-        public static final boolean kLeftMotorsInverted = true;
+        public static final boolean kLeftMotorsInverted = false;
         public static final boolean kRightMotorsInverted = true;
+
+        public static final int kLeftEncoderChannelA = 0;
+
+        public static final int kLeftEncoderChannelB = 0;
+
+        public static final int kRightEncoderChannelA = 0;
+
+        public static final int kRightEncoderChannelB = 0;
 
         public static enum DriveType {
             SINGLE,

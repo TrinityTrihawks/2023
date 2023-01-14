@@ -11,6 +11,7 @@ import org.trinity4215.robot2023.Constants.DriveConstants.DriveType;
 import org.trinity4215.robot2023.Constants.DriveConstants.MotorTypeInstalled;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 import com.revrobotics.CANSparkMax;
@@ -50,24 +51,25 @@ public class Drivetrain extends SubsystemBase {
    
     // private final MotorControllerGroup leftMotorControllerGroup = new MotorControllerGroup(leftLeader, leftFollower);            // IF REV
 
-    private final Encoder leftEncoder = new Encoder(0, 1);
-    private final Encoder rightEncoder = new Encoder(0, 1);
+    private final Encoder leftEncoder = 
+        new Encoder(DriveConstants.kLeftEncoderChannelA, DriveConstants.kLeftEncoderChannelB);
+    private final Encoder rightEncoder = 
+        new Encoder(DriveConstants.kRightEncoderChannelA, DriveConstants.kRightEncoderChannelB);
     
     // Initialize Spark Max encoders
     // private final RelativeEncoder leftEncoder = leftLeader.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, DriveConstants.kEncoderCPR); // IF REV
     // private final RelativeEncoder rightEncoder = rightLeader.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, DriveConstants.kEncoderCPR); // IF REV
 
-    // TODO: Choose an encoder to use
-    private final WPI_PigeonIMU pigeon = new WPI_PigeonIMU(DriveConstants.kPigeonId);
+    // TODO: Choose an gyro to use
+    private final WPI_PigeonIMU gyro = new WPI_PigeonIMU(DriveConstants.kPigeonId);
 
     // Initialize slew rate limiters
-    private SlewRateLimiter ylimiter = new SlewRateLimiter(DriveConstants.kSlewValue);
-    private SlewRateLimiter xlimiter = new SlewRateLimiter(DriveConstants.kSlewValue);
-    private SlewRateLimiter zlimiter = new SlewRateLimiter(DriveConstants.kSlewValue);
+    private SlewRateLimiter rightLimiter = new SlewRateLimiter(DriveConstants.kSlewValue);
+    private SlewRateLimiter leftLimiter = new SlewRateLimiter(DriveConstants.kSlewValue);
 
     // private final DifferentialDrive drive = new DifferentialDrive(leftLeader, rightLeader);                                    // IF REV
     // TODO: This line requires you to set encoder.setPositionConversionFactor to a value that will cause the encoder to return its position in meters (if using spark encoders)
-    private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(pigeon.getRotation2d(),
+    private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(gyro.getRotation2d(),
     //         leftEncoder.getPosition(), rightEncoder.getPosition());                                                          // IF REV
             leftEncoder.getDistance(), rightEncoder.getDistance());
 
@@ -111,17 +113,19 @@ public class Drivetrain extends SubsystemBase {
 
     public void driveSingleJoystickPercent(double speed, double twist) {
         // TODO: Implement Slew Rate Limiters
+        double right = (2 * speed + twist) / 2;
 
+        double left = 2 * speed - right;
 
-
+        driveDualJoystickPercent(left, right);
 
         // drive.arcadeDrive(speed, twist, DriveConstants.kSquareJoystickValues);   // IF REV
     }
 
     public void driveDualJoystickPercent(double left, double right) {
-        // TODO: Implement Slew Rate Limiters
 
-
+        leftLeader.set(TalonSRXControlMode.PercentOutput, leftLimiter.calculate(left));
+        rightLeader.set(TalonSRXControlMode.PercentOutput, rightLimiter.calculate(right));
 
 
         // drive.tankDrive(left, right);                                            // IF REV
@@ -132,7 +136,7 @@ public class Drivetrain extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        var gyro_angle = pigeon.getRotation2d();
+        var gyro_angle = gyro.getRotation2d();
 
         // Update the robot pose periodically with encoder values and gyro angle
         // TODO: This line requires you to set encoder.setPositionConversionFactor to a value that will cause the encoder to return its position in meters (if using spark encoders)
