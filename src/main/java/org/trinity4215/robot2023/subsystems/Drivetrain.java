@@ -30,7 +30,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Drivetrain extends SubsystemBase {
     private static Drivetrain subsystemInst = null;
-    public MotorTypeInstalled motorTypeInstalled = MotorTypeInstalled.CTRE_TALON_SRX; // Change this to switch to a spark max robot
+    private static MotorTypeInstalled motorTypeInstalled = MotorTypeInstalled.CTRE_TALON_SRX; // Change this to switch to a spark max robot
 
 
     // TODO: Figure out robot pose and how it integrates with vision tracking -- especially PhotonVision
@@ -94,14 +94,10 @@ public class Drivetrain extends SubsystemBase {
         rightFollower.follow(rightLeader);
 
         leftLeader.setInverted(DriveConstants.kLeftMotorsInverted);
-        // TODO: Decide which one this is
         leftFollower.setInverted(InvertType.FollowMaster);
-        leftFollower.setInverted(InvertType.OpposeMaster);
 
         rightLeader.setInverted(DriveConstants.kRightMotorsInverted);
-        // TODO: Decide which one this is
         rightFollower.setInverted(InvertType.FollowMaster);
-        rightFollower.setInverted(InvertType.OpposeMaster);
 
     }
 
