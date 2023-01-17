@@ -4,22 +4,33 @@
 
 package org.trinity4215.robot2023.commands;
 
+import java.util.function.DoubleSupplier;
+
 import org.trinity4215.robot2023.Constants.DriveConstants.DriveType;
 import org.trinity4215.robot2023.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
 public class DriveJoystick extends CommandBase {
-    @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
     private final Drivetrain drivetrain;
+    private final DoubleSupplier leftYSupplier;
+    private final DoubleSupplier rightYSupplier;
+    private final DoubleSupplier rightTwistSupplier;
 
     /**
      * Creates a new DriveJoystick.
      *
      * @param drivetrain The subsystem used by this command.
      */
-    public DriveJoystick(Drivetrain drivetrain) {
+    public DriveJoystick(Drivetrain drivetrain,
+                         DoubleSupplier leftY,
+                         DoubleSupplier rightY,
+                         DoubleSupplier rightTwist) {
+                            
         this.drivetrain = drivetrain;
+        leftYSupplier = leftY;
+        rightYSupplier = rightY;
+        rightTwistSupplier = rightTwist;
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(drivetrain);
     }
@@ -34,11 +45,13 @@ public class DriveJoystick extends CommandBase {
     @Override
     public void execute() {
         if (drivetrain.getDriveType() == DriveType.DUAL) {
-            // TODO: Write dual joystick drive code
-            System.out.println("Dual mode active");
+            drivetrain.driveDualJoystickPercent(
+                leftYSupplier.getAsDouble(),
+                rightYSupplier.getAsDouble());
         } else {
-            // TODO: Write single joystick drive code
-            System.out.println("Single mode active");
+            drivetrain.driveSingleJoystickPercent(
+                rightYSupplier.getAsDouble(), 
+                rightTwistSupplier.getAsDouble());
         }
     }
 
