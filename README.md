@@ -8,7 +8,7 @@
 
 ## About
 
-This repository contains the code we use in our robot at the competition, open houses, and other events.
+This repository contains the code we use in our robot at the competition, at open houses, and at other events.
 
 ## Sponsors
 
