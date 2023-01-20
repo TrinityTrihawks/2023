@@ -34,13 +34,13 @@ public class GyroBasics extends CommandBase {
 
             double x = Math.abs(
                     Math.abs((a - 10) / 80 - 1)
-                            - 1); // todo: someone who knows what this math does document it
+                            - 1); // TODO: someone who knows what this math does document it
             System.out.println(x);
             robotgyro.drive(x);
 
         } else if (190 < a && a < 350) {
 
-            double x = Math.abs((a - 190) / 80 - 1) - 1; // todo: someone who knows what this math does document it
+            double x = Math.abs((a - 190) / 80 - 1) - 1; // TODO: someone who knows what this math does document it
             System.out.println(x);
             robotgyro.drive(x);
 
