@@ -37,6 +37,8 @@ public final class Constants {
             public static final int kLeftFollowerId = 0;
             public static final int kRightLeaderId = 0;
             public static final int kRightFollowerId = 0;
+            public static final int kRightTest = 11;
+            public static final int kLeftTest = 12;
         }
         public class SPARKMAX {
             public static final int kLeftLeaderId = 0;
@@ -54,6 +56,10 @@ public final class Constants {
         public static final boolean kSquareJoystickValues = true;
         public static final boolean kLeftMotorsInverted = true;
         public static final boolean kRightMotorsInverted = true;
+
+        public static final double kDeadzone = 0.1;
+
+        public static final double kSanityLimit = 0.1;
 
         public static enum DriveType {
             SINGLE,

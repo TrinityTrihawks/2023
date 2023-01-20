@@ -4,6 +4,11 @@
 
 package org.trinity4215.robot2023.subsystems;
 
+import org.trinity4215.robot2023.Constants;
+import org.trinity4215.robot2023.Robot;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -14,31 +19,52 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class RobotGyro extends SubsystemBase {
-  private ADIS16470_IMU gyro = new ADIS16470_IMU();
-  private CANSparkMax sparkMax = new CANSparkMax(13, MotorType.kBrushless);
-  private SlewRateLimiter slewRateLimiter = new SlewRateLimiter(0.2); 
-  private RelativeEncoder encoder = sparkMax.getEncoder();
-  /** Creates a new Gyro. */
-  public RobotGyro() {
-    gyro.calibrate();
-    gyro.reset();
-    encoder.setPositionConversionFactor(42);
-  }
-  public double getAngleY() {
-    return gyro.getYFilteredAccelAngle();
-  }
-  public double getAngleX() {
-    return gyro.getXFilteredAccelAngle();
-  }
-  
+    private ADIS16470_IMU gyro = new ADIS16470_IMU();
+    private SlewRateLimiter slewRateLimiter = new SlewRateLimiter(0.2);
+    private TalonSRX rightTalonSRX = new TalonSRX(Constants.DriveConstants.TALONSRX.kRightTest);
+    private TalonSRX leftTalonSRX = new TalonSRX(Constants.DriveConstants.TALONSRX.kLeftTest);
 
-  public void drive(double percentOutput) {
-      double slewedSpeed = slewRateLimiter.calculate(percentOutput);
-      sparkMax.set(slewedSpeed);
-  }
+    private static RobotGyro instance = null;
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
+    public static RobotGyro getInstance() {
+        if (instance == null) {
+            return instance = new RobotGyro();
+        } else {
+            return instance;
+        }
+    }
+
+    /** Creates a new Gyro. */
+    private RobotGyro() {
+        gyro.calibrate();
+        gyro.reset();
+    }
+
+    public double getAngleY() {
+        return gyro.getYFilteredAccelAngle();
+    }
+
+    public double getAngleX() {
+        return gyro.getXFilteredAccelAngle();
+    }
+
+    public double getAngleYaw() {
+        return gyro.getAccelZ();
+    }
+
+    public void drive(double percentOutput) {
+    }
+
+    public void drive(double rightSpeed, double leftSpeed) {
+        rightTalonSRX.set(ControlMode.PercentOutput, slewRateLimiter.calculate(rightSpeed));
+        leftTalonSRX.set(ControlMode.PercentOutput, slewRateLimiter.calculate(leftSpeed));
+        
+    }
+
+    @Override
+    public void periodic() {
+        // This method will be called once per scheduler run
+    }
+
+    
 }
