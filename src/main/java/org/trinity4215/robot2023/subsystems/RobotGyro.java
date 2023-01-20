@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class RobotGyro extends SubsystemBase {
     private ADIS16470_IMU gyro = new ADIS16470_IMU();
-    private SlewRateLimiter slewRateLimiter = new SlewRateLimiter(0.2);
+    private SlewRateLimiter slewRateLimiter = new SlewRateLimiter(0);
     private TalonSRX rightTalonSRX = new TalonSRX(Constants.DriveConstants.TALONSRX.kRightTest);
     private TalonSRX leftTalonSRX = new TalonSRX(Constants.DriveConstants.TALONSRX.kLeftTest);
 
@@ -49,15 +49,15 @@ public class RobotGyro extends SubsystemBase {
     }
 
     public double getAngleYaw() {
-        return gyro.getAccelZ();
+        return gyro.getAngle();
     }
 
     public void drive(double percentOutput) {
     }
 
     public void drive(double rightSpeed, double leftSpeed) {
-        rightTalonSRX.set(ControlMode.PercentOutput, slewRateLimiter.calculate(rightSpeed));
-        leftTalonSRX.set(ControlMode.PercentOutput, slewRateLimiter.calculate(leftSpeed));
+        rightTalonSRX.set(ControlMode.PercentOutput, /*slewRateLimiter.calculate(*/rightSpeed/*)*/);
+        leftTalonSRX.set(ControlMode.PercentOutput, /*slewRateLimiter.calculate(*/leftSpeed/*)*/);
         
     }
 

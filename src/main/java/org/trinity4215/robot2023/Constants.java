@@ -57,9 +57,9 @@ public final class Constants {
         public static final boolean kLeftMotorsInverted = true;
         public static final boolean kRightMotorsInverted = true;
 
-        public static final double kDeadzone = 0.1;
+        public static final double kDeadzone = 0.2;
 
-        public static final double kSanityLimit = 0.1;
+        public static final double kSanityLimit = 0.5;
 
         public static enum DriveType {
             SINGLE,
