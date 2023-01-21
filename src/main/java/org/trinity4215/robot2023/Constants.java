@@ -67,9 +67,15 @@ public final class Constants {
 
         public static final int kRightEncoderChannelB = 0;
 
+        public static final double kMaxSpeedPercent = 0.4;
+
+        public static final double kMinTurnSpeed = 0.2;
+
         public static enum DriveType {
             SINGLE,
             DUAL
         }
+
+        public static double kDeadzone;
     }
 }

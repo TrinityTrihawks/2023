@@ -5,6 +5,7 @@
 package org.trinity4215.robot2023.subsystems;
 
 import org.trinity4215.robot2023.Constants.DriveConstants;
+import org.trinity4215.robot2023.Constants.OperatorConstants;
 import org.trinity4215.robot2023.Constants.DriveConstants.DriveType;
 import org.trinity4215.robot2023.Constants.DriveConstants.MotorTypeInstalled;
 
@@ -20,7 +21,9 @@ import com.revrobotics.SparkMaxRelativeEncoder.Type;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
@@ -58,16 +61,14 @@ public class Drivetrain extends SubsystemBase {
     // private final RelativeEncoder leftEncoder = leftLeader.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, DriveConstants.kEncoderCPR); // IF REV
     // private final RelativeEncoder rightEncoder = rightLeader.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, DriveConstants.kEncoderCPR); // IF REV
 
-    // TODO: Choose an gyro to use
-    private final WPI_PigeonIMU gyro = new WPI_PigeonIMU(DriveConstants.kPigeonId);
-
+    private final ADIS16470_IMU gyro = new ADIS16470_IMU();
     // Initialize slew rate limiters
     private SlewRateLimiter rightLimiter = new SlewRateLimiter(DriveConstants.kSlewValue);
     private SlewRateLimiter leftLimiter = new SlewRateLimiter(DriveConstants.kSlewValue);
 
     // private final DifferentialDrive drive = new DifferentialDrive(leftLeader, rightLeader);                                    // IF REV
     // TODO: This line requires you to set encoder.setPositionConversionFactor to a value that will cause the encoder to return its position in meters (if using spark encoders)
-    private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(gyro.getRotation2d(),
+    private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(new Rotation2d(gyro.getAngle()),
     //         leftEncoder.getPosition(), rightEncoder.getPosition());                                                          // IF REV
             leftEncoder.getDistance(), rightEncoder.getDistance());
 
@@ -122,19 +123,25 @@ public class Drivetrain extends SubsystemBase {
 
     public void driveDualJoystickPercent(double left, double right) {
 
-        leftLeader.set(TalonSRXControlMode.PercentOutput, leftLimiter.calculate(left));
-        rightLeader.set(TalonSRXControlMode.PercentOutput, rightLimiter.calculate(right));
+        leftLeader.set(TalonSRXControlMode.PercentOutput, leftLimiter.calculate(left) * DriveConstants.kMaxSpeedPercent);
+        rightLeader.set(TalonSRXControlMode.PercentOutput, rightLimiter.calculate(right) * DriveConstants.kMaxSpeedPercent);
 
 
         // drive.tankDrive(left, right);                                            // IF REV
     }
 
+    public void resetGyro() {
+        gyro.reset();
+    }
     
+    public double getGyroAngle() {
+        return gyro.getAngle();
+    }
 
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        var gyro_angle = gyro.getRotation2d();
+        var gyro_angle = new Rotation2d(gyro.getAngle());
 
         // Update the robot pose periodically with encoder values and gyro angle
         // TODO: This line requires you to set encoder.setPositionConversionFactor to a value that will cause the encoder to return its position in meters (if using spark encoders)
