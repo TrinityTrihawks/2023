@@ -48,7 +48,7 @@ public class Drivetrain extends SubsystemBase {
     // private final CANSparkMax rightFollower = new CANSparkMax(DriveConstants.SPARKMAX.kRightFollowerId, MotorType.kBrushless);   // IF REV
    
     // private final MotorControllerGroup leftMotorControllerGroup = new MotorControllerGroup(leftLeader, leftFollower);            // IF REV
-
+    // TODO: we have talon breakouts for the encs
     private final Encoder leftEncoder = 
         new Encoder(DriveConstants.kLeftEncoderChannelA, DriveConstants.kLeftEncoderChannelB);
     private final Encoder rightEncoder = 
