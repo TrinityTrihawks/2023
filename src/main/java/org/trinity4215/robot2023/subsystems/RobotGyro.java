@@ -5,7 +5,6 @@
 package org.trinity4215.robot2023.subsystems;
 
 import org.trinity4215.robot2023.Constants;
-import org.trinity4215.robot2023.Robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
