@@ -8,8 +8,8 @@ package org.trinity4215.robot2023;
 import org.trinity4215.robot2023.Constants.Bilbot;
 import org.trinity4215.robot2023.commands.DriveJoystick;
 import org.trinity4215.robot2023.commands.TurnDegrees;
-import org.trinity4215.robot2023.subsystems.BilbotDrivetrain;
 import org.trinity4215.robot2023.subsystems.Drivetrain;
+import org.trinity4215.robot2023.subsystems.drivetrains.BilbotDrivetrain;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;

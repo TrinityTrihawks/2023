@@ -38,4 +38,20 @@ public abstract class Drivetrain extends SubsystemBase {
     }
 
 
+    /**
+     * Although it is not compiler-enforced, this 
+     * should return _constant_ constants.
+     * DO NOT HIJACK!
+     */
+    public abstract DrivetrainConstants getConstants();
+
+
+    /**
+     * Abstracted constants for driving.
+     * 
+     */
+    public interface DrivetrainConstants {
+
+    }
+
 }

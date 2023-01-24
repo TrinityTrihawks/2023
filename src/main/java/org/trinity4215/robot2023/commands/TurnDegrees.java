@@ -5,8 +5,6 @@
 package org.trinity4215.robot2023.commands;
 
 import org.trinity4215.robot2023.Constants.Bilbot;
-import org.trinity4215.robot2023.Constants.Bilbot.DriveConstants;
-import org.trinity4215.robot2023.Constants.Bilbot.OperatorConstants;
 import org.trinity4215.robot2023.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
