@@ -4,8 +4,6 @@
 
 package org.trinity4215.robot2023.subsystems;
 
-import java.util.ArrayList;
-
 import org.trinity4215.robot2023.Constants.DriveConstants;
 import org.trinity4215.robot2023.Constants.DriveConstants.DriveType;
 import org.trinity4215.robot2023.Constants.DriveConstants.MotorTypeInstalled;

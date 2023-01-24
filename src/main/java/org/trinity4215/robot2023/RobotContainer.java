@@ -5,11 +5,8 @@
 package org.trinity4215.robot2023;
 
 import org.trinity4215.robot2023.Constants.OperatorConstants;
-import org.trinity4215.robot2023.commands.Autos;
 import org.trinity4215.robot2023.commands.DriveJoystick;
-import org.trinity4215.robot2023.commands.ExampleCommand;
 import org.trinity4215.robot2023.subsystems.Drivetrain;
-import org.trinity4215.robot2023.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -26,7 +23,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
     // ==================== SUBSYSTEMS ======================
-    private final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
     private final Drivetrain drivetrain = Drivetrain.getInstance();
 
 
@@ -76,22 +72,21 @@ public class RobotContainer {
      */
     private void configureBindings() {
         // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-        new Trigger(exampleSubsystem::exampleCondition)
-                .onTrue(new ExampleCommand(exampleSubsystem));
+        // new Trigger(exampleSubsystem::exampleCondition)
+            //     .onTrue(new ExampleCommand(exampleSubsystem));
 
-        // Schedule `exampleMethodCommand` when the Xbox controller's B button is
-        // pressed,
-        // cancelling on release.
-        subsysController.b().whileTrue(exampleSubsystem.exampleMethodCommand());
-    }
+    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
+    // cancelling on release.
+    // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+  }
 
-    /**
-     * Use this to pass the autonomous command to the main {@link Robot} class.
-     *
-     * @return the command to run in autonomous
-     */
-    public Command getAutonomousCommand() {
-        // An example command will be run in autonomous
-        return Autos.exampleAuto(exampleSubsystem);
-    }
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
+  public Command getAutonomousCommand() {
+    // An example command will be run in autonomous
+    return null;
+  }
 }
