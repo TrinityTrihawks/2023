@@ -37,7 +37,7 @@ public final class Constants {
         }
 
         public class TALONSRX {
-            public static final int kLeftLeaderId = 0;
+            public static final int kLeftLeaderId = 0; // TODO: set motor ids
             public static final int kLeftFollowerId = 0;
             public static final int kRightLeaderId = 0;
             public static final int kRightFollowerId = 0;
@@ -49,16 +49,16 @@ public final class Constants {
             public static final int kRightFollowerId = 0;
         }
 
-        public static final int kPigeonId = 0;
 
         // TODO: Tune these
         public static final int kEncoderCPR = 0;
-        public static final double kSlewValue = 0;
+        public static final double kSlewValue = 0.2;
 
         public static final boolean kSquareJoystickValues = true;
         public static final boolean kLeftMotorsInverted = false;
         public static final boolean kRightMotorsInverted = true;
 
+        // TODO: set enc channels -- is this necessary for talon breakouts?
         public static final int kLeftEncoderChannelA = 0;
 
         public static final int kLeftEncoderChannelB = 0;

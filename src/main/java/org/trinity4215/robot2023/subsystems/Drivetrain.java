@@ -61,7 +61,6 @@ public class Drivetrain extends SubsystemBase {
     // private final RelativeEncoder rightEncoder = rightLeader.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, DriveConstants.kEncoderCPR); // IF REV
 
     // TODO: Choose an gyro to use
-    private final WPI_PigeonIMU gyro = new WPI_PigeonIMU(DriveConstants.kPigeonId);
 
     // Initialize slew rate limiters
     private SlewRateLimiter rightLimiter = new SlewRateLimiter(DriveConstants.kSlewValue);
@@ -69,9 +68,9 @@ public class Drivetrain extends SubsystemBase {
 
     // private final DifferentialDrive drive = new DifferentialDrive(leftLeader, rightLeader);                                    // IF REV
     // TODO: This line requires you to set encoder.setPositionConversionFactor to a value that will cause the encoder to return its position in meters (if using spark encoders)
-    private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(gyro.getRotation2d(),
+    //private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(gyro.getRotation2d(),
     //         leftEncoder.getPosition(), rightEncoder.getPosition());                                                          // IF REV
-            leftEncoder.getDistance(), rightEncoder.getDistance());
+    //              leftEncoder.getDistance(), rightEncoder.getDistance());
 
     private DriveType driveType = null;
 
@@ -136,7 +135,7 @@ public class Drivetrain extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        var gyro_angle = gyro.getRotation2d();
+        ///var gyro_angle = gyro.getRotation2d();
 
         // Update the robot pose periodically with encoder values and gyro angle
         // TODO: This line requires you to set encoder.setPositionConversionFactor to a value that will cause the encoder to return its position in meters (if using spark encoders)
@@ -144,6 +143,6 @@ public class Drivetrain extends SubsystemBase {
         // https://github.com/wpilibsuite/allwpilib/tree/main/wpilibjExamples/src/main/java/edu/wpi/first/wpilibj/examples/differentialdrivebot
         // https://docs.wpilib.org/en/stable/docs/software/kinematics-and-odometry/differential-drive-odometry.html
         // robotPose = odometry.update(gyro_angle, leftEncoder.getPosition(), rightEncoder.getPosition());  // if rev
-        robotPose = odometry.update(gyro_angle, leftEncoder.getDistance(), rightEncoder.getDistance());
+        //robotPose = odometry.update(gyro_angle, leftEncoder.getDistance(), rightEncoder.getDistance());
     }
 }
