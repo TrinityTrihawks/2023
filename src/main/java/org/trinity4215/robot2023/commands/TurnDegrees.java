@@ -4,8 +4,9 @@
 
 package org.trinity4215.robot2023.commands;
 
-import org.trinity4215.robot2023.Constants.DriveConstants;
-import org.trinity4215.robot2023.Constants.OperatorConstants;
+import org.trinity4215.robot2023.Constants.Bilbot;
+import org.trinity4215.robot2023.Constants.Bilbot.DriveConstants;
+import org.trinity4215.robot2023.Constants.Bilbot.OperatorConstants;
 import org.trinity4215.robot2023.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,47 +19,42 @@ public class TurnDegrees extends CommandBase {
 
     private double curAngle = 0;
 
-    /** Creates a new TurnDegrees. */
+
     public TurnDegrees(double targetAngle, Drivetrain drivetrain) {
         drive = drivetrain;
         target = targetAngle;
         addRequirements(drive);
-        // Use addRequirements() here to declare subsystem dependencies.
     }
 
-    // Called when the command is initially scheduled.
     @Override
     public void initialize() {
         drive.resetGyro();
     }
 
-    // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
         curAngle = drive.getGyroAngle();
         SmartDashboard.putNumber("input angle", curAngle);
         double speed = Math.sin((curAngle - target) * Math.PI / 180 / 2);
         SmartDashboard.putNumber("sind(angle)", speed);
-        int deadzoneScalar = Math.abs(speed) <= DriveConstants.kDeadzone? 0 : 1;
+        int deadzoneScalar = Math.abs(speed) <= Bilbot.DriveConstants.kDeadzone? 0 : 1;
         SmartDashboard.putBoolean("in dead zone", deadzoneScalar == 0);
         double output = 
             -1 * speed 
             * deadzoneScalar 
-            * DriveConstants.kMaxSpeedPercent
-            * (1 - DriveConstants.kMinTurnSpeed) + DriveConstants.kMinTurnSpeed;
+            * Bilbot.DriveConstants.kMaxSpeedPercent
+            * (1 - Bilbot.DriveConstants.kMinTurnSpeed) + Bilbot.DriveConstants.kMinTurnSpeed;
             
         SmartDashboard.putNumber("output", output);
-        drive.driveDualJoystickPercent(output, output);
+        drive.driveTank(output, output);
     }
 
-    // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
     }
 
-    // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return Math.abs(Math.sin((curAngle - target) * Math.PI / 180 / 2)) <= DriveConstants.kDeadzone;
+        return Math.abs(Math.sin((curAngle - target) * Math.PI / 180 / 2)) <= Bilbot.DriveConstants.kDeadzone;
     }
 }

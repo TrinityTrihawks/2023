@@ -6,7 +6,8 @@ package org.trinity4215.robot2023.commands;
 
 import java.util.function.DoubleSupplier;
 
-import org.trinity4215.robot2023.Constants.DriveConstants.DriveType;
+import org.trinity4215.robot2023.Constants.Bilbot.DriveConstants;
+import org.trinity4215.robot2023.Constants.Bilbot.DriveConstants.DriveType;
 import org.trinity4215.robot2023.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -38,20 +39,21 @@ public class DriveJoystick extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        drivetrain.setDriveType(DriveType.DUAL); // Init drive mode
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (drivetrain.getDriveType() == DriveType.DUAL) {
-            drivetrain.driveDualJoystickPercent(
+        if (DriveConstants.kDriveType == DriveType.DUAL) {
+            drivetrain.driveTank(
                 leftYSupplier.getAsDouble(),
-                rightYSupplier.getAsDouble());
+                rightYSupplier.getAsDouble()
+            );
         } else {
-            drivetrain.driveSingleJoystickPercent(
+            drivetrain.driveArcade(
                 rightYSupplier.getAsDouble(), 
-                rightTwistSupplier.getAsDouble());
+                rightTwistSupplier.getAsDouble()
+            );
         }
     }
 

@@ -5,10 +5,12 @@
 package org.trinity4215.robot2023;
 
 
-import org.trinity4215.robot2023.Constants.OperatorConstants;
+import org.trinity4215.robot2023.Constants.Bilbot;
 import org.trinity4215.robot2023.commands.DriveJoystick;
 import org.trinity4215.robot2023.commands.TurnDegrees;
+import org.trinity4215.robot2023.subsystems.BilbotDrivetrain;
 import org.trinity4215.robot2023.subsystems.Drivetrain;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -25,15 +27,15 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
     // ==================== SUBSYSTEMS ======================
-    private final Drivetrain drivetrain = Drivetrain.getInstance();
+    private final Drivetrain drivetrain = BilbotDrivetrain.getInstance();
 
 
     // ==================== CONTROLLERS =====================
     private final CommandXboxController subsysController = new CommandXboxController(
-            OperatorConstants.kXboxPort);
+            Bilbot.OperatorConstants.kXboxPort);
 
-    private final CommandJoystick leftStick = new CommandJoystick(OperatorConstants.kLeftStickPort);
-    private final CommandJoystick rightStick = new CommandJoystick(OperatorConstants.kRightStickPort);
+    private final CommandJoystick leftStick = new CommandJoystick(Bilbot.OperatorConstants.kLeftStickPort);
+    private final CommandJoystick rightStick = new CommandJoystick(Bilbot.OperatorConstants.kRightStickPort);
 
 
     // ==================== COMMANDS ========================
