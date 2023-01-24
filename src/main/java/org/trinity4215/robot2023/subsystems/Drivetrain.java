@@ -28,6 +28,8 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Drivetrain extends SubsystemBase {
@@ -52,10 +54,10 @@ public class Drivetrain extends SubsystemBase {
    
     // private final MotorControllerGroup leftMotorControllerGroup = new MotorControllerGroup(leftLeader, leftFollower);            // IF REV
     // TODO: we have talon breakouts for the encs
-    private final Encoder leftEncoder = 
-        new Encoder(DriveConstants.kLeftEncoderChannelA, DriveConstants.kLeftEncoderChannelB);
-    private final Encoder rightEncoder = 
-        new Encoder(DriveConstants.kRightEncoderChannelA, DriveConstants.kRightEncoderChannelB);
+    // private final Encoder leftEncoder = 
+    //     new Encoder(DriveConstants.kLeftEncoderChannelA, DriveConstants.kLeftEncoderChannelB);
+    // private final Encoder rightEncoder = 
+    //     new Encoder(DriveConstants.kRightEncoderChannelA, DriveConstants.kRightEncoderChannelB);
     
     // Initialize Spark Max encoders
     // private final RelativeEncoder leftEncoder = leftLeader.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, DriveConstants.kEncoderCPR); // IF REV
@@ -68,9 +70,9 @@ public class Drivetrain extends SubsystemBase {
 
     // private final DifferentialDrive drive = new DifferentialDrive(leftLeader, rightLeader);                                    // IF REV
     // TODO: This line requires you to set encoder.setPositionConversionFactor to a value that will cause the encoder to return its position in meters (if using spark encoders)
-    private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(new Rotation2d(gyro.getAngle()),
-    //         leftEncoder.getPosition(), rightEncoder.getPosition());                                                          // IF REV
-            leftEncoder.getDistance(), rightEncoder.getDistance());
+    // private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(new Rotation2d(gyro.getAngle()),
+    // //         leftEncoder.getPosition(), rightEncoder.getPosition());                                                          // IF REV
+    //         leftEncoder.getDistance(), rightEncoder.getDistance());
 
     private DriveType driveType = null;
 
@@ -117,6 +119,7 @@ public class Drivetrain extends SubsystemBase {
         double left = 2 * speed - right;
 
         driveDualJoystickPercent(left, right);
+        SmartDashboard.putString("driveMode", driveType.toString());
 
         // drive.arcadeDrive(speed, twist, DriveConstants.kSquareJoystickValues);   // IF REV
     }
@@ -125,7 +128,8 @@ public class Drivetrain extends SubsystemBase {
 
         leftLeader.set(TalonSRXControlMode.PercentOutput, leftLimiter.calculate(left) * DriveConstants.kMaxSpeedPercent);
         rightLeader.set(TalonSRXControlMode.PercentOutput, rightLimiter.calculate(right) * DriveConstants.kMaxSpeedPercent);
-
+        // leftLeader.set(TalonSRXControlMode.PercentOutput, 0.2);
+        SmartDashboard.putString("driveMode", driveType.toString());
 
         // drive.tankDrive(left, right);                                            // IF REV
     }
@@ -149,6 +153,6 @@ public class Drivetrain extends SubsystemBase {
         // https://github.com/wpilibsuite/allwpilib/tree/main/wpilibjExamples/src/main/java/edu/wpi/first/wpilibj/examples/differentialdrivebot
         // https://docs.wpilib.org/en/stable/docs/software/kinematics-and-odometry/differential-drive-odometry.html
         // robotPose = odometry.update(gyro_angle, leftEncoder.getPosition(), rightEncoder.getPosition());  // if rev
-        robotPose = odometry.update(gyro_angle, leftEncoder.getDistance(), rightEncoder.getDistance());
+        // robotPose = odometry.update(gyro_angle, leftEncoder.getDistance(), rightEncoder.getDistance());
     }
 }

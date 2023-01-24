@@ -4,15 +4,29 @@
 
 package org.trinity4215.robot2023.subsystems;
 
+import org.photonvision.PhotonCamera;
+import org.photonvision.targeting.PhotonPipelineResult;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LimelightPhotonVision extends SubsystemBase {
+    private static LimelightPhotonVision subsystemInst = null;
 
-    // TODO: Decide whether to use a limelight running stock firmware, photonvision,
-    // or the jetson as a coprocessor
+    PhotonCamera photonCamera = new PhotonCamera("visioncam");
 
     /** Creates a new LimelightPhotonVision. */
+    public static LimelightPhotonVision getInstance() {
+        if (subsystemInst == null) {
+            subsystemInst = new LimelightPhotonVision();
+        } 
+        return subsystemInst;
+    }
     public LimelightPhotonVision() {
+        
+    }
+    
+    public PhotonPipelineResult getLatestResult() {
+        return photonCamera.getLatestResult();
     }
 
     @Override

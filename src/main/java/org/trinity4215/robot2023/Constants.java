@@ -37,10 +37,10 @@ public final class Constants {
         }
 
         public class TALONSRX {
-            public static final int kLeftLeaderId = 0;
-            public static final int kLeftFollowerId = 0;
-            public static final int kRightLeaderId = 0;
-            public static final int kRightFollowerId = 0;
+            public static final int kLeftLeaderId = 12;
+            public static final int kLeftFollowerId = 14;
+            public static final int kRightLeaderId = 11;
+            public static final int kRightFollowerId = 13;
         }
         public class SPARKMAX {
             public static final int kLeftLeaderId = 0;
@@ -53,7 +53,9 @@ public final class Constants {
 
         // TODO: Tune these
         public static final int kEncoderCPR = 0;
-        public static final double kSlewValue = 0;
+        public static final double kSlewValue = 0.5;
+
+        
 
         public static final boolean kSquareJoystickValues = true;
         public static final boolean kLeftMotorsInverted = false;

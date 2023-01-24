@@ -35,6 +35,7 @@ public class TurnDegrees extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        SmartDashboard.putNumber("Target Angle", target);
         curAngle = drive.getGyroAngle();
         SmartDashboard.putNumber("input angle", curAngle);
         double speed = Math.sin((curAngle - target) * Math.PI / 180 / 2);
@@ -48,7 +49,7 @@ public class TurnDegrees extends CommandBase {
             * (1 - DriveConstants.kMinTurnSpeed) + DriveConstants.kMinTurnSpeed;
             
         SmartDashboard.putNumber("output", output);
-        drive.driveDualJoystickPercent(output, output);
+        drive.driveDualJoystickPercent(output, -output);
     }
 
     // Called once the command ends or is interrupted.
