@@ -2,9 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.trinity4215.robot2023.subsystems.drivetrains;
-
-import org.trinity4215.robot2023.subsystems.Drivetrain;
+package org.trinity4215.bilbotbaggins.subsystems;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
