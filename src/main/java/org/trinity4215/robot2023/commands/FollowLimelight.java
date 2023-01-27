@@ -4,11 +4,14 @@
 
 package org.trinity4215.robot2023.commands;
 
+import org.ejml.dense.row.mult.SubmatrixOps_FDRM;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import org.trinity4215.robot2023.Constants.DriveConstants;
 import org.trinity4215.robot2023.subsystems.Drivetrain;
 import org.trinity4215.robot2023.subsystems.LimelightPhotonVision;
+
+import com.fasterxml.jackson.databind.module.SimpleAbstractTypeResolver;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -16,6 +19,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class FollowLimelight extends CommandBase {
   private LimelightPhotonVision limelight;
   private Drivetrain drivetrain;
+
+  private double limelightZeroAngle = 0;
 
   /** Creates a new FollowLimelight. */
   public FollowLimelight(LimelightPhotonVision limelight, Drivetrain drivetrain) {
@@ -35,39 +40,44 @@ public class FollowLimelight extends CommandBase {
   public void execute() {
     PhotonPipelineResult r = limelight.getLatestResult();
     boolean c = r.hasTargets();
-    SmartDashboard.putBoolean("HasTargets", c);
+    SmartDashboard.putBoolean("HasTag", c);
     if (c) {
-      SmartDashboard.putString("Targets", r.getTargets().toString());
       PhotonTrackedTarget t = r.getBestTarget();
-      SmartDashboard.putNumber("Best Target Yaw", t.getYaw());
-      SmartDashboard.putNumber("Best Target Pitch", t.getPitch());
+      double tagYaw = t.getYaw();
+      double rotSpeed = 0;
+      double tagMax = 0.3;
+      double tagMin = 0.1;
+      SmartDashboard.putNumber("Tag Yaw", tagYaw);
+      if ((-30 < tagYaw) && (tagYaw < -3)) {
+         rotSpeed = -(Math.abs((tagYaw - 3)/25) * (tagMax - tagMin) + tagMin);
+      } else if ((30 > tagYaw) && (tagYaw > 3)){
+         rotSpeed = Math.abs((tagYaw - 3)/25) * (tagMax - tagMin) + tagMin;
+      } else {
+        rotSpeed = 0;
+      }
 
-      double target = t.getYaw();
+      SmartDashboard.putNumber("rotSpeed", rotSpeed);
 
-      SmartDashboard.putNumber("Target Angle", target);
-      double curAngle = drivetrain.getGyroAngle();
-      SmartDashboard.putNumber("input angle", curAngle);
-      double speed = Math.sin((curAngle - target) * Math.PI / 180 / 2);
-      SmartDashboard.putNumber("sind(angle)", speed);
-      int deadzoneScalar = Math.abs(speed) <= DriveConstants.kDeadzone? 0 : 1;
-      SmartDashboard.putBoolean("in dead zone", deadzoneScalar == 0);
-      double output = 
-          -1 * speed 
-          * deadzoneScalar 
-          * DriveConstants.kMaxSpeedPercent
-          * (1 - DriveConstants.kMinTurnSpeed) + DriveConstants.kMinTurnSpeed;
-          
-      SmartDashboard.putNumber("output", output);
-      drivetrain.driveDualJoystickPercent(output, -output);
+
+      // SmartDashboard.putNumber("Speed", (curAngle - tagYaw - limelightZeroAngle));
+      // SmartDashboard.putNumber("sind(angle)", rotSpeed);
+      // int deadzoneScalar = Math.abs(rotSpeed) <= DriveConstants.kDeadzone ? 0 : 1;
+      // SmartDashboard.putBoolean("in dead zone", deadzoneScalar == 0);
+      // double output = -1 * rotSpeed
+      //     * deadzoneScalar
+      //     * DriveConstants.kMaxSpeedPercent
+      //     * (1 - DriveConstants.kMinTurnSpeed) + DriveConstants.kMinTurnSpeed;
+
+      SmartDashboard.putNumber("Output", rotSpeed);
+      drivetrain.driveDualJoystickPercent(rotSpeed, -rotSpeed);
 
     } else {
       SmartDashboard.putString("Targets", "");
       SmartDashboard.putString("Best Target", "");
       SmartDashboard.putNumber("Best Target Yaw", 0);
       SmartDashboard.putNumber("Best Target Pitch", 0);
+      drivetrain.driveDualJoystickPercent(0, 0);
     }
-
-    
 
     // System.out.println(r);
   }

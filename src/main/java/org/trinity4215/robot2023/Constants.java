@@ -53,7 +53,7 @@ public final class Constants {
 
         // TODO: Tune these
         public static final int kEncoderCPR = 0;
-        public static final double kSlewValue = 0.5;
+        public static final double kSlewValue = 0.1;
 
         
 
@@ -69,7 +69,7 @@ public final class Constants {
 
         public static final int kRightEncoderChannelB = 0;
 
-        public static final double kMaxSpeedPercent = 0.4;
+        public static final double kMaxSpeedPercent = 0.3;
 
         public static final double kMinTurnSpeed = 0.2;
 

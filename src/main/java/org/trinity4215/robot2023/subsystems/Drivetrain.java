@@ -126,8 +126,8 @@ public class Drivetrain extends SubsystemBase {
 
     public void driveDualJoystickPercent(double left, double right) {
 
-        leftLeader.set(TalonSRXControlMode.PercentOutput, leftLimiter.calculate(left) * DriveConstants.kMaxSpeedPercent);
-        rightLeader.set(TalonSRXControlMode.PercentOutput, rightLimiter.calculate(right) * DriveConstants.kMaxSpeedPercent);
+        leftLeader.set(TalonSRXControlMode.PercentOutput, left);
+        rightLeader.set(TalonSRXControlMode.PercentOutput, right);
         // leftLeader.set(TalonSRXControlMode.PercentOutput, 0.2);
         SmartDashboard.putString("driveMode", driveType.toString());
 
