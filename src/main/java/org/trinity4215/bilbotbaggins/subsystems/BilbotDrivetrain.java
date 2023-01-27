@@ -4,6 +4,8 @@
 
 package org.trinity4215.bilbotbaggins.subsystems;
 
+import org.trinity4215.bilbotbaggins.Utils;
+
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -71,8 +73,10 @@ public class BilbotDrivetrain extends Drivetrain {
     @Override
     public void driveTank(double left, double right) {
 
-        leftLeader.set(TalonSRXControlMode.PercentOutput, leftLimiter.calculate(left) * DriveConstants.kMaxSpeedPercent);
-        rightLeader.set(TalonSRXControlMode.PercentOutput, rightLimiter.calculate(right) * DriveConstants.kMaxSpeedPercent);
+        leftLeader.set(TalonSRXControlMode.PercentOutput, 
+            Utils.constr(leftLimiter.calculate(left), -constants.kMaxSpeedPercent(), constants.kAngularDeadZone()));
+        rightLeader.set(TalonSRXControlMode.PercentOutput, 
+            Utils.constr(rightLimiter.calculate(right), -constants.kMaxSpeedPercent(), constants.kMaxSpeedPercent()));
 
 
     }
