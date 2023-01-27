@@ -6,8 +6,8 @@ package org.trinity4215.robot2023.commands;
 
 import java.util.function.DoubleSupplier;
 
-import org.trinity4215.robot2023.Constants.Bilbot.DriveConstants;
-import org.trinity4215.robot2023.Constants.Bilbot.DriveConstants.DriveType;
+import org.trinity4215.robot2023.Constants.OperatorConstants;
+import org.trinity4215.robot2023.Constants.OperatorConstants.DriveType;
 import org.trinity4215.robot2023.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -32,7 +32,6 @@ public class DriveJoystick extends CommandBase {
         leftYSupplier = leftY;
         rightYSupplier = rightY;
         rightTwistSupplier = rightTwist;
-        // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(drivetrain);
     }
 
@@ -44,7 +43,7 @@ public class DriveJoystick extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (DriveConstants.kDriveType == DriveType.DUAL) {
+        if (OperatorConstants.kDriveType == DriveType.DUAL) {
             drivetrain.driveTank(
                 leftYSupplier.getAsDouble(),
                 rightYSupplier.getAsDouble()

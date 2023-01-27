@@ -4,7 +4,6 @@
 
 package org.trinity4215.robot2023.subsystems.drivetrains;
 
-import org.trinity4215.robot2023.Constants.Bilbot;
 import org.trinity4215.robot2023.subsystems.Drivetrain;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
@@ -151,13 +150,21 @@ public class BilbotDrivetrain extends Drivetrain {
         public static final double kMinTurnSpeed = 0.2;
     
         public static final double kDeadzone = 0.015;
-    
-        public static enum DriveType {
-            SINGLE,
-            DUAL
+
+        @Override
+        public double kMaxSpeedPercent() {
+            return kMaxSpeedPercent;
         }
 
-        public final DriveType kDriveType = DriveType.DUAL;
+        @Override
+        public double kMinTurnSpeed() {
+            return kMinTurnSpeed;
+        }
+
+        @Override
+        public double kAngularDeadZone() {
+            return kDeadzone;
+        }
     
     }
 }

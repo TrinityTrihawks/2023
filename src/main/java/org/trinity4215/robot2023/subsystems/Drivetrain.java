@@ -48,10 +48,17 @@ public abstract class Drivetrain extends SubsystemBase {
 
     /**
      * Abstracted constants for driving.
-     * 
+     * yes they're functions. The other option 
+     * publicly available (& thus publicly
+     * <i>changeable</i>)
      */
     public interface DrivetrainConstants {
 
+        double kMaxSpeedPercent();
+        double kMinTurnSpeed();
+        double kAngularDeadZone();
+
+        // this will probably need more stuff
     }
 
 }
