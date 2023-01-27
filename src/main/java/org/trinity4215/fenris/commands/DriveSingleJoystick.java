@@ -2,25 +2,24 @@ package org.trinity4215.fenris.commands;
 
 import java.util.function.DoubleSupplier;
 
+import org.trinity4215.bilbotbaggins.subsystems.Drivetrain;
+import org.trinity4215.bilbotbaggins.subsystems.Drivetrain.DrivetrainConstants;
 import org.trinity4215.fenris.Constants.JoystickConstants;
-import org.trinity4215.fenris.subsystems.Drivetrain;
+import org.trinity4215.fenris.subsystems.FenrisDrivetrain.DriveConstants;
 
-import edu.wpi.first.math.kinematics.MecanumDriveMotorVoltages;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class DriveSingleJoystick extends CommandBase {
     private final Drivetrain drivetrain;
-    private final DoubleSupplier xSupplier;
+    private final DrivetrainConstants constants;
     private final DoubleSupplier ySupplier;
     private final DoubleSupplier twistSupplier;
-    private final DoubleSupplier throttleSupplier;
 
-    public DriveSingleJoystick(Drivetrain drivetrain, DoubleSupplier x, DoubleSupplier y, DoubleSupplier twist, DoubleSupplier throttle) {
+    public DriveSingleJoystick(Drivetrain drivetrain, DoubleSupplier y, DoubleSupplier twist) {
         this.drivetrain = drivetrain;
-        xSupplier = x;
+        constants = drivetrain.getConstants();
         ySupplier = y;
         twistSupplier = twist;
-        throttleSupplier = throttle; 
         addRequirements(drivetrain);
 
     }
@@ -33,35 +32,23 @@ public class DriveSingleJoystick extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        double x = xSupplier.getAsDouble();
         double y = ySupplier.getAsDouble();
         double twist = twistSupplier.getAsDouble();
-        double throttle = throttleSupplier.getAsDouble();
         
-        // Deadzone Logic
-        x = Math.abs(x) < JoystickConstants.kXDeadZone ? 0.0 : x;
         y = Math.abs(y) < JoystickConstants.kYDeadZone ? 0.0 : y;
         twist = Math.abs(twist) < JoystickConstants.kTwistDeadZone ? 0.0 : twist;
         
-        throttle = (-throttle + 1)/2;
+        y = y * constants.kMaxSpeedPercent() * -1; //correct the y-axis (backwards is now backwards!)
+        twist = twist * constants.kMaxSpeedPercent();
 
-        // scale x, y, and twist by throttle and sanity limit
-        x = x * throttle * JoystickConstants.kStaticThrottleScalar;
-        y = y * throttle * JoystickConstants.kStaticThrottleScalar * -1; //correct the y-axis (backwards is now backwards!)
-        twist = twist * throttle * JoystickConstants.kStaticThrottleScalar;
 
-        // SmartDashboard.putNumber("X", x);
-        // SmartDashboard.putNumber("Y", y);
-        // SmartDashboard.putNumber("Twistation", twist);
-        // SmartDashboard.putNumber("Throttle", throttle);
-
-        drivetrain.drive(x, y, twist, false);
+        drivetrain.driveArcade(y, twist);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        drivetrain.setDriveMotorControllersVolts(new MecanumDriveMotorVoltages(0, 0, 0, 0));
+        drivetrain.driveTank(0, 0);
     }
 
     // Returns true when the command should end.

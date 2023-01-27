@@ -14,7 +14,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public class BilbotDrivetrain extends Drivetrain {
     private static BilbotDrivetrain subsystemInst = null;
-    private DrivetrainConstants constants = null;
+    private static DrivetrainConstants constants = null;
     
 
 
@@ -91,7 +91,7 @@ public class BilbotDrivetrain extends Drivetrain {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        var gyro_angle = new Rotation2d(getGyroAngle());
+        var gyroAngle = new Rotation2d(getGyroAngle());
 
         // Update the robot pose periodically with encoder values and gyro angle
         // TODO: This line requires you to set encoder.setPositionConversionFactor to a value that will cause the encoder to return its position in meters (if using spark encoders)
@@ -103,7 +103,7 @@ public class BilbotDrivetrain extends Drivetrain {
 
 
 
-    public static class DriveConstants implements DrivetrainConstants {
+    private static class DriveConstants implements DrivetrainConstants {
         
         // TODO: Make these constants the actual CAN IDs of the components
     
@@ -134,20 +134,11 @@ public class BilbotDrivetrain extends Drivetrain {
         public static final boolean kLeftMotorsInverted = false;
         public static final boolean kRightMotorsInverted = true;
     
-        // TODO: set enc channels -- is this necessary for talon breakouts?
-        public static final int kLeftEncoderChannelA = 0;
-    
-        public static final int kLeftEncoderChannelB = 0;
-    
-        public static final int kRightEncoderChannelA = 0;
-    
-        public static final int kRightEncoderChannelB = 0;
-    
+        
         public static final double kMaxSpeedPercent = 0.4;
     
         public static final double kMinTurnSpeed = 0.2;
     
-        public static final double kDeadzone = 0.015;
 
         @Override
         public double kMaxSpeedPercent() {
@@ -159,10 +150,6 @@ public class BilbotDrivetrain extends Drivetrain {
             return kMinTurnSpeed;
         }
 
-        @Override
-        public double kAngularDeadZone() {
-            return kDeadzone;
-        }
     
     }
 }

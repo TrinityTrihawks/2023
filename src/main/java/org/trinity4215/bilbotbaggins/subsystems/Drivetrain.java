@@ -56,7 +56,9 @@ public abstract class Drivetrain extends SubsystemBase {
 
         double kMaxSpeedPercent();
         double kMinTurnSpeed();
-        double kAngularDeadZone();
+        default double kAngularDeadZone() {
+            return 0.015;
+        }
 
         // this will probably need more stuff
     }

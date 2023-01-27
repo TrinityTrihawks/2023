@@ -4,15 +4,12 @@
 
 package org.trinity4215.fenris;
 
-import org.trinity4215.fenris.Constants.DriveConstants;
 import org.trinity4215.fenris.Constants.JoystickConstants;
 import org.trinity4215.fenris.Constants.ShootyBitsConstants;
 import org.trinity4215.fenris.Constants.XboxPortProvider;
 import org.trinity4215.fenris.commands.DriveDoubleJoystick;
 import org.trinity4215.fenris.commands.DriveSingleJoystick;
-import org.trinity4215.fenris.commands.DriveZero;
-import org.trinity4215.fenris.commands.ResetGyro;
-import org.trinity4215.fenris.subsystems.Drivetrain;
+import org.trinity4215.fenris.subsystems.FenrisDrivetrain;
 import org.trinity4215.fenris.subsystems.ShootyBits;
 
 import edu.wpi.first.networktables.NetworkTable;
@@ -25,9 +22,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -45,7 +40,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
     // Subsystems
-    private final Drivetrain drivetrain = Drivetrain.getInstance();
+    private final FenrisDrivetrain drivetrain = (FenrisDrivetrain)FenrisDrivetrain.getInstance();
     private final ShootyBits shootyBits = ShootyBits.getInstance();
 
     private final XboxPortProvider xboxPorts = new XboxPortProvider();
@@ -78,17 +73,12 @@ public class RobotContainer {
     private DriveSingleJoystick singleDefault = new DriveSingleJoystick(
             drivetrain,
             () -> -rightJoystick.getZeroedY(),
-            () -> -rightJoystick.getZeroedX(),
-            () -> rightJoystick.getZeroedTwist(),
-            () -> rightJoystick.getThrottle());
+            () -> rightJoystick.getZeroedTwist());
 
     private DriveDoubleJoystick doubleDefault = new DriveDoubleJoystick(
             drivetrain,
-            () -> leftJoystick.getZeroedX(),
-            () -> rightJoystick.getZeroedX(),
             () -> leftJoystick.getZeroedY(),
-            () -> rightJoystick.getZeroedY(),
-            () -> rightJoystick.getThrottle());
+            () -> rightJoystick.getZeroedY());
 
     private StartEndCommand runIntake = new StartEndCommand(
             () -> {

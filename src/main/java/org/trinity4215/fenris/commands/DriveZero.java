@@ -4,15 +4,15 @@
 
 package org.trinity4215.fenris.commands;
 
-import org.trinity4215.fenris.subsystems.Drivetrain;
+import org.trinity4215.fenris.subsystems.FenrisDrivetrain;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class DriveZero extends CommandBase {
 
-	private Drivetrain drive;
+	private FenrisDrivetrain drive;
 
-	public DriveZero(Drivetrain drivetrain) {
+	public DriveZero(FenrisDrivetrain drivetrain) {
 		drive = drivetrain;
 		addRequirements(drivetrain);
 	}

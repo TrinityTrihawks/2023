@@ -69,7 +69,7 @@ public class ShootyBits extends SubsystemBase implements IntakeBits, ShooterBits
 
     @Override
     public void setShooterVoltage(double percentOutput) {
-        shooterMotor.set(ControlMode.PercentOutput, percentOutput * (Constants.kOptimalVoltage / getTotalVoltage()));
+        shooterMotor.set(ControlMode.PercentOutput, percentOutput);
     }
     public boolean getArmLimit() {
         return armLimit.get();

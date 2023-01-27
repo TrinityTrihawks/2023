@@ -3,29 +3,25 @@ package org.trinity4215.fenris.commands;
 
 import java.util.function.DoubleSupplier;
 
+import org.trinity4215.bilbotbaggins.subsystems.Drivetrain;
+import org.trinity4215.bilbotbaggins.subsystems.Drivetrain.DrivetrainConstants;
 import org.trinity4215.fenris.Constants.JoystickConstants;
-import org.trinity4215.fenris.subsystems.Drivetrain;
 
-import edu.wpi.first.math.kinematics.MecanumDriveMotorVoltages;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class DriveDoubleJoystick extends CommandBase {
     
     private final Drivetrain drivetrain;
+    private final DrivetrainConstants constants;
 
-    private final DoubleSupplier x1Supplier;
-    private final DoubleSupplier x2Supplier;
-    private final DoubleSupplier y1Supplier;
-    private final DoubleSupplier y2Supplier;
-    private final DoubleSupplier throttleSupplier;
+    private final DoubleSupplier leftSupplier;
+    private final DoubleSupplier rightSupplier;
 
-    public DriveDoubleJoystick(Drivetrain drivetrain, DoubleSupplier x1, DoubleSupplier x2, DoubleSupplier y1, DoubleSupplier y2, DoubleSupplier throttle) {
+    public DriveDoubleJoystick(Drivetrain drivetrain, DoubleSupplier left, DoubleSupplier right) {
         this.drivetrain = drivetrain;
-        x1Supplier = x1;
-        x2Supplier = x2;
-        y1Supplier = y1;
-        y2Supplier = y2;
-        throttleSupplier = throttle; 
+        constants = drivetrain.getConstants();
+        leftSupplier = left;
+        rightSupplier = right;
         addRequirements(drivetrain);
 
     }
@@ -37,49 +33,23 @@ public class DriveDoubleJoystick extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        double x1 = x1Supplier.getAsDouble();
-        double x2 = x2Supplier.getAsDouble();
-        double y1 = y1Supplier.getAsDouble();
-        double y2 = y2Supplier.getAsDouble();
-        double throttle = throttleSupplier.getAsDouble();
+        double left = leftSupplier.getAsDouble();
+        double right = rightSupplier.getAsDouble();
         
         // Deadzone Logic
-        x1 = Math.abs(x1) < JoystickConstants.kXDeadZone ? 0.0 : x1;
-        x2 = Math.abs(x2) < JoystickConstants.kXDeadZone ? 0.0 : x2;
-        y1 = Math.abs(y1) < JoystickConstants.kYDeadZone ? 0.0 : y1;
-        y2 = Math.abs(y2) < JoystickConstants.kYDeadZone ? 0.0 : y2;
+        left = Math.abs(left) < JoystickConstants.kYDeadZone ? 0.0 : left;
+        right = Math.abs(right) < JoystickConstants.kYDeadZone ? 0.0 : right;
 
-        // Double joystick math (courtesy of Peter, Veronica, Luke & Michael)
-        double y = (y1 + y2) / 2;
-        double twist = (y2 - y1) / 2;
+        left = left * constants.kMaxSpeedPercent();
+        right = right * constants.kMaxSpeedPercent();
 
-        double x;
-        if (x1 * x2 < 0) {
-            x = 0;
-        } else {
-            x = Math.abs (x2) < Math.abs (x1) ? x2 : x1;
-        }
-
-        
-        throttle = (-throttle + 1)/2;
-
-        // scale x, y, and twist by throttle and sanity limit
-        x = x * throttle * JoystickConstants.kStaticThrottleScalar;
-        y = y * throttle * JoystickConstants.kStaticThrottleScalar * -1; //correct the y-axis (backwards is now backwards!)
-        twist = twist * throttle * JoystickConstants.kStaticThrottleScalar;
-
-        // SmartDashboard.putNumber("X", x);
-        // SmartDashboard.putNumber("Y", y);
-        // SmartDashboard.putNumber("Twistation", twist);
-        // SmartDashboard.putNumber("Throttle", throttle);
-
-        drivetrain.drive(y, x, twist, false);
+        drivetrain.driveTank(left, right);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        drivetrain.setDriveMotorControllersVolts(new MecanumDriveMotorVoltages(0, 0, 0, 0));
+        drivetrain.driveTank(0, 0);
     }
 
     // Returns true when the command should end.
