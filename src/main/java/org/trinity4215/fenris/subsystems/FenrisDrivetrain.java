@@ -156,7 +156,8 @@ public class FenrisDrivetrain extends Drivetrain {
         double y = (left + right) / 2;
         double twist = (right - left) / 2;
 
-        drive(0, y, twist, false);
+        // for whatever reason, forward is not forward
+        drive(-y, 0, twist, false);
         
     }
 

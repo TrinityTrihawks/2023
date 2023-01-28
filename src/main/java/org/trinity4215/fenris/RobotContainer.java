@@ -206,7 +206,7 @@ public class RobotContainer {
                     rightJoystick.zero();
                     leftJoystick.zero();
                     System.out.println(this + ": zeroed joysticks");
-                }).andThen(doubleDefault));
+                }).andThen(singleDefault));
     }
 
     /**

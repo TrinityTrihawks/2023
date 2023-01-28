@@ -43,7 +43,7 @@ public class DriveDoubleJoystick extends CommandBase {
         left = left * constants.kMaxSpeedPercent();
         right = right * constants.kMaxSpeedPercent();
 
-        drivetrain.driveTank(left, right);
+        drivetrain.driveTank(-left, -right); 
     }
 
     // Called once the command ends or is interrupted.
