@@ -24,7 +24,7 @@ public final class Constants {
     public static class DriveConstants {
 
         // TODO: Make these constants the actual CAN IDs of the components
-        public static final int kLeftMotorId = 0;
+        public static final int kLeftMotorId = 13;
         public static final int kRightMotorId = 0;
         public static final int kPigeonId = 0;
 
