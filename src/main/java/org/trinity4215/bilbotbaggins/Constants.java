@@ -28,7 +28,7 @@ public final class Constants {
         public static final int kXboxPort = 2;
         public static final int kLeftStickPort = 1;
         public static final int kRightStickPort = 0;
-        public static final DriveType kDriveType = DriveType.DUAL;
+        public static final DriveType kDriveType = DriveType.SINGLE;
     }
 
         

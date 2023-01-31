@@ -13,8 +13,7 @@ subsystems.
 
 `Drivetrain` is now an abstract class covering gyroscope and tank-drive
 functionalities. Concrete drivetrains \(`BilbotDrivetrain` &
-`FenrisDrivetrain`\) now live in their own package,
-`org.trinity4215.robot2023.subsystems.drivetrains`.
+`FenrisDrivetrain`\) now live in their own packages.
 
 ## Constant Abstraction
 

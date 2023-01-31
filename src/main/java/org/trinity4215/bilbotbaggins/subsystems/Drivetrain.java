@@ -45,6 +45,11 @@ public abstract class Drivetrain extends SubsystemBase {
      */
     public abstract DrivetrainConstants getConstants();
 
+    /**
+     * `NullPointerException` protector
+     */
+    public abstract void setConstants();
+
 
     /**
      * Abstracted constants for driving.
