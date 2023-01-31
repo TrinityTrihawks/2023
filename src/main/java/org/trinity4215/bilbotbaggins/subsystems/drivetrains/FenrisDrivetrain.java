@@ -4,7 +4,6 @@
 
 package org.trinity4215.bilbotbaggins.subsystems.drivetrains;
 
-import org.trinity4215.bilbotbaggins.Utils;
 import org.trinity4215.bilbotbaggins.subsystems.Drivetrain;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -153,7 +152,7 @@ public class FenrisDrivetrain extends Drivetrain {
     
         public static final double kSlewValue = 1.5;
         
-        public static final double kStaticThrottleScalar = 1; // multiple inputs values by this
+        public static final double kStaticThrottleScalar = 0.4; // multiple inputs values by this
 
         @Override
         public double kMaxSpeedPercent() {

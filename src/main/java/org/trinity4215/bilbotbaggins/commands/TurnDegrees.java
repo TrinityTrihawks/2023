@@ -45,7 +45,7 @@ public class TurnDegrees extends CommandBase {
             * (1 - constants.kMinTurnSpeed()) + constants.kMinTurnSpeed();
             
         SmartDashboard.putNumber("output", output);
-        drive.driveTank(output, output);
+        drive.driveTank(output, -output);
     }
 
     @Override

@@ -4,7 +4,6 @@
 
 package org.trinity4215.bilbotbaggins.subsystems.drivetrains;
 
-import org.trinity4215.bilbotbaggins.Utils;
 import org.trinity4215.bilbotbaggins.subsystems.Drivetrain;
 
 import com.ctre.phoenix.motorcontrol.InvertType;

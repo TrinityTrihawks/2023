@@ -10,7 +10,6 @@ import org.trinity4215.bilbotbaggins.Constants.OperatorConstants;
 import org.trinity4215.bilbotbaggins.Constants.OperatorConstants.DriveType;
 import org.trinity4215.bilbotbaggins.subsystems.Drivetrain;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
@@ -57,10 +56,6 @@ public class DriveJoystick extends CommandBase {
             );
         }
 
-        SmartDashboard.putNumber("ly", -leftYSupplier.getAsDouble());
-        SmartDashboard.putNumber("ry", -rightYSupplier.getAsDouble());
-        SmartDashboard.putNumber("rt", -rightTwistSupplier.getAsDouble());
-        
     }
 
     // Called once the command ends or is interrupted.
