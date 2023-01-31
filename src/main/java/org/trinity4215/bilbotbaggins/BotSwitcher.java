@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.RuntimeType;
  */
 public class BotSwitcher {
 
-    private static final RobotType type = RobotType.kFenris;
+    private static final RobotType type = RobotType.kBilbotBaggins;
 
     public enum RobotType { 
         kFenris,

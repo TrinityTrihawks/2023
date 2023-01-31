@@ -144,14 +144,14 @@ public class BilbotDrivetrain extends Drivetrain {
     
         // TODO: Tune these
         public static final int kEncoderCPR = 0;
-        public static final double kSlewValue = 0.2;
+        public static final double kSlewValue = 3;
     
         public static final boolean kSquareJoystickValues = true;
         public static final boolean kLeftMotorsInverted = false;
         public static final boolean kRightMotorsInverted = true;
     
         
-        public static final double kMaxSpeedPercent = 0.4;
+        public static final double kMaxSpeedPercent = 0.2;
     
         public static final double kMinTurnSpeed = 0.2;
     

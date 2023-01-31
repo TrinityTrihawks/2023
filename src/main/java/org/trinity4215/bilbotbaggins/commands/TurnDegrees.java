@@ -16,6 +16,7 @@ public class TurnDegrees extends CommandBase {
     private final DrivetrainConstants constants;
     private final double target;
     private double curAngle = 0;
+    private boolean isInDeadzone = false;
 
 
     public TurnDegrees(double targetAngle, Drivetrain drivetrain) {
@@ -37,7 +38,8 @@ public class TurnDegrees extends CommandBase {
         double speed = Math.sin((curAngle - target) * Math.PI / 180 / 2);
         SmartDashboard.putNumber("sind(angle)", speed);
         int deadzoneScalar = Math.abs(speed) <= constants.kAngularDeadZone()? 0 : 1;
-        SmartDashboard.putBoolean("in dead zone", deadzoneScalar == 0);
+        isInDeadzone = deadzoneScalar == 0;
+        SmartDashboard.putBoolean("in dead zone", isInDeadzone);
         double output = 
             -1 * speed 
             * deadzoneScalar 
@@ -50,10 +52,11 @@ public class TurnDegrees extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
+        drive.driveTank(0, 0);
     }
 
     @Override
     public boolean isFinished() {
-        return Math.abs(Math.sin((curAngle - target) * Math.PI / 180 / 2)) <= constants.kAngularDeadZone();
+        return isInDeadzone;
     }
 }
