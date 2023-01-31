@@ -73,6 +73,9 @@ public final class Constants {
 
         public static final double kMinTurnSpeed = 0.2;
 
+        public static final double kOneMeterArea = 2.24;
+        public static final double kAreaDeadzone = 0;
+
         public static enum DriveType {
             SINGLE,
             DUAL
