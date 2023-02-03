@@ -166,6 +166,13 @@ public class BilbotDrivetrain extends Drivetrain {
             return kMinTurnSpeed;
         }
 
+        @Override
+        public double kSlewValue() {
+            // TODO Auto-generated method stub
+            return kSlewValue;
+        }
+
     
     }
+
 }

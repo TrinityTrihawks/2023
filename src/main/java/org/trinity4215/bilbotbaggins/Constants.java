@@ -31,9 +31,8 @@ public final class Constants {
         public static final DriveType kDriveType = DriveType.DUAL;
     }
 
-        
-        
-
-
+      
+    public static final double kLoopLengthSeconds = 0.02;
+    public static final double kAllOutTurnRateDegreesPerSecond = 180;
 
 }

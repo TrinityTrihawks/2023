@@ -163,5 +163,11 @@ public class FenrisDrivetrain extends Drivetrain {
         public double kMinTurnSpeed() {
             return 0.1;
         }
+
+        @Override
+        public double kSlewValue() {
+            // TODO Auto-generated method stub
+            return kSlewValue;
+        }
     }
 }

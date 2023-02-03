@@ -37,6 +37,10 @@ public abstract class Drivetrain extends SubsystemBase {
         return gyro.getAngle();
     }
 
+    public double getGyroVel() {
+        return gyro.getRate();
+    }
+    
 
     /**
      * Although it is not compiler-enforced, this 
@@ -64,6 +68,8 @@ public abstract class Drivetrain extends SubsystemBase {
         default double kAngularDeadZone() {
             return 0.015;
         }
+
+        double kSlewValue();
 
         // this will probably need more stuff
     }

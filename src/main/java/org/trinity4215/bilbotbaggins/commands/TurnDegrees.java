@@ -37,8 +37,8 @@ public class TurnDegrees extends CommandBase {
         SmartDashboard.putNumber("input angle", curAngle);
         double speed = Math.sin((curAngle - target) * Math.PI / 180 / 2);
         SmartDashboard.putNumber("sind(angle)", speed);
-        int deadzoneScalar = Math.abs(speed) <= constants.kAngularDeadZone()? 0 : 1;
-        isInDeadzone = deadzoneScalar == 0;
+        isInDeadzone = Math.abs(speed) <= constants.kAngularDeadZone();
+        int deadzoneScalar = isInDeadzone? 0 : 1;
         SmartDashboard.putBoolean("in dead zone", isInDeadzone);
         double output = 
             -1 * speed 
