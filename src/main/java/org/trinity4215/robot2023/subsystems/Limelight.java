@@ -9,19 +9,19 @@ import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class LimelightPhotonVision extends SubsystemBase {
-    private static LimelightPhotonVision subsystemInst = null;
+public class Limelight extends SubsystemBase {
+    private static Limelight subsystemInst = null;
 
     PhotonCamera photonCamera = new PhotonCamera("visioncam");
 
     /** Creates a new LimelightPhotonVision. */
-    public static LimelightPhotonVision getInstance() {
+    public static Limelight getInstance() {
         if (subsystemInst == null) {
-            subsystemInst = new LimelightPhotonVision();
+            subsystemInst = new Limelight();
         } 
         return subsystemInst;
     }
-    public LimelightPhotonVision() {
+    public Limelight() {
         
     }
     
