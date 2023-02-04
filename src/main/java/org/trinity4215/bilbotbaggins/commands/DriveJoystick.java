@@ -9,6 +9,7 @@ import java.util.function.DoubleSupplier;
 import org.trinity4215.bilbotbaggins.Constants.OperatorConstants;
 import org.trinity4215.bilbotbaggins.Constants.OperatorConstants.DriveType;
 import org.trinity4215.bilbotbaggins.subsystems.Drivetrain;
+import org.trinity4215.bilbotbaggins.subsystems.Drivetrain.DrivetrainConstants;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -16,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 /** An example command that uses an example subsystem. */
 public class DriveJoystick extends CommandBase {
     private final Drivetrain drivetrain;
+    private final DrivetrainConstants constants;
     private final DoubleSupplier leftYSupplier;
     private final DoubleSupplier rightYSupplier;
     private final DoubleSupplier rightTwistSupplier;
@@ -31,6 +33,7 @@ public class DriveJoystick extends CommandBase {
                          DoubleSupplier rightTwist) {
                             
         this.drivetrain = drivetrain;
+        constants = drivetrain.getConstants();
         leftYSupplier = leftY;
         rightYSupplier = rightY;
         rightTwistSupplier = rightTwist;
@@ -47,13 +50,13 @@ public class DriveJoystick extends CommandBase {
     public void execute() {
         if (OperatorConstants.kDriveType == DriveType.DUAL) {
             drivetrain.driveTank(
-                -leftYSupplier.getAsDouble(),
-                -rightYSupplier.getAsDouble()
+                -leftYSupplier.getAsDouble() * constants.kMaxSpeedPercent(),
+                -rightYSupplier.getAsDouble() * constants.kMaxSpeedPercent()
             );
         } else {
             drivetrain.driveArcade(
-                -rightYSupplier.getAsDouble(), 
-                -rightTwistSupplier.getAsDouble()
+                -rightYSupplier.getAsDouble() * constants.kMaxSpeedPercent(), 
+                -rightTwistSupplier.getAsDouble() * constants.kMaxSpeedPercent()
             );
         }
 

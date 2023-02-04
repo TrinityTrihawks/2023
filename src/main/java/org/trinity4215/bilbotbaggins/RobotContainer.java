@@ -57,7 +57,12 @@ public class RobotContainer {
     }
 
     private void configureDefaultCommands() {
-        drivetrain.setDefaultCommand(defaultDrive);
+        drivetrain.setDefaultCommand(new InstantCommand(
+            () -> {
+                frodoBaggins.zero();
+                samwiseGamgee.zero();
+            }
+        ).andThen(defaultDrive));
     }
 
     /**
@@ -84,8 +89,6 @@ public class RobotContainer {
         // cancelling on release.
         // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
-        frodoBaggins.zero();
-        samwiseGamgee.zero();
     }
 
     /**
