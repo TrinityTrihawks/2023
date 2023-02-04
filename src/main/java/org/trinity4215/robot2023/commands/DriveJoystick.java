@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
 public class DriveJoystick extends CommandBase {
+    private static final double kStaticJoystickScalar = 0.4;
     private final Drivetrain drivetrain;
     private final DoubleSupplier leftYSupplier;
     private final DoubleSupplier rightYSupplier;
@@ -46,8 +47,8 @@ public class DriveJoystick extends CommandBase {
     public void execute() {
         if (drivetrain.getDriveType() == DriveType.DUAL) {
             drivetrain.driveDualJoystickPercent(
-                leftYSupplier.getAsDouble(),
-                rightYSupplier.getAsDouble());
+                leftYSupplier.getAsDouble()* kStaticJoystickScalar,
+                rightYSupplier.getAsDouble()* kStaticJoystickScalar);
         } else {
             drivetrain.driveSingleJoystickPercent(
                 rightYSupplier.getAsDouble(), 

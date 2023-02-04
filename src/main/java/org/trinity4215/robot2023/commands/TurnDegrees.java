@@ -36,7 +36,7 @@ public class TurnDegrees extends CommandBase {
     @Override
     public void execute() {
         SmartDashboard.putNumber("Target Angle", target);
-        curAngle = drive.getGyroAngle();
+        curAngle = drive.getGyroY();
         SmartDashboard.putNumber("input angle", curAngle);
         double speed = Math.sin((curAngle - target) * Math.PI / 180 / 2);
         SmartDashboard.putNumber("sind(angle)", speed);

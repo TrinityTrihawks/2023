@@ -4,19 +4,25 @@
 
 package org.trinity4215.robot2023;
 
-
 import javax.xml.crypto.KeySelector.Purpose;
 
 import org.trinity4215.robot2023.Constants.OperatorConstants;
 import org.trinity4215.robot2023.Constants.DriveConstants.DriveType;
+import org.trinity4215.robot2023.commands.AutoLevel;
 import org.trinity4215.robot2023.commands.DriveJoystick;
 import org.trinity4215.robot2023.commands.FollowLimelight;
+import org.trinity4215.robot2023.commands.LevelingTests;
 import org.trinity4215.robot2023.commands.TurnDegrees;
 import org.trinity4215.robot2023.subsystems.Drivetrain;
 import org.trinity4215.robot2023.subsystems.Limelight;
 
 import edu.wpi.first.net.PortForwarder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -35,7 +41,6 @@ public class RobotContainer {
     private final Drivetrain drivetrain = Drivetrain.getInstance();
     private final Limelight limelight = Limelight.getInstance();
 
-
     // ==================== CONTROLLERS =====================
     private final CommandXboxController gollum_subsys = new CommandXboxController(
             OperatorConstants.kXboxPort);
@@ -43,16 +48,12 @@ public class RobotContainer {
     private final CommandJoystick samwiseGamgee_left = new CommandJoystick(OperatorConstants.kLeftStickPort);
     private final CommandJoystick frodoBaggins_right = new CommandJoystick(OperatorConstants.kRightStickPort);
 
-
     // ==================== COMMANDS ========================
-    private final DriveJoystick defaultDrive = 
-        new DriveJoystick(
-            drivetrain, 
-            samwiseGamgee_left :: getY, 
-            frodoBaggins_right :: getY,
-            frodoBaggins_right :: getTwist
-        );
-
+    private final DriveJoystick defaultDrive = new DriveJoystick(
+            drivetrain,
+            samwiseGamgee_left::getY,
+            frodoBaggins_right::getY,
+            frodoBaggins_right::getTwist);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -85,21 +86,40 @@ public class RobotContainer {
     private void configureBindings() {
         // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
         // new Trigger(exampleSubsystem::exampleCondition)
-            //     .onTrue(new ExampleCommand(exampleSubsystem));
+        // .onTrue(new ExampleCommand(exampleSubsystem));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-  }
+        // Schedule `exampleMethodCommand` when the Xbox controller's B button is
+        // pressed,
+        // cancelling on release.
+        // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    // return new TurnDegrees(180, drivetrain);
-    return new FollowLimelight(limelight, drivetrain);
-  }
+    /**
+     * Use this to pass the autonomous command to the main {@link Robot} class.
+     *
+     * @return the command to run in autonomous
+     */
+    public Command getAutonomousCommand() {
+        // An example command will be run in autonomous
+        // return new TurnDegrees(180, drivetrain);
+        return new AutoLevel(drivetrain);
+        // return new SequentialCommandGroup(
+        //         new RepeatCommand(
+        //                 new InstantCommand(() -> {
+        //                     SmartDashboard.putNumber("GyroX", drivetrain.getGyroX());
+        //                     SmartDashboard.putString("CurrentGyroAxis", drivetrain.getCurrentGyroAxis().toString());
+        //                 }, drivetrain)).withTimeout(10),
+        //         new WaitCommand(1),
+        //         new RepeatCommand(
+        //                 new InstantCommand(() -> {
+        //                     SmartDashboard.putNumber("GyroY", drivetrain.getGyroY());
+        //                     SmartDashboard.putString("CurrentGyroAxis", drivetrain.getCurrentGyroAxis().toString());
+        //                 }, drivetrain)).withTimeout(10),
+        //         new WaitCommand(1),
+        //         new RepeatCommand(
+        //                 new InstantCommand(() -> {
+        //                     SmartDashboard.putNumber("GyroZ", drivetrain.getGyroZ());
+        //                     SmartDashboard.putString("CurrentGyroAxis", drivetrain.getCurrentGyroAxis().toString());
+        //                 }, drivetrain)).withTimeout(10));
+    }
 }

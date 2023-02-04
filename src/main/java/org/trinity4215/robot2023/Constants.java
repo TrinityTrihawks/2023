@@ -36,6 +36,16 @@ public final class Constants {
             CTRE_TALON_SRX
         }
 
+        public static enum AutoLevelState {
+            LEVEL_GROUND,
+            INITIAL_CLIMB,
+            FALL_FORWARD,
+            KICKBACK,
+            PAUSE,
+            ADJUST,
+            END
+        }
+
         public class TALONSRX {
             public static final int kLeftLeaderId = 12;
             public static final int kLeftFollowerId = 14;
