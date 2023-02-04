@@ -65,8 +65,13 @@ public abstract class Drivetrain extends SubsystemBase {
 
         double kMaxSpeedPercent();
         double kMinTurnSpeed();
+        /**
+         * in degrees in each direction from the
+         * target. The total deadzone size is twice 
+         * this number
+         */
         default double kAngularDeadZone() {
-            return 0.015;
+            return 1;
         }
 
         double kSlewValue();

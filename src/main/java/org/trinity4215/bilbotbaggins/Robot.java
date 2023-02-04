@@ -61,6 +61,7 @@ public class Robot extends TimedRobot {
     /** This function is called once each time the robot enters Disabled mode. */
     @Override
     public void disabledInit() {
+        System.out.println("============ Disable ============");
     }
 
     @Override
@@ -79,6 +80,7 @@ public class Robot extends TimedRobot {
         if (autonomousCommand != null) {
             autonomousCommand.schedule();
         }
+        System.out.println("============ Auton enable ============");
     }
 
     /** This function is called periodically during autonomous. */
@@ -95,6 +97,7 @@ public class Robot extends TimedRobot {
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
+        System.out.println("============ Teleop enable ============");
     }
 
     /** This function is called periodically during operator control. */

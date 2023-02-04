@@ -4,19 +4,22 @@
 
 package org.trinity4215.bilbotbaggins.commands;
 
+import org.trinity4215.bilbotbaggins.Constants;
 import org.trinity4215.bilbotbaggins.subsystems.Drivetrain;
 import org.trinity4215.bilbotbaggins.subsystems.Drivetrain.DrivetrainConstants;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class TurnDegrees extends CommandBase {
 
     private final Drivetrain drive;
     private final DrivetrainConstants constants;
+
     private final double target;
     private double curAngle = 0;
     private boolean isInDeadzone = false;
+
+    private double output = 0;
 
 
     public TurnDegrees(double targetAngle, Drivetrain drivetrain) {
@@ -34,20 +37,25 @@ public class TurnDegrees extends CommandBase {
     @Override
     public void execute() {
         curAngle = drive.getGyroAngle();
-        SmartDashboard.putNumber("input angle", curAngle);
-        double speed = Math.sin((curAngle - target) * Math.PI / 180 / 2);
-        SmartDashboard.putNumber("sind(angle)", speed);
-        isInDeadzone = Math.abs(speed) <= constants.kAngularDeadZone();
-        int deadzoneScalar = isInDeadzone? 0 : 1;
-        SmartDashboard.putBoolean("in dead zone", isInDeadzone);
-        double output = 
-            -1 * speed 
-            * deadzoneScalar 
-            * constants.kMaxSpeedPercent()
-            * (1 - constants.kMinTurnSpeed()) + constants.kMinTurnSpeed();
-            
-        SmartDashboard.putNumber("output", output);
-        drive.driveTank(output, -output);
+        isInDeadzone = Math.abs(curAngle - target) <= constants.kAngularDeadZone();
+
+        if (projectedStopPointIsInDeadZone()){
+
+            output = 0;
+
+        } else {
+
+            double speed = Math.sin((curAngle - target) * Math.PI / 180 / 2);
+            int deadzoneScalar = isInDeadzone? 0 : 1;
+            output = 
+                -1 * speed 
+                * deadzoneScalar 
+                * constants.kMaxSpeedPercent()
+                * (1 - constants.kMinTurnSpeed()) + constants.kMinTurnSpeed();
+
+        }
+
+        drive.driveTank(-output, output);
     }
 
     @Override
@@ -58,5 +66,15 @@ public class TurnDegrees extends CommandBase {
     @Override
     public boolean isFinished() {
         return isInDeadzone;
+    }
+
+
+
+    private boolean projectedStopPointIsInDeadZone() {
+
+        double timeToStop = Math.abs(output / constants.kSlewValue());
+        double distToStop = timeToStop * Constants.kAllOutTurnRateDegreesPerSecond;
+
+        return Math.abs((curAngle - target)) - distToStop <= constants.kAngularDeadZone();
     }
 }

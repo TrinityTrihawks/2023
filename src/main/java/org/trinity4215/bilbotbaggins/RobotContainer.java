@@ -6,15 +6,14 @@ package org.trinity4215.bilbotbaggins;
 
 import org.trinity4215.bilbotbaggins.Constants.OperatorConstants;
 import org.trinity4215.bilbotbaggins.commands.DriveJoystick;
-import org.trinity4215.bilbotbaggins.commands.GetRotVel;
 import org.trinity4215.bilbotbaggins.commands.TurnDegrees;
 import org.trinity4215.bilbotbaggins.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -46,7 +45,8 @@ public class RobotContainer {
             drivetrain,
             samwiseGamgee::getZeroedY,
             frodoBaggins::getZeroedY,
-            frodoBaggins::getZeroedTwist);
+            frodoBaggins::getZeroedTwist
+    );
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -57,12 +57,15 @@ public class RobotContainer {
     }
 
     private void configureDefaultCommands() {
-        drivetrain.setDefaultCommand(new InstantCommand(
-            () -> {
-                frodoBaggins.zero();
-                samwiseGamgee.zero();
-            }
-        ).andThen(defaultDrive));
+
+        drivetrain.setDefaultCommand(
+            new InstantCommand(
+                () -> {
+                    frodoBaggins.zero();
+                    samwiseGamgee.zero();
+                }
+            ).andThen(defaultDrive)
+        );
     }
 
     /**
@@ -97,21 +100,19 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new GetRotVel(drivetrain);
-        /*new SequentialCommandGroup(
+        return new SequentialCommandGroup(
             new TurnDegrees(180, drivetrain)
-            , new InstantCommand()
-            , new WaitCommand(1));/*,
-            new StartEndCommand(
+            , new StartEndCommand(
                 () -> drivetrain.driveTank(0.2, 0.2), 
                 () -> drivetrain.driveTank(0, 0), 
-                drivetrain).withTimeout(1),
-            new TurnDegrees(180, drivetrain),
-            new StartEndCommand(
+                drivetrain).withTimeout(1)
+            , new TurnDegrees(180, drivetrain)
+            , new StartEndCommand(
                 () -> drivetrain.driveTank(0.2, 0.2), 
                 () -> drivetrain.driveTank(0, 0), 
-                drivetrain).withTimeout(1),
-            new TurnDegrees(180, drivetrain));*/
+                drivetrain).withTimeout(1)
+            , new TurnDegrees(180, drivetrain)
+        );
     }
 
 }

@@ -152,7 +152,7 @@ public class FenrisDrivetrain extends Drivetrain {
     
         public static final double kSlewValue = 1.5;
         
-        public static final double kStaticThrottleScalar = 0.2; // multiple inputs values by this
+        public static final double kStaticThrottleScalar = 0.3; // multiple inputs values by this
 
         @Override
         public double kMaxSpeedPercent() {
