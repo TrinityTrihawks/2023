@@ -14,7 +14,7 @@ import org.trinity4215.bilbotbaggins.subsystems.Drivetrain.DrivetrainConstants;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-/** An example command that uses an example subsystem. */
+
 public class DriveJoystick extends CommandBase {
     private final Drivetrain drivetrain;
     private final DrivetrainConstants constants;

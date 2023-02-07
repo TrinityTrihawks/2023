@@ -27,7 +27,6 @@ public abstract class Drivetrain extends SubsystemBase {
         driveTank(left, right);
     }
     
-
     
     public void resetGyro() {
         gyro.reset();
