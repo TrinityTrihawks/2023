@@ -43,8 +43,7 @@ public abstract class Drivetrain extends SubsystemBase {
 
     /**
      * Although it is not compiler-enforced, this 
-     * should return _constant_ constants.
-     * DO NOT HIJACK!
+     * should return <b>constant</b> constants.
      */
     public abstract DrivetrainConstants getConstants();
 
@@ -56,7 +55,7 @@ public abstract class Drivetrain extends SubsystemBase {
 
     /**
      * Abstracted constants for driving.
-     * yes they're functions. The other option 
+     * yes they're functions. The other option is
      * publicly available (& thus publicly
      * <i>changeable</i>)
      */

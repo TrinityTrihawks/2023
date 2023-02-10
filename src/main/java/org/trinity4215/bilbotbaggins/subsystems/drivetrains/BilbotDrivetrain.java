@@ -25,10 +25,10 @@ public class BilbotDrivetrain extends Drivetrain {
 
 
     // Initialize Spark Max's
-    private final TalonSRX leftLeader = new TalonSRX(DriveConstants.TALONSRX.kLeftLeaderId);
-    private final TalonSRX leftFollower = new TalonSRX(DriveConstants.TALONSRX.kLeftFollowerId);
-    private final TalonSRX rightLeader = new TalonSRX(DriveConstants.TALONSRX.kRightLeaderId);
-    private final TalonSRX rightFollower = new TalonSRX(DriveConstants.TALONSRX.kRightFollowerId);
+    private final TalonSRX leftLeader = new TalonSRX(DriveConstants.kLeftLeaderId);
+    private final TalonSRX leftFollower = new TalonSRX(DriveConstants.kLeftFollowerId);
+    private final TalonSRX rightLeader = new TalonSRX(DriveConstants.kRightLeaderId);
+    private final TalonSRX rightFollower = new TalonSRX(DriveConstants.kRightFollowerId);
 
     // TODO: we have talon breakouts for the encs
     // private final Encoder leftEncoder = 
@@ -105,11 +105,9 @@ public class BilbotDrivetrain extends Drivetrain {
 
     @Override
     public void periodic() {
-        // This method will be called once per scheduler run
-        var gyroAngle = new Rotation2d(getGyroAngle());
-
-        // Update the robot pose periodically with encoder values and gyro angle
+        
         // TODO: This line requires you to set encoder.setPositionConversionFactor to a value that will cause the encoder to return its position in meters (if using spark encoders)
+        // TODO: Odometry?
         // More information:
         // https://github.com/wpilibsuite/allwpilib/tree/main/wpilibjExamples/src/main/java/edu/wpi/first/wpilibj/examples/differentialdrivebot
         // https://docs.wpilib.org/en/stable/docs/software/kinematics-and-odometry/differential-drive-odometry.html
@@ -117,32 +115,9 @@ public class BilbotDrivetrain extends Drivetrain {
     }
 
 
-    private static final class DriveConstants implements DrivetrainConstants {
-        
-        // TODO: Make these constants the actual CAN IDs of the components
-        private enum MotorTypeInstalled {
-            REV_SPARK_MAX,
-            CTRE_TALON_SRX
-        }
+    private static final class DriveConstants implements DrivetrainConstants {    
     
-        
-    
-        public class TALONSRX {
-            public static final int kLeftLeaderId = 12; 
-            public static final int kLeftFollowerId = 14;
-            public static final int kRightLeaderId = 11;
-            public static final int kRightFollowerId = 13;
-        }
-        public class SPARKMAX {
-            // TODO: set these ids (if we end up needing them)
-            public static final int kLeftLeaderId = 0;
-            public static final int kLeftFollowerId = 0;
-            public static final int kRightLeaderId = 0;
-            public static final int kRightFollowerId = 0;
-        }
-    
-    
-        // TODO: Tune these
+        // TODO: Tune this
         public static final int kEncoderCPR = 0;
         public static final double kSlewValue = 3;
     
@@ -154,6 +129,12 @@ public class BilbotDrivetrain extends Drivetrain {
         public static final double kMaxSpeedPercent = 0.2;
     
         public static final double kMinTurnSpeed = 0.2;
+
+
+        public static final int kRightFollowerId = 13;
+        public static final int kRightLeaderId = 11;
+        public static final int kLeftFollowerId = 14;
+        public static final int kLeftLeaderId = 12;
     
 
         @Override
