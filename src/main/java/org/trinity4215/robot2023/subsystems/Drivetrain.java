@@ -156,6 +156,11 @@ public class Drivetrain extends SubsystemBase {
 
         // drive.tankDrive(left, right); // IF REV
     }
+    public void stop() {
+        leftLeader.set(TalonSRXControlMode.PercentOutput, 0);
+        rightLeader.set(TalonSRXControlMode.PercentOutput, 0);
+    }
+    
 
     public void resetGyro() {
         gyro.reset();
@@ -180,12 +185,12 @@ public class Drivetrain extends SubsystemBase {
     public double getGyroX() {
         IMUAxis curAxis = gyro.getYawAxis();
         SmartDashboard.putString("CurrentAxis", curAxis.toString());
-        if (curAxis == IMUAxis.kY) {
+        if (curAxis == IMUAxis.kX) {
             double angle = gyro.getAngle();
             SmartDashboard.putNumber("CurrentAngle", angle);
             return angle;
         } else {
-            axis = IMUAxis.kY;
+            axis = IMUAxis.kX;
             gyro.setYawAxis(axis);
             double angle = gyro.getAngle();
             SmartDashboard.putNumber("CurrentAngle", angle);

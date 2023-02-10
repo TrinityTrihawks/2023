@@ -4,6 +4,10 @@
 
 package org.trinity4215.robot2023.commands;
 
+import javax.swing.ComboBoxEditor;
+
+
+import org.trinity4215.robot2023.CombinedLogging;
 import org.trinity4215.robot2023.Constants.DriveConstants.AutoLevelState;
 import org.trinity4215.robot2023.subsystems.Drivetrain;
 
@@ -15,16 +19,17 @@ public class AutoLevel extends CommandBase {
     /** Creates a new AutoLevel. */
     private Drivetrain drivetrain;
     private AutoLevelState state;
-    private double initialDriveSpeed = 0.4;
-    private double initialClimbThreshold = 18;
-    private double climbSpeed = 0.3;
-    private double endClimbThreshold = 10;
-    private double fallForwardThreshold = 0.0;
-    private double kickbackThreshold = 0.0;
-    private double kickbackSpeed = 0.0;
-    private double pauseTime = 0.0;
-    private boolean endCondition = false;
+    private final double initialClimbThreshold = 18;
+    private final double initialDriveSpeed = 0.4;
+    private final double climbSpeed = 0.3;
+    private final double endClimbThreshold = 10;
+    private final double fallForwardThreshold = 0.0;
+    private final double kickbackThreshold = 0.0;
+    private final double kickbackSpeed = 0.0;
+    private final long pauseTime = 1;
+    private final boolean endCondition = false;
     private double maxDegreesUpY = 0.0;
+    private boolean timer_over = false;
 
     public AutoLevel(Drivetrain drivetrain) {
         this.drivetrain = drivetrain;
@@ -45,24 +50,25 @@ public class AutoLevel extends CommandBase {
     public void execute() {
         // drivetrain.driveDualJoystickPercent(initialDriveSpeed, initialDriveSpeed);
         // System.out.println(initialDriveSpeed);
+
+        double currentAngleY = drivetrain.getGyroY();
+        CombinedLogging.putNumber("CurrentAngley", currentAngleY);
+
         switch (state) {
             case LEVEL_GROUND:
-                System.out.println(drivetrain.getGyroY());
-                System.out.println(drivetrain.getGyroY() > initialClimbThreshold);
-                if (drivetrain.getGyroY() > initialClimbThreshold) {
+                if (currentAngleY > initialClimbThreshold) {
                     state = AutoLevelState.INITIAL_CLIMB;
                     SmartDashboard.putString("AutoLevelState", state.toString());
                     drivetrain.driveDualJoystickPercent(0, 0);
-                    System.out.println("-----------");
                 } else {
                     drivetrain.driveDualJoystickPercent(initialDriveSpeed, initialDriveSpeed);
                 }
                 break;
             case INITIAL_CLIMB:
-                System.out.println(drivetrain.getGyroY() + endClimbThreshold);
-                System.out.println(maxDegreesUpY);
-                System.out.println(drivetrain.getGyroY() + endClimbThreshold < maxDegreesUpY);
-                if (drivetrain.getGyroY() + endClimbThreshold < maxDegreesUpY) {
+                CombinedLogging.putNumber("currentangley + endckibthreshold", Math.abs(currentAngleY) + endClimbThreshold);
+                CombinedLogging.putNumber("MaxDegreesUpY", maxDegreesUpY);
+                CombinedLogging.putBoolean("threshold", Math.abs(currentAngleY) + endClimbThreshold < maxDegreesUpY);
+                if (Math.abs(currentAngleY) + endClimbThreshold < maxDegreesUpY) {
                     state = AutoLevelState.FALL_FORWARD;
                     SmartDashboard.putString("AutoLevelState", state.toString());
                     drivetrain.driveDualJoystickPercent(0, 0);
@@ -71,20 +77,25 @@ public class AutoLevel extends CommandBase {
                 }
                 break;
             case FALL_FORWARD:
-                if (endCondition) {
+                if (timer_over) {
                     state = AutoLevelState.KICKBACK;
-                    SmartDashboard.putString("AutoLevelState", state.toString());
+                    CombinedLogging.putString("AutoLevelState", state.toString());
                     drivetrain.driveDualJoystickPercent(0, 0);
                 } else {
-
+                    //wait
                 }
                 break;
             case KICKBACK:
-                if (endCondition) {
+                if (Math.abs(currentAngleY) < 2) {
                     state = AutoLevelState.PAUSE;
                     SmartDashboard.putString("AutoLevelState", state.toString());
                     drivetrain.driveDualJoystickPercent(0, 0);
                 } else {
+                    if (currentAngleY > 0) {
+                        drivetrain.driveDualJoystickPercent(kickbackSpeed, kickbackSpeed);
+                    } else {
+
+                    }
 
                 }
                 break;
@@ -110,8 +121,8 @@ public class AutoLevel extends CommandBase {
                 drivetrain.driveDualJoystickPercent(0, 0);
                 break;
         }
-        if (maxDegreesUpY < drivetrain.getGyroY()) {
-            maxDegreesUpY = drivetrain.getGyroY();
+        if (maxDegreesUpY < currentAngleY) {
+            maxDegreesUpY = currentAngleY;
         }
 
     }
@@ -125,7 +136,7 @@ public class AutoLevel extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        //return state == AutoLevelState.END;
+        // return state == AutoLevelState.END;
         return false;
     }
 }
