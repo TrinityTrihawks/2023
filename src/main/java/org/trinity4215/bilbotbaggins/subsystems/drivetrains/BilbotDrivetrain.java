@@ -6,36 +6,45 @@ package org.trinity4215.bilbotbaggins.subsystems.drivetrains;
 
 import org.trinity4215.bilbotbaggins.subsystems.Drivetrain;
 
-import com.ctre.phoenix.motorcontrol.InvertType;
-import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxRelativeEncoder;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+
 
 public class BilbotDrivetrain extends Drivetrain {
     private static BilbotDrivetrain subsystemInst = null;
     private static DrivetrainConstants constants = null;
-    
 
 
-    // TODO: Figure out robot pose and how it integrates with vision tracking -- especially PhotonVision
+    // TODO: Figure out robot pose and how it integrates with vision tracking --
+    // especially PhotonVision
     private Pose2d robotPose = null;
 
+    private final CANSparkMax leftLeader = new CANSparkMax(DriveConstants.kLeftLeaderId, 
+            MotorType.kBrushless);
+    private final CANSparkMax leftFollower = new CANSparkMax(DriveConstants.kLeftFollowerId,
+            MotorType.kBrushless);
+    private final CANSparkMax rightLeader = new CANSparkMax(DriveConstants.kRightLeaderId,
+            MotorType.kBrushless);
+    private final CANSparkMax rightFollower = new CANSparkMax(DriveConstants.kRightFollowerId,
+            MotorType.kBrushless);
 
-    // Initialize Spark Max's
-    private final TalonSRX leftLeader = new TalonSRX(DriveConstants.kLeftLeaderId);
-    private final TalonSRX leftFollower = new TalonSRX(DriveConstants.kLeftFollowerId);
-    private final TalonSRX rightLeader = new TalonSRX(DriveConstants.kRightLeaderId);
-    private final TalonSRX rightFollower = new TalonSRX(DriveConstants.kRightFollowerId);
+    private final MotorControllerGroup leftMotorControllerGroup = new MotorControllerGroup(leftLeader, leftFollower);
+    private final MotorControllerGroup rightMotorControllerGroup = new MotorControllerGroup(rightLeader, rightFollower);
 
-    // TODO: we have talon breakouts for the encs
-    // private final Encoder leftEncoder = 
-    //     new Encoder(DriveConstants.kLeftEncoderChannelA, DriveConstants.kLeftEncoderChannelB);
-    // private final Encoder rightEncoder = 
-    //     new Encoder(DriveConstants.kRightEncoderChannelA, DriveConstants.kRightEncoderChannelB);
-    
+    // Initialize Spark Max encoders
+    private final RelativeEncoder leftEncoder = leftLeader.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor,
+            DriveConstants.kEncoderCPR); // IF REV
+    private final RelativeEncoder rightEncoder = rightLeader.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor,
+            DriveConstants.kEncoderCPR);
     
     
     // Initialize slew rate limiters
@@ -43,22 +52,24 @@ public class BilbotDrivetrain extends Drivetrain {
     private SlewRateLimiter leftLimiter = new SlewRateLimiter(DriveConstants.kSlewValue);
 
 
+    private final DifferentialDrive drive = new DifferentialDrive(leftMotorControllerGroup, rightMotorControllerGroup);
+
+    // TODO: This line requires you to set encoder.setPositionConversionFactor to a
+    // value that will cause the encoder to return its position in meters
+    private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(new Rotation2d(getGyroZ()),
+            leftEncoder.getPosition(), rightEncoder.getPosition());
+
+
     public BilbotDrivetrain() {
 
-        // ctre setup
-        leftLeader.configFactoryDefault();
-        leftFollower.configFactoryDefault();
-        rightLeader.configFactoryDefault();
-        rightFollower.configFactoryDefault();
-
-        leftFollower.follow(leftLeader);
-        rightFollower.follow(rightLeader);
+        leftEncoder.setPositionConversionFactor(DriveConstants.kPositionConversionFactor);
+        rightEncoder.setPositionConversionFactor(DriveConstants.kPositionConversionFactor);
 
         leftLeader.setInverted(DriveConstants.kLeftMotorsInverted);
-        leftFollower.setInverted(InvertType.FollowMaster);
+        leftFollower.setInverted(DriveConstants.kLeftMotorsInverted);
 
         rightLeader.setInverted(DriveConstants.kRightMotorsInverted);
-        rightFollower.setInverted(InvertType.FollowMaster);
+        rightFollower.setInverted(DriveConstants.kRightMotorsInverted);
 
     }
 
@@ -75,16 +86,10 @@ public class BilbotDrivetrain extends Drivetrain {
 
         setConstants();
 
-        leftLeader.set(
-            TalonSRXControlMode.PercentOutput, 
-            leftLimiter.calculate(left)
-        );
-        rightLeader.set(
-            TalonSRXControlMode.PercentOutput, 
+        drive.tankDrive( 
+            leftLimiter.calculate(left),
             rightLimiter.calculate(right)
         );
-
-
     }
 
 
@@ -105,15 +110,19 @@ public class BilbotDrivetrain extends Drivetrain {
 
     @Override
     public void periodic() {
-        
-        // TODO: This line requires you to set encoder.setPositionConversionFactor to a value that will cause the encoder to return its position in meters (if using spark encoders)
-        // TODO: Odometry?
+        // This method will be called once per scheduler run
+        var gyro_angle = new Rotation2d(getGyroZ());
+
+        // Update the robot pose periodically with encoder values and gyro angle
+        // TODO: This line requires you to set encoder.setPositionConversionFactor to a
+        // value that will cause the encoder to return its position in meters (if using
+        // spark encoders)
         // More information:
         // https://github.com/wpilibsuite/allwpilib/tree/main/wpilibjExamples/src/main/java/edu/wpi/first/wpilibj/examples/differentialdrivebot
         // https://docs.wpilib.org/en/stable/docs/software/kinematics-and-odometry/differential-drive-odometry.html
-        // robotPose = odometry.update(gyro_angle, leftEncoder.getDistance(), rightEncoder.getDistance());
+        robotPose = odometry.update(gyro_angle, leftEncoder.getPosition(),
+                rightEncoder.getPosition());
     }
-
 
     private static final class DriveConstants implements DrivetrainConstants {    
     
@@ -121,7 +130,6 @@ public class BilbotDrivetrain extends Drivetrain {
         public static final int kEncoderCPR = 0;
         public static final double kSlewValue = 3;
     
-        public static final boolean kSquareJoystickValues = true;
         public static final boolean kLeftMotorsInverted = false;
         public static final boolean kRightMotorsInverted = true;
     
@@ -136,6 +144,9 @@ public class BilbotDrivetrain extends Drivetrain {
         public static final int kLeftFollowerId = 14;
         public static final int kLeftLeaderId = 12;
     
+
+        public static final double kPositionConversionFactor = 0;
+
 
         @Override
         public double kMaxSpeedPercent() {

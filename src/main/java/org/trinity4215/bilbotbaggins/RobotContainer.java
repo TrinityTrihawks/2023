@@ -5,10 +5,12 @@
 package org.trinity4215.bilbotbaggins;
 
 import org.trinity4215.bilbotbaggins.Constants.OperatorConstants;
+import org.trinity4215.bilbotbaggins.commands.Autos;
 import org.trinity4215.bilbotbaggins.commands.DriveJoystick;
-import org.trinity4215.bilbotbaggins.commands.TurnDegrees;
 import org.trinity4215.bilbotbaggins.subsystems.Drivetrain;
+import org.trinity4215.bilbotbaggins.subsystems.Limelight;
 
+import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -26,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
     // ==================== SUBSYSTEMS ======================
     private final Drivetrain drivetrain = BotSwitcher.getDrivetrain();
+    private final Limelight limelight = Limelight.getInstance();
 
     // ==================== CONTROLLERS =====================
     private final CommandXboxController gollum = new CommandXboxController(
@@ -50,6 +53,7 @@ public class RobotContainer {
     public RobotContainer() {
         configureBindings();
         configureDefaultCommands();
+        PortForwarder.add(5800, "10.42.15.11", 5800);
     }
 
     private void configureDefaultCommands() {
@@ -96,7 +100,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return  new TurnDegrees(180, drivetrain);
+        return Autos.doA180(drivetrain);
     }
 
 }

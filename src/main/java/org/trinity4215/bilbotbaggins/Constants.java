@@ -20,7 +20,7 @@ package org.trinity4215.bilbotbaggins;
 public final class Constants {
 
 
-    public static class OperatorConstants {
+    public static final class OperatorConstants {
         public static enum DriveType {
             SINGLE,
             DUAL
@@ -29,6 +29,15 @@ public final class Constants {
         public static final int kLeftStickPort = 1;
         public static final int kRightStickPort = 0;
         public static final DriveType kDriveType = DriveType.DUAL;
+    }
+
+
+    public static final class VisionConstants {
+
+        public static final double kOneMeterArea = 2.24;
+        // TODO: set area deadzone
+        public static final double kAreaDeadZone = 0;
+
     }
 
       

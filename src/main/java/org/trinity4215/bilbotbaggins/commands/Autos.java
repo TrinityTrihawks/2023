@@ -4,16 +4,22 @@
 
 package org.trinity4215.bilbotbaggins.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Commands;
+import org.trinity4215.bilbotbaggins.subsystems.Drivetrain;
+
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public final class Autos {
-  /** Example static factory for an autonomous command. */
-  public static CommandBase exampleAuto(/*ExampleSubsystem subsystem*/) {
-    return Commands.sequence(/*subsystem.exampleMethodCommand(), new ExampleCommand(subsystem)*/);
-  }
+    
+    public static Command level(Drivetrain drive) {
+        return new AutoLevel(drive);
+    }
 
-  private Autos() {
-    throw new UnsupportedOperationException("This is a utility class!");
-  }
+    public static Command doA180(Drivetrain drive) {
+        return new TurnDegrees(180, drive).andThen(new WaitCommand(1));
+    }
+
+    private Autos() {
+        throw new UnsupportedOperationException("This is a utility class!");
+    }
 }
