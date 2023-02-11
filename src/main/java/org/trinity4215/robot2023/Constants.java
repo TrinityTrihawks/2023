@@ -41,8 +41,8 @@ public final class Constants {
             INITIAL_CLIMB,
             FALL_FORWARD,
             KICKBACK,
-            PAUSE,
-            ADJUST,
+            OVERCORRECTED,
+            FINAL_ADJUST,
             END
         }
 
@@ -94,5 +94,12 @@ public final class Constants {
         }
 
         public static double kDeadzone;
+    }
+
+    public static class GripperConstants {
+        public static final int kSqeezeSolenoidPort0 = 0;
+        public static final int kSqeezeSolenoidPort1 = 0;
+        public static final int kRaiseSolenoidPort0 = 0;
+        public static final int kRaiseSolenoidPort1 = 0;
     }
 }
