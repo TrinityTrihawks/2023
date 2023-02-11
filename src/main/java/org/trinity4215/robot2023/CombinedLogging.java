@@ -20,7 +20,7 @@ public class CombinedLogging {
 
     private static final LoggingLevel loggingLevel = LoggingLevel.ALL;
     private static final List<String> priorityKeys = Arrays.asList(
-            "driveType" // Add priority keys here to ensure they are always printed
+            "driveType" // Add priority keys here
     );
 
     private static void print(String key, Object value) {

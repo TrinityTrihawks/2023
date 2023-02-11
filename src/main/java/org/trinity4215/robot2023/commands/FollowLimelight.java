@@ -86,14 +86,14 @@ public class FollowLimelight extends CommandBase {
 
       SmartDashboard.putNumber("OutputL", finalLeft);
       SmartDashboard.putNumber("OutputR", finalRight);
-      drivetrain.driveDualJoystickPercent(finalLeft, finalRight);
+      drivetrain.driveTankPercent(finalLeft, finalRight);
 
     } else {
       SmartDashboard.putString("Targets", "");
       SmartDashboard.putString("Best Target", "");
       SmartDashboard.putNumber("Best Target Yaw", 0);
       SmartDashboard.putNumber("Best Target Pitch", 0);
-      drivetrain.driveDualJoystickPercent(0, 0);
+      drivetrain.driveTankPercent(0, 0);
     }
 
     // System.out.println(r);

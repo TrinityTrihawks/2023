@@ -46,11 +46,11 @@ public class DriveJoystick extends CommandBase {
     @Override
     public void execute() {
         if (drivetrain.getDriveType() == DriveType.DUAL) {
-            drivetrain.driveDualJoystickPercent(
+            drivetrain.driveTankPercent(
                 leftYSupplier.getAsDouble()* kStaticJoystickScalar,
                 rightYSupplier.getAsDouble()* kStaticJoystickScalar);
         } else {
-            drivetrain.driveSingleJoystickPercent(
+            drivetrain.driveArcadePercent(
                 rightYSupplier.getAsDouble(), 
                 rightTwistSupplier.getAsDouble());
         }

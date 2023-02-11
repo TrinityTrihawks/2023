@@ -85,11 +85,11 @@ public class Drivetrain extends SubsystemBase {
         return subsystemInst; // Ensures that only one Drivetrain instance exists at once
     }
 
-    public void driveSingleJoystickPercent(double speed, double twist) {
+    public void driveArcadePercent(double speed, double twist) {
         drive.arcadeDrive(speed, twist, DriveConstants.kSquareJoystickValues);
     }
 
-    public void driveDualJoystickPercent(double left, double right) {
+    public void driveTankPercent(double left, double right) {
         drive.tankDrive(left, right);
     }
 

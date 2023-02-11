@@ -49,7 +49,7 @@ public class TurnDegrees extends CommandBase {
             * (1 - DriveConstants.kMinTurnSpeed) + DriveConstants.kMinTurnSpeed;
             
         SmartDashboard.putNumber("output", output);
-        drive.driveDualJoystickPercent(output, -output);
+        drive.driveTankPercent(output, -output);
     }
 
     // Called once the command ends or is interrupted.

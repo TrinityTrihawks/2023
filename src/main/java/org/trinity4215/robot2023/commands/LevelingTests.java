@@ -25,7 +25,7 @@ public class LevelingTests extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivetrain.driveDualJoystickPercent(0.4, 0.4);
+    drivetrain.driveTankPercent(0.4, 0.4);
   }
 
   // Called once the command ends or is interrupted.
