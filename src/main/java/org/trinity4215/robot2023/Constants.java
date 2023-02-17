@@ -4,10 +4,6 @@
 
 package org.trinity4215.robot2023;
 
-import com.ctre.phoenix.motorcontrol.InvertType;
-
-import edu.wpi.first.wpilibj.DigitalSource;
-
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -65,9 +61,6 @@ public final class Constants {
         public static final int kEncoderCPR = 0;
         public static final double kSlewValue = 0.1;
 
-        
-
-        public static final boolean kSquareJoystickValues = true;
         public static final boolean kLeftMotorsInverted = false;
         public static final boolean kRightMotorsInverted = true;
 
@@ -97,8 +90,11 @@ public final class Constants {
     }
 
     public static class GripperConstants {
-        public static final int kSqeezeSolenoidPort0 = 0;
-        public static final int kSqeezeSolenoidPort1 = 0;
+        public static final int kSqueezeSolenoidAPort0 = 16;
+        public static final int kSqeezeSolenoidAPort1 = 17;
+        public static final int kSqueezeSolenoidBPort0 = 12;
+        public static final int kSqueezeSolenoidBPort1 = 13;
+
         public static final int kRaiseSolenoidPort0 = 14;
         public static final int kRaiseSolenoidPort1 = 15;
     }

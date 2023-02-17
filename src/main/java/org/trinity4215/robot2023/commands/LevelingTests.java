@@ -4,7 +4,6 @@
 
 package org.trinity4215.robot2023.commands;
 
-import org.trinity4215.robot2023.Constants.DriveConstants.DriveType;
 import org.trinity4215.robot2023.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;

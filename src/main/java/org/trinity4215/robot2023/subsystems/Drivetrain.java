@@ -84,11 +84,11 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void driveArcadePercent(double speed, double twist) {
-        drive.arcadeDrive(speed, twist, DriveConstants.kSquareJoystickValues);
+        drive.arcadeDrive(speed, twist);
     }
 
     public void driveTankPercent(double left, double right) {
-        drive.tankDrive(left, right);
+        drive.tankDrive(leftLimiter.calculate(left), rightLimiter.calculate(right));
     }
 
     public void stop() {

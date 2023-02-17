@@ -29,8 +29,8 @@ public class DriveJoystick extends CommandBase {
                          DoubleSupplier rightTwist) {
                             
         this.drivetrain = drivetrain;
-        leftYSupplier = leftY;
-        rightYSupplier = rightY;
+        leftYSupplier = () -> Math.pow(leftY.getAsDouble(), 2);
+        rightYSupplier = () -> Math.pow(rightY.getAsDouble(), 2);
         rightTwistSupplier = rightTwist;
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(drivetrain);

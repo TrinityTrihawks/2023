@@ -4,7 +4,6 @@
 
 package org.trinity4215.robot2023.subsystems;
 
-import org.trinity4215.robot2023.Constants;
 import org.trinity4215.robot2023.Constants.GripperConstants;
 
 import edu.wpi.first.wpilibj.Compressor;
@@ -16,8 +15,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Gripper extends SubsystemBase {
     private static Gripper subsystemInst = null;
 
-    private DoubleSolenoid squeeze = new DoubleSolenoid(PneumaticsModuleType.REVPH,
-            GripperConstants.kSqeezeSolenoidPort0, GripperConstants.kSqeezeSolenoidPort1);
+    private DoubleSolenoid squeezeA = new DoubleSolenoid(PneumaticsModuleType.REVPH,
+            GripperConstants.kSqueezeSolenoidAPort0, GripperConstants.kSqeezeSolenoidAPort1);
+    private DoubleSolenoid squeezeB = new DoubleSolenoid(PneumaticsModuleType.REVPH,
+            GripperConstants.kSqueezeSolenoidBPort0, GripperConstants.kSqueezeSolenoidBPort1);
+
     private DoubleSolenoid raise = new DoubleSolenoid(PneumaticsModuleType.REVPH, GripperConstants.kRaiseSolenoidPort0,
             GripperConstants.kRaiseSolenoidPort1);
     private Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
@@ -43,6 +45,17 @@ public class Gripper extends SubsystemBase {
     }
     public void off() {
         raise.set(Value.kOff);
+        squeezeA.set(Value.kOff);
+        squeezeB.set(Value.kOff);
+    }
+
+    public void grab() {
+        squeezeA.set(Value.kForward);
+        squeezeB.set(Value.kForward);
+    }
+    public void drop() {
+        squeezeA.set(Value.kReverse);
+        squeezeB.set(Value.kReverse);
     }
 
     @Override
