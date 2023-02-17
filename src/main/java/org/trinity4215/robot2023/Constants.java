@@ -18,19 +18,16 @@ package org.trinity4215.robot2023;
  */
 public final class Constants {
     public static class OperatorConstants {
-        public static final int kXboxPort = 2;
-        public static final int kLeftStickPort = 1;
-        public static final int kRightStickPort = 0;
+        public static final int kGollumSubsysPort = 2;
+        public static final int kSamwiseLeftStickPort = 1;
+        public static final int kFrodoRightStickPort = 0;
+
+        public static final double kSlowWheelSpeedPercent = 0.2;
+
     }
 
     public static class DriveConstants {
 
-        // TODO: Make these constants the actual CAN IDs of the components
-
-        public static enum MotorTypeInstalled {
-            REV_SPARK_MAX,
-            CTRE_TALON_SRX
-        }
 
         public static enum AutoLevelState {
             LEVEL_GROUND,
