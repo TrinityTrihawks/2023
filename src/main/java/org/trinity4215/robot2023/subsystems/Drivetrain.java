@@ -26,8 +26,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Drivetrain extends SubsystemBase {
     private static Drivetrain subsystemInst = null;
 
-    // TODO: Figure out robot pose and how it integrates with vision tracking --
-    // especially PhotonVision
     private Pose2d robotPose = null;
 
     private final CANSparkMax leftLeader = new CANSparkMax(DriveConstants.SPARKMAX.kLeftLeaderId, MotorType.kBrushless);
@@ -99,6 +97,10 @@ public class Drivetrain extends SubsystemBase {
 
     public void resetGyro() {
         gyro.reset();
+    }
+
+    public void driveOne(double speed) {
+        leftLeader.set(speed);
     }
 
     public double getGyroY() {

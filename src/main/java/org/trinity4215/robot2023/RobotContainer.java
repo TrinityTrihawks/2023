@@ -4,6 +4,7 @@
 
 package org.trinity4215.robot2023;
 
+import javax.swing.GroupLayout.Group;
 import javax.xml.crypto.KeySelector.Purpose;
 
 import org.trinity4215.robot2023.Constants.OperatorConstants;
@@ -14,14 +15,17 @@ import org.trinity4215.robot2023.commands.FollowLimelight;
 import org.trinity4215.robot2023.commands.LevelingTests;
 import org.trinity4215.robot2023.commands.TurnDegrees;
 import org.trinity4215.robot2023.subsystems.Drivetrain;
+import org.trinity4215.robot2023.subsystems.Gripper;
 import org.trinity4215.robot2023.subsystems.Limelight;
 
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -40,6 +44,7 @@ public class RobotContainer {
     // ==================== SUBSYSTEMS ======================
     private final Drivetrain drivetrain = Drivetrain.getInstance();
     private final Limelight limelight = Limelight.getInstance();
+    private final Gripper gripper = Gripper.getInstance();
 
     // ==================== CONTROLLERS =====================
     private final CommandXboxController gollum_subsys = new CommandXboxController(
@@ -92,6 +97,24 @@ public class RobotContainer {
         // pressed,
         // cancelling on release.
         // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+        gollum_subsys.a().whileTrue(new StartEndCommand(
+                () -> {
+                    gripper.raise();
+                },
+                () -> {
+                    gripper.lower();
+                },
+                gripper));
+        gollum_subsys.b().whileTrue(new InstantCommand(() -> {
+            gripper.off();
+        }, gripper));
+        gollum_subsys.x().whileTrue(new StartEndCommand(() -> {
+            while (true) {
+                drivetrain.driveTankPercent(0.4, 0.4);
+            }
+        }, () -> {
+            drivetrain.driveTankPercent(0, 0);
+        }, drivetrain));
     }
 
     /**
@@ -102,24 +125,34 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         // An example command will be run in autonomous
         // return new TurnDegrees(180, drivetrain);
-        return new AutoLevel(drivetrain);
+        // return new AutoLevel(drivetrain);
+        return new StartEndCommand(
+                () -> {
+                    gripper.raise();
+                },
+                () -> {
+                    gripper.lower();
+                }, gripper);
         // return new SequentialCommandGroup(
-        //         new RepeatCommand(
-        //                 new InstantCommand(() -> {
-        //                     SmartDashboard.putNumber("GyroX", drivetrain.getGyroX());
-        //                     SmartDashboard.putString("CurrentGyroAxis", drivetrain.getCurrentGyroAxis().toString());
-        //                 }, drivetrain)).withTimeout(10),
-        //         new WaitCommand(1),
-        //         new RepeatCommand(
-        //                 new InstantCommand(() -> {
-        //                     SmartDashboard.putNumber("GyroY", drivetrain.getGyroY());
-        //                     SmartDashboard.putString("CurrentGyroAxis", drivetrain.getCurrentGyroAxis().toString());
-        //                 }, drivetrain)).withTimeout(10),
-        //         new WaitCommand(1),
-        //         new RepeatCommand(
-        //                 new InstantCommand(() -> {
-        //                     SmartDashboard.putNumber("GyroZ", drivetrain.getGyroZ());
-        //                     SmartDashboard.putString("CurrentGyroAxis", drivetrain.getCurrentGyroAxis().toString());
-        //                 }, drivetrain)).withTimeout(10));
+        // new RepeatCommand(
+        // new InstantCommand(() -> {
+        // SmartDashboard.putNumber("GyroX", drivetrain.getGyroX());
+        // SmartDashboard.putString("CurrentGyroAxis",
+        // drivetrain.getCurrentGyroAxis().toString());
+        // }, drivetrain)).withTimeout(10),
+        // new WaitCommand(1),
+        // new RepeatCommand(
+        // new InstantCommand(() -> {
+        // SmartDashboard.putNumber("GyroY", drivetrain.getGyroY());
+        // SmartDashboard.putString("CurrentGyroAxis",
+        // drivetrain.getCurrentGyroAxis().toString());
+        // }, drivetrain)).withTimeout(10),
+        // new WaitCommand(1),
+        // new RepeatCommand(
+        // new InstantCommand(() -> {
+        // SmartDashboard.putNumber("GyroZ", drivetrain.getGyroZ());
+        // SmartDashboard.putString("CurrentGyroAxis",
+        // drivetrain.getCurrentGyroAxis().toString());
+        // }, drivetrain)).withTimeout(10));
     }
 }
