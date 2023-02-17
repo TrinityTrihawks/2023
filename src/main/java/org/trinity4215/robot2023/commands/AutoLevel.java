@@ -4,14 +4,11 @@
 
 package org.trinity4215.robot2023.commands;
 
-import javax.swing.ComboBoxEditor;
-
 import org.trinity4215.robot2023.CombinedLogging;
 import org.trinity4215.robot2023.Constants.DriveConstants.AutoLevelState;
 import org.trinity4215.robot2023.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -20,8 +17,8 @@ public class AutoLevel extends CommandBase {
     private Drivetrain drivetrain;
     private AutoLevelState state;
     private final double initialClimbThreshold = 18;
-    private final double initialDriveSpeed = 0.4;
-    private final double climbSpeed = 0.3;
+    private final double initialDriveSpeed = -0.4;
+    private final double climbSpeed = -0.3;
     private final double endClimbThreshold = 10;
     private final double fallForwardThreshold = 0.0;
     private final double kickbackThreshold = 0.0;
@@ -33,7 +30,6 @@ public class AutoLevel extends CommandBase {
 
     public AutoLevel(Drivetrain drivetrain) {
         this.drivetrain = drivetrain;
-        // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(drivetrain);
     }
 
@@ -51,7 +47,7 @@ public class AutoLevel extends CommandBase {
         // drivetrain.driveDualJoystickPercent(initialDriveSpeed, initialDriveSpeed);
         // System.out.println(initialDriveSpeed);
 
-        double currentAngleY = drivetrain.getGyroY();
+        double currentAngleY = -drivetrain.getGyroY();
         CombinedLogging.putNumber("CurrentAngley", currentAngleY);
 
         switch (state) {

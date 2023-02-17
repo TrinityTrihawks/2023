@@ -53,10 +53,8 @@ public final class Constants {
         }
 
         public static final int kPigeonId = 0;
-
-        // TODO: Tune these
         public static final int kEncoderCPR = 0;
-        public static final double kSlewValue = 0.1;
+        public static final double kSlewValue = 5;
 
         public static final boolean kLeftMotorsInverted = false;
         public static final boolean kRightMotorsInverted = true;
