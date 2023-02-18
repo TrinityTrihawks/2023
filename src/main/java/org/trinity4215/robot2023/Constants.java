@@ -97,9 +97,9 @@ public final class Constants {
     }
 
     public static class GripperConstants {
-        public static final int kSqeezeSolenoidPort0 = 0;
-        public static final int kSqeezeSolenoidPort1 = 0;
-        public static final int kRaiseSolenoidPort0 = 14;
-        public static final int kRaiseSolenoidPort1 = 15;
+        public static final int kSqeezeSolenoidPort0 = 0; //14;
+        public static final int kSqeezeSolenoidPort1 = 1; //15;
+        public static final int kRaiseSolenoidPort0 = 2;
+        public static final int kRaiseSolenoidPort1 = 3;
     }
 }

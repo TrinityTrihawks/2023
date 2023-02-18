@@ -88,7 +88,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void driveTankPercent(double left, double right) {
-        drive.tankDrive(left, right);
+        drive.tankDrive(-left, right);
     }
 
     public void stop() {

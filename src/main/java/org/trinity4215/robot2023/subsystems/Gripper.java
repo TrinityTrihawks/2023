@@ -10,21 +10,21 @@ import org.trinity4215.robot2023.Constants.GripperConstants;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Gripper extends SubsystemBase {
     private static Gripper subsystemInst = null;
 
-    private DoubleSolenoid squeeze = new DoubleSolenoid(PneumaticsModuleType.REVPH,
+    private DoubleSolenoid squeeze = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
             GripperConstants.kSqeezeSolenoidPort0, GripperConstants.kSqeezeSolenoidPort1);
-    private DoubleSolenoid raise = new DoubleSolenoid(PneumaticsModuleType.REVPH, GripperConstants.kRaiseSolenoidPort0,
-            GripperConstants.kRaiseSolenoidPort1);
-    private Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
+    private DoubleSolenoid raise = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, GripperConstants.kRaiseSolenoidPort0, GripperConstants.kRaiseSolenoidPort1);
+    // private Compressor compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
     /** Creates a new Gripper. */
     public Gripper() {
-        compressor.enableDigital();
+        // compressor.enableDigital();
     }
 
     public static Gripper getInstance() {
@@ -41,8 +41,17 @@ public class Gripper extends SubsystemBase {
     public void lower() {
         raise.set(Value.kReverse);
     }
-    public void off() {
+    public void raise_off() {
         raise.set(Value.kOff);
+    }
+    public void close() {
+        squeeze.set(Value.kForward);
+    }
+    public void open() {
+        squeeze.set(Value.kReverse);
+    }
+    public void grip_off() {
+        squeeze.set(Value.kOff);
     }
 
     @Override

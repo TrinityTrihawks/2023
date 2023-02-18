@@ -99,22 +99,20 @@ public class RobotContainer {
         // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
         gollum_subsys.a().whileTrue(new StartEndCommand(
                 () -> {
-                    gripper.raise();
+                    gripper.open();
                 },
                 () -> {
-                    gripper.lower();
+                    gripper.close();
                 },
                 gripper));
         gollum_subsys.b().whileTrue(new InstantCommand(() -> {
-            gripper.off();
+            gripper.grip_off();
         }, gripper));
-        gollum_subsys.x().whileTrue(new StartEndCommand(() -> {
-            while (true) {
-                drivetrain.driveTankPercent(0.4, 0.4);
-            }
+        gollum_subsys.y().whileTrue(new StartEndCommand(() -> {
+            gripper.raise();
         }, () -> {
-            drivetrain.driveTankPercent(0, 0);
-        }, drivetrain));
+            gripper.lower();
+        }, gripper));
     }
 
     /**
