@@ -4,29 +4,20 @@
 
 package org.trinity4215.robot2023;
 
-import javax.swing.GroupLayout.Group;
-import javax.xml.crypto.KeySelector.Purpose;
 
-import org.trinity4215.robot2023.Constants.OperatorConstants;
 import org.trinity4215.robot2023.Constants.DriveConstants.DriveType;
-import org.trinity4215.robot2023.commands.AutoLevel;
+import org.trinity4215.robot2023.Constants.OperatorConstants;
+import org.trinity4215.robot2023.commands.Autos;
 import org.trinity4215.robot2023.commands.DriveJoystick;
-import org.trinity4215.robot2023.commands.FollowLimelight;
-import org.trinity4215.robot2023.commands.LevelingTests;
-import org.trinity4215.robot2023.commands.TurnDegrees;
 import org.trinity4215.robot2023.subsystems.Drivetrain;
 import org.trinity4215.robot2023.subsystems.Gripper;
 import org.trinity4215.robot2023.subsystems.Limelight;
 
 import edu.wpi.first.net.PortForwarder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -48,10 +39,10 @@ public class RobotContainer {
 
     // ==================== CONTROLLERS =====================
     private final CommandXboxController gollum_subsys = new CommandXboxController(
-            OperatorConstants.kXboxPort);
+            OperatorConstants.kGollumSubsysPort);
 
-    private final CommandJoystick samwiseGamgee_left = new CommandJoystick(OperatorConstants.kLeftStickPort);
-    private final CommandJoystick frodoBaggins_right = new CommandJoystick(OperatorConstants.kRightStickPort);
+    private final CommandJoystick samwiseGamgee_left = new CommandJoystick(OperatorConstants.kSamwiseLeftStickPort);
+    private final CommandJoystick frodoBaggins_right = new CommandJoystick(OperatorConstants.kFrodoRightStickPort);
 
     // ==================== COMMANDS ========================
     private final DriveJoystick defaultDrive = new DriveJoystick(
@@ -89,30 +80,155 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-        // new Trigger(exampleSubsystem::exampleCondition)
-        // .onTrue(new ExampleCommand(exampleSubsystem));
 
-        // Schedule `exampleMethodCommand` when the Xbox controller's B button is
-        // pressed,
-        // cancelling on release.
-        // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-        gollum_subsys.a().whileTrue(new StartEndCommand(
+        configFrodo();
+        configGollum();
+    }
+
+    private void configFrodo() {
+        frodoBaggins_right.povUp().debounce(0.25).whileTrue(
+            new RepeatCommand(
+                new InstantCommand(
+                    () -> drivetrain.driveArcadePercent(OperatorConstants.kSlowWheelSpeedPercent, 0),
+                    drivetrain
+                )
+            ).andThen(
+                new InstantCommand(
+                    () -> drivetrain.stop(),
+                    drivetrain
+                )
+            )
+        );
+
+        frodoBaggins_right.povDown().debounce(0.25).whileTrue(
+            new RepeatCommand(
+                new InstantCommand(
+                    () -> drivetrain.driveArcadePercent(-OperatorConstants.kSlowWheelSpeedPercent, 0),
+                    drivetrain
+                )
+            ).andThen(
+                new InstantCommand(
+                    () -> drivetrain.stop(),
+                    drivetrain
+                )
+            )
+        );
+
+        frodoBaggins_right.povLeft().debounce(0.25).whileTrue(
+            new RepeatCommand(
+                new InstantCommand(
+                    () -> drivetrain.driveArcadePercent(0, OperatorConstants.kSlowWheelSpeedPercent), // ccw is +
+                    drivetrain
+                )
+            ).andThen(
+                new InstantCommand(
+                    () -> drivetrain.stop(),
+                    drivetrain
+                )
+            )
+        );
+
+        frodoBaggins_right.povRight().debounce(0.25).whileTrue(
+            new RepeatCommand(
+                new InstantCommand(
+                    () -> drivetrain.driveArcadePercent(0, -OperatorConstants.kSlowWheelSpeedPercent),
+                    drivetrain
+                )
+            ).andThen(
+                new InstantCommand(
+                    () -> drivetrain.stop(),
+                    drivetrain
+                )
+            )
+        );
+
+        frodoBaggins_right.povUpLeft().debounce(0.25).whileTrue(
+            new RepeatCommand(
+                new InstantCommand(
+                    () -> drivetrain.driveArcadePercent(
+                        OperatorConstants.kSlowWheelSpeedPercent, 
+                        OperatorConstants.kSlowWheelSpeedPercent
+                    ),
+                    drivetrain
+                )
+            ).andThen(
+                new InstantCommand(
+                    () -> drivetrain.stop(),
+                    drivetrain
+                )
+            )
+        );
+
+        frodoBaggins_right.povUpRight().debounce(0.25).whileTrue(
+            new RepeatCommand(
+                new InstantCommand(
+                    () -> drivetrain.driveArcadePercent(
+                        OperatorConstants.kSlowWheelSpeedPercent, 
+                        -OperatorConstants.kSlowWheelSpeedPercent
+                    ),
+                    drivetrain
+                )
+            ).andThen(
+                new InstantCommand(
+                    () -> drivetrain.stop(),
+                    drivetrain
+                )
+            )
+        );
+
+        frodoBaggins_right.povDownLeft().debounce(0.25).whileTrue(
+            new RepeatCommand(
+                new InstantCommand(
+                    () -> drivetrain.driveArcadePercent(
+                        -OperatorConstants.kSlowWheelSpeedPercent, 
+                        OperatorConstants.kSlowWheelSpeedPercent
+                    ),
+                    drivetrain
+                )
+            ).andThen(
+                new InstantCommand(
+                    () -> drivetrain.stop(),
+                    drivetrain
+                )
+            )
+        );
+
+        frodoBaggins_right.povDownRight().debounce(0.25).whileTrue(
+            new RepeatCommand(
+                new InstantCommand(
+                    () -> drivetrain.driveArcadePercent(
+                        -OperatorConstants.kSlowWheelSpeedPercent, 
+                        -OperatorConstants.kSlowWheelSpeedPercent
+                    ),
+                    drivetrain
+                )
+            ).andThen(
+                new InstantCommand(
+                    () -> drivetrain.stop(),
+                    drivetrain
+                )
+            )
+        );
+    }
+
+    private void configGollum() {
+        
+        gollum_subsys.a().onTrue(
+            new InstantCommand(
+                () -> gripper.toggleGrab(),
+                gripper
+            )
+        );
+
+
+        gollum_subsys.y().onTrue(
+            new InstantCommand(
                 () -> {
-                    gripper.open();
+                    gripper.toggleUp();
                 },
-                () -> {
-                    gripper.close();
-                },
-                gripper));
-        gollum_subsys.b().whileTrue(new InstantCommand(() -> {
-            gripper.grip_off();
-        }, gripper));
-        gollum_subsys.y().whileTrue(new StartEndCommand(() -> {
-            gripper.raise();
-        }, () -> {
-            gripper.lower();
-        }, gripper));
+                gripper
+            )
+        );
     }
 
     /**
@@ -124,13 +240,7 @@ public class RobotContainer {
         // An example command will be run in autonomous
         // return new TurnDegrees(180, drivetrain);
         // return new AutoLevel(drivetrain);
-        return new StartEndCommand(
-                () -> {
-                    gripper.raise();
-                },
-                () -> {
-                    gripper.lower();
-                }, gripper);
+        return Autos.balance(drivetrain);
         // return new SequentialCommandGroup(
         // new RepeatCommand(
         // new InstantCommand(() -> {

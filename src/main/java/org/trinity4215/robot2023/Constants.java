@@ -4,10 +4,6 @@
 
 package org.trinity4215.robot2023;
 
-import com.ctre.phoenix.motorcontrol.InvertType;
-
-import edu.wpi.first.wpilibj.DigitalSource;
-
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -22,19 +18,16 @@ import edu.wpi.first.wpilibj.DigitalSource;
  */
 public final class Constants {
     public static class OperatorConstants {
-        public static final int kXboxPort = 2;
-        public static final int kLeftStickPort = 1;
-        public static final int kRightStickPort = 0;
+        public static final int kGollumSubsysPort = 2;
+        public static final int kSamwiseLeftStickPort = 1;
+        public static final int kFrodoRightStickPort = 0;
+
+        public static final double kSlowWheelSpeedPercent = 0.4;
+
     }
 
     public static class DriveConstants {
 
-        // TODO: Make these constants the actual CAN IDs of the components
-
-        public static enum MotorTypeInstalled {
-            REV_SPARK_MAX,
-            CTRE_TALON_SRX
-        }
 
         public static enum AutoLevelState {
             LEVEL_GROUND,
@@ -60,14 +53,9 @@ public final class Constants {
         }
 
         public static final int kPigeonId = 0;
-
-        // TODO: Tune these
         public static final int kEncoderCPR = 0;
-        public static final double kSlewValue = 0.1;
+        public static final double kSlewValue = 2.5;
 
-        
-
-        public static final boolean kSquareJoystickValues = true;
         public static final boolean kLeftMotorsInverted = false;
         public static final boolean kRightMotorsInverted = true;
 

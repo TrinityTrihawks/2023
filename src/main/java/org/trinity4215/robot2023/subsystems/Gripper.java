@@ -4,7 +4,6 @@
 
 package org.trinity4215.robot2023.subsystems;
 
-import org.trinity4215.robot2023.Constants;
 import org.trinity4215.robot2023.Constants.GripperConstants;
 
 import edu.wpi.first.wpilibj.Compressor;
@@ -22,7 +21,9 @@ public class Gripper extends SubsystemBase {
     private DoubleSolenoid raise = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, GripperConstants.kRaiseSolenoidPort0, GripperConstants.kRaiseSolenoidPort1);
     // private Compressor compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
-    /** Creates a new Gripper. */
+    private boolean isGrabbing = false;
+    private boolean isUp = false;
+
     public Gripper() {
         // compressor.enableDigital();
     }
@@ -43,6 +44,14 @@ public class Gripper extends SubsystemBase {
     }
     public void raise_off() {
         raise.set(Value.kOff);
+        squeeze.set(Value.kOff);
+    }
+
+    public void grab() {
+        squeeze.set(Value.kForward);
+    }
+    public void drop() {
+        squeeze.set(Value.kReverse);
     }
     public void close() {
         squeeze.set(Value.kForward);
@@ -57,5 +66,23 @@ public class Gripper extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
+    }
+
+    public void toggleUp() {
+        if (isUp) {
+            lower();
+        } else {
+            raise();
+        }
+        isUp = !isUp;
+    }
+
+    public void toggleGrab() {
+        if (isGrabbing) {
+            open();
+        } else {
+            close();
+        }
+        isGrabbing = !isGrabbing;
     }
 }

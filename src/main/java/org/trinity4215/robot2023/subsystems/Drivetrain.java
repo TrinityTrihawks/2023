@@ -47,9 +47,13 @@ public class Drivetrain extends SubsystemBase {
 
     private final ADIS16470_IMU gyro = new ADIS16470_IMU();
     private edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis axis = null;
+
     // Initialize slew rate limiters
     private SlewRateLimiter rightLimiter = new SlewRateLimiter(DriveConstants.kSlewValue);
     private SlewRateLimiter leftLimiter = new SlewRateLimiter(DriveConstants.kSlewValue);
+
+    private SlewRateLimiter speedLimiter = new SlewRateLimiter(DriveConstants.kSlewValue);
+    private SlewRateLimiter twistLimiter = new SlewRateLimiter(DriveConstants.kSlewValue);
 
     private final DifferentialDrive drive = new DifferentialDrive(leftMotorControllerGroup, rightMotorControllerGroup);
 
@@ -73,6 +77,7 @@ public class Drivetrain extends SubsystemBase {
         axis = IMUAxis.kY;
         leftEncoder.setPositionConversionFactor(DriveConstants.kPositionConversionFactor);
         rightEncoder.setPositionConversionFactor(DriveConstants.kPositionConversionFactor);
+        leftMotorControllerGroup.setInverted(true);
     }
 
     public static Drivetrain getInstance() {
@@ -84,11 +89,11 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void driveArcadePercent(double speed, double twist) {
-        drive.arcadeDrive(speed, twist, DriveConstants.kSquareJoystickValues);
+        drive.arcadeDrive(speedLimiter.calculate(speed), twistLimiter.calculate(twist));
     }
 
     public void driveTankPercent(double left, double right) {
-        drive.tankDrive(-left, right);
+        drive.tankDrive(leftLimiter.calculate(left), rightLimiter.calculate(right));
     }
 
     public void stop() {

@@ -12,7 +12,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
 public class DriveJoystick extends CommandBase {
-    private static final double kStaticJoystickScalar = 0.4;
+    private static final double kStaticJoystickScalar = 1;
+    private static final double kStaticInputPower = 2;
     private final Drivetrain drivetrain;
     private final DoubleSupplier leftYSupplier;
     private final DoubleSupplier rightYSupplier;
@@ -29,8 +30,8 @@ public class DriveJoystick extends CommandBase {
                          DoubleSupplier rightTwist) {
                             
         this.drivetrain = drivetrain;
-        leftYSupplier = leftY;
-        rightYSupplier = rightY;
+        leftYSupplier = () -> Math.pow(leftY.getAsDouble(), kStaticInputPower) * Math.signum(leftY.getAsDouble());
+        rightYSupplier = () -> Math.pow(rightY.getAsDouble(), kStaticInputPower) * Math.signum(rightY.getAsDouble());
         rightTwistSupplier = rightTwist;
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(drivetrain);
