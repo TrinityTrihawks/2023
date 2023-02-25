@@ -13,19 +13,19 @@ import edu.wpi.first.wpilibj2.command.RepeatCommand;
 public final class Autos { 
 
     public static Command justDrive(Drivetrain drive) {
-        return lowerArm(drive).andThen(
+        return //lowerArm(drive).andThen(
             new RepeatCommand(
                 new InstantCommand(
-                    () -> drive.driveArcadePercent(-1, 0),
+                    () -> drive.driveArcadePercent(0.5, 0),
                     drive
                 )
-            ).withTimeout(0.4).andThen(
+            ).withTimeout(2).andThen(
                 new InstantCommand(
                     () -> drive.stop(),
                     drive
                 )
-            )
-        );
+            );
+        //);
     }
 
     public static Command lowerArm(Drivetrain drive) {

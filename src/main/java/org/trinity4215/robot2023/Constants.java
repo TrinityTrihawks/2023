@@ -22,7 +22,7 @@ public final class Constants {
         public static final int kSamwiseLeftStickPort = 1;
         public static final int kFrodoRightStickPort = 0;
 
-        public static final double kSlowWheelSpeedPercent = 0.2;
+        public static final double kSlowWheelSpeedPercent = 0.4;
 
     }
 
@@ -54,7 +54,7 @@ public final class Constants {
 
         public static final int kPigeonId = 0;
         public static final int kEncoderCPR = 0;
-        public static final double kSlewValue = 5;
+        public static final double kSlewValue = 2.5;
 
         public static final boolean kLeftMotorsInverted = false;
         public static final boolean kRightMotorsInverted = true;
@@ -85,12 +85,9 @@ public final class Constants {
     }
 
     public static class GripperConstants {
-        public static final int kSqueezeSolenoidAPort0 = 16;
-        public static final int kSqeezeSolenoidAPort1 = 17;
-        public static final int kSqueezeSolenoidBPort0 = 12;
-        public static final int kSqueezeSolenoidBPort1 = 13;
-
-        public static final int kRaiseSolenoidPort0 = 14;
-        public static final int kRaiseSolenoidPort1 = 15;
+        public static final int kSqeezeSolenoidPort0 = 0; //14;
+        public static final int kSqeezeSolenoidPort1 = 1; //15;
+        public static final int kRaiseSolenoidPort0 = 2;
+        public static final int kRaiseSolenoidPort1 = 3;
     }
 }

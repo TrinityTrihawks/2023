@@ -7,6 +7,7 @@ package org.trinity4215.robot2023;
 
 import org.trinity4215.robot2023.Constants.DriveConstants.DriveType;
 import org.trinity4215.robot2023.Constants.OperatorConstants;
+import org.trinity4215.robot2023.commands.Autos;
 import org.trinity4215.robot2023.commands.DriveJoystick;
 import org.trinity4215.robot2023.subsystems.Drivetrain;
 import org.trinity4215.robot2023.subsystems.Gripper;
@@ -212,36 +213,20 @@ public class RobotContainer {
     }
 
     private void configGollum() {
-        gollum_subsys.a().whileTrue(new StartEndCommand(
-                () -> {
-                    gripper.raise();
-                },
-                () -> {
-                    gripper.lower();
-                },
+        
+        gollum_subsys.a().onTrue(
+            new InstantCommand(
+                () -> gripper.toggleGrab(),
                 gripper
             )
         );
 
-        gollum_subsys.b().whileTrue(
+
+        gollum_subsys.y().onTrue(
             new InstantCommand(
                 () -> {
-                    gripper.off();
+                    gripper.toggleUp();
                 },
-                gripper
-            )
-        );
-
-        gollum_subsys.x().whileTrue(
-            new StartEndCommand(
-                () -> {
-                    gripper.grab();
-                },
-
-                () -> {
-                    gripper.drop();
-                },
-
                 gripper
             )
         );
@@ -256,13 +241,7 @@ public class RobotContainer {
         // An example command will be run in autonomous
         // return new TurnDegrees(180, drivetrain);
         // return new AutoLevel(drivetrain);
-        return new StartEndCommand(
-                () -> {
-                    gripper.raise();
-                },
-                () -> {
-                    gripper.lower();
-                }, gripper);
+        return Autos.balance(drivetrain);
         // return new SequentialCommandGroup(
         // new RepeatCommand(
         // new InstantCommand(() -> {

@@ -7,7 +7,6 @@ package org.trinity4215.robot2023.subsystems;
 import org.trinity4215.robot2023.CombinedLogging;
 import org.trinity4215.robot2023.Constants.GripperConstants;
 
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -17,31 +16,24 @@ public class Gripper extends SubsystemBase {
 
     private static Gripper subsystemInst = null;
 
-    private DoubleSolenoid squeezeA;
-    private DoubleSolenoid squeezeB;
+    private DoubleSolenoid squeeze = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
+            GripperConstants.kSqeezeSolenoidPort0, GripperConstants.kSqeezeSolenoidPort1);
+    private DoubleSolenoid raise = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, GripperConstants.kRaiseSolenoidPort0, GripperConstants.kRaiseSolenoidPort1);
+    // private Compressor compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
-    private DoubleSolenoid raise;
-    private Compressor compressor;
-
+    private boolean isGrabbing = false;
+    private boolean isUp = false;
     private boolean hasPneumatics = true;
 
-
-    private Gripper() {
-        
+    public Gripper() {
         try {
-            squeezeA = new DoubleSolenoid(PneumaticsModuleType.REVPH,
-                GripperConstants.kSqueezeSolenoidAPort0, GripperConstants.kSqeezeSolenoidAPort1);
-            squeezeB = new DoubleSolenoid(PneumaticsModuleType.REVPH,
-                GripperConstants.kSqueezeSolenoidBPort0, GripperConstants.kSqueezeSolenoidBPort1);
+            squeeze = new DoubleSolenoid(PneumaticsModuleType.REVPH,
+                GripperConstants.kSqeezeSolenoidPort0, GripperConstants.kSqeezeSolenoidPort1);
             raise = new DoubleSolenoid(PneumaticsModuleType.REVPH, GripperConstants.kRaiseSolenoidPort0,
                 GripperConstants.kRaiseSolenoidPort1);
-            compressor = new Compressor(PneumaticsModuleType.REVPH);
-            compressor.enableDigital();
         } catch(Exception e) {
-            squeezeA = null;
-            squeezeB = null;
+            squeeze = null;
             raise = null;
-            compressor = null;
             hasPneumatics = false;
             CombinedLogging.putString(
                 "Error",
@@ -70,32 +62,56 @@ public class Gripper extends SubsystemBase {
         }
         raise.set(Value.kReverse);
     }
-    public void off() {
+    public void raise_off() {
         if (!hasPneumatics) {
             return;
         }
         raise.set(Value.kOff);
-        squeezeA.set(Value.kOff);
-        squeezeB.set(Value.kOff);
+        squeeze.set(Value.kOff);
     }
 
     public void grab() {
         if (!hasPneumatics) {
             return;
         }
-        squeezeA.set(Value.kForward);
-        squeezeB.set(Value.kForward);
+        squeeze.set(Value.kForward);
     }
     public void drop() {
         if (!hasPneumatics) {
             return;
         }
-        squeezeA.set(Value.kReverse);
-        squeezeB.set(Value.kReverse);
+        squeeze.set(Value.kReverse);
+    }
+    public void close() {
+        squeeze.set(Value.kForward);
+    }
+    public void open() {
+        squeeze.set(Value.kReverse);
+    }
+    public void grip_off() {
+        squeeze.set(Value.kOff);
     }
 
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
+    }
+
+    public void toggleUp() {
+        if (isUp) {
+            lower();
+        } else {
+            raise();
+        }
+        isUp = !isUp;
+    }
+
+    public void toggleGrab() {
+        if (isGrabbing) {
+            open();
+        } else {
+            close();
+        }
+        isGrabbing = !isGrabbing;
     }
 }
