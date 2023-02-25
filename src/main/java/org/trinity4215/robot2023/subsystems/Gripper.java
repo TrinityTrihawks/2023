@@ -19,7 +19,6 @@ public class Gripper extends SubsystemBase {
     private DoubleSolenoid squeeze = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
             GripperConstants.kSqeezeSolenoidPort0, GripperConstants.kSqeezeSolenoidPort1);
     private DoubleSolenoid raise = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, GripperConstants.kRaiseSolenoidPort0, GripperConstants.kRaiseSolenoidPort1);
-    // private Compressor compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
     private boolean isGrabbing = false;
     private boolean isUp = false;
