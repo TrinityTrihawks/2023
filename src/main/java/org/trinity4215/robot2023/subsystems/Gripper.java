@@ -4,6 +4,7 @@
 
 package org.trinity4215.robot2023.subsystems;
 
+import org.trinity4215.robot2023.CombinedLogging;
 import org.trinity4215.robot2023.Constants.GripperConstants;
 
 import edu.wpi.first.wpilibj.Compressor;
@@ -13,20 +14,40 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Gripper extends SubsystemBase {
+
     private static Gripper subsystemInst = null;
 
-    private DoubleSolenoid squeezeA = new DoubleSolenoid(PneumaticsModuleType.REVPH,
-            GripperConstants.kSqueezeSolenoidAPort0, GripperConstants.kSqeezeSolenoidAPort1);
-    private DoubleSolenoid squeezeB = new DoubleSolenoid(PneumaticsModuleType.REVPH,
-            GripperConstants.kSqueezeSolenoidBPort0, GripperConstants.kSqueezeSolenoidBPort1);
+    private DoubleSolenoid squeezeA;
+    private DoubleSolenoid squeezeB;
 
-    private DoubleSolenoid raise = new DoubleSolenoid(PneumaticsModuleType.REVPH, GripperConstants.kRaiseSolenoidPort0,
-            GripperConstants.kRaiseSolenoidPort1);
-    private Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
+    private DoubleSolenoid raise;
+    private Compressor compressor;
 
-    /** Creates a new Gripper. */
-    public Gripper() {
-        compressor.enableDigital();
+    private boolean hasPneumatics = true;
+
+
+    private Gripper() {
+        
+        try {
+            squeezeA = new DoubleSolenoid(PneumaticsModuleType.REVPH,
+                GripperConstants.kSqueezeSolenoidAPort0, GripperConstants.kSqeezeSolenoidAPort1);
+            squeezeB = new DoubleSolenoid(PneumaticsModuleType.REVPH,
+                GripperConstants.kSqueezeSolenoidBPort0, GripperConstants.kSqueezeSolenoidBPort1);
+            raise = new DoubleSolenoid(PneumaticsModuleType.REVPH, GripperConstants.kRaiseSolenoidPort0,
+                GripperConstants.kRaiseSolenoidPort1);
+            compressor = new Compressor(PneumaticsModuleType.REVPH);
+            compressor.enableDigital();
+        } catch(Exception e) {
+            squeezeA = null;
+            squeezeB = null;
+            raise = null;
+            compressor = null;
+            hasPneumatics = false;
+            CombinedLogging.putString(
+                "Error",
+                "no PCM: no pneumatics will work. AS A MATTER OF FACT, IT WOULD HAVE CRASHED WHEN YOU PRESS THE PNEUMATICS BUTTONS IF I HADN'T FIXED IT SO DON'T DO IT I KNOW YOU WANT TO BUT DON'T IM TALKING TO YOU NERD DON'T DO IT YOU IDIOT -- The Code Genii"
+            );
+        }
     }
 
     public static Gripper getInstance() {
@@ -38,22 +59,37 @@ public class Gripper extends SubsystemBase {
     }
 
     public void raise() {
+        if (!hasPneumatics) {
+            return; // save (us from) the nullrefs!
+        }
         raise.set(Value.kForward);
     }
     public void lower() {
+        if (!hasPneumatics) {
+            return;
+        }
         raise.set(Value.kReverse);
     }
     public void off() {
+        if (!hasPneumatics) {
+            return;
+        }
         raise.set(Value.kOff);
         squeezeA.set(Value.kOff);
         squeezeB.set(Value.kOff);
     }
 
     public void grab() {
+        if (!hasPneumatics) {
+            return;
+        }
         squeezeA.set(Value.kForward);
         squeezeB.set(Value.kForward);
     }
     public void drop() {
+        if (!hasPneumatics) {
+            return;
+        }
         squeezeA.set(Value.kReverse);
         squeezeB.set(Value.kReverse);
     }

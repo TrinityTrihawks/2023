@@ -34,7 +34,7 @@ public class RobotContainer {
     // ==================== SUBSYSTEMS ======================
     private final Drivetrain drivetrain = Drivetrain.getInstance();
     private final Limelight limelight = Limelight.getInstance();
-    private final Gripper gripper = Gripper.getInstance();
+    private Gripper gripper = Gripper.getInstance();
 
     // ==================== CONTROLLERS =====================
     private final CommandXboxController gollum_subsys = new CommandXboxController(
@@ -59,6 +59,7 @@ public class RobotContainer {
         drivetrain.setDriveType(DriveType.DUAL);
         PortForwarder.add(5800, "10.42.15.11", 5800);
     }
+
 
     private void configureDefaultCommands() {
         drivetrain.setDefaultCommand(defaultDrive);
