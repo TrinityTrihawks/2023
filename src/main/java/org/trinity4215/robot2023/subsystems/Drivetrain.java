@@ -39,6 +39,7 @@ public class Drivetrain extends SubsystemBase {
     private final MotorControllerGroup leftMotorControllerGroup = new MotorControllerGroup(leftLeader, leftFollower);
     private final MotorControllerGroup rightMotorControllerGroup = new MotorControllerGroup(rightLeader, rightFollower);
 
+
     // Initialize Spark Max encoders
     private final RelativeEncoder leftEncoder = leftLeader.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor,
             DriveConstants.kEncoderCPR); // IF REV
@@ -77,7 +78,7 @@ public class Drivetrain extends SubsystemBase {
         axis = IMUAxis.kY;
         leftEncoder.setPositionConversionFactor(DriveConstants.kPositionConversionFactor);
         rightEncoder.setPositionConversionFactor(DriveConstants.kPositionConversionFactor);
-        leftMotorControllerGroup.setInverted(true);
+        rightMotorControllerGroup.setInverted(true);
     }
 
     public static Drivetrain getInstance() {
