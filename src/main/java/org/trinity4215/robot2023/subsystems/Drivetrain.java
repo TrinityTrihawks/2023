@@ -11,11 +11,13 @@ import org.trinity4215.robot2023.Constants.DriveConstants.DriveType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxRelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -28,13 +30,17 @@ public class Drivetrain extends SubsystemBase {
 
     private Pose2d robotPose = null;
 
-    private final CANSparkMax leftLeader = new CANSparkMax(DriveConstants.SPARKMAX.kLeftLeaderId, MotorType.kBrushless);
-    private final CANSparkMax leftFollower = new CANSparkMax(DriveConstants.SPARKMAX.kLeftFollowerId,
+    private final CANSparkMax leftLeader = new CANSparkMax(DriveConstants.kLeftLeaderId, MotorType.kBrushless);
+    private final CANSparkMax leftFollower = new CANSparkMax(DriveConstants.kLeftFollowerId,
             MotorType.kBrushless);
-    private final CANSparkMax rightLeader = new CANSparkMax(DriveConstants.SPARKMAX.kRightLeaderId,
+    private final CANSparkMax rightLeader = new CANSparkMax(DriveConstants.kRightLeaderId,
             MotorType.kBrushless);
-    private final CANSparkMax rightFollower = new CANSparkMax(DriveConstants.SPARKMAX.kRightFollowerId,
+    private final CANSparkMax rightFollower = new CANSparkMax(DriveConstants.kRightFollowerId,
             MotorType.kBrushless);
+
+    private final CANSparkMax[] sparks = new CANSparkMax[] 
+            { leftLeader,   rightLeader,
+              leftFollower, rightFollower };
 
     private final MotorControllerGroup leftMotorControllerGroup = new MotorControllerGroup(leftLeader, leftFollower);
     private final MotorControllerGroup rightMotorControllerGroup = new MotorControllerGroup(rightLeader, rightFollower);
@@ -97,16 +103,33 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void stop() {
-        drive.tankDrive(0, 0);
+        drive.stopMotor();
     }
 
     public void resetGyro() {
         gyro.reset();
     }
 
-    public void driveOne(double speed) {
-        leftLeader.set(speed);
+
+    public void brakeIdle() {
+        for (CANSparkMax spark : sparks) {
+            spark.setIdleMode(IdleMode.kBrake);
+        }
     }
+
+    public void releaseBrake() {
+        for (CANSparkMax spark : sparks) {
+            spark.setIdleMode(IdleMode.kCoast);
+        }
+    }
+
+
+    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+        return new DifferentialDriveWheelSpeeds(
+            leftEncoder.getVelocity(),
+            rightEncoder.getVelocity());
+    }
+
 
     public double getGyroY() {
         IMUAxis curAxis = gyro.getYawAxis();

@@ -39,18 +39,10 @@ public final class Constants {
             END
         }
 
-        public class TALONSRX {
-            public static final int kLeftLeaderId = 12;
-            public static final int kLeftFollowerId = 14;
-            public static final int kRightLeaderId = 11;
-            public static final int kRightFollowerId = 13;
-        }
-        public class SPARKMAX {
-            public static final int kLeftLeaderId = 12;
-            public static final int kLeftFollowerId = 14;
-            public static final int kRightLeaderId = 11;
-            public static final int kRightFollowerId = 13;
-        }
+        public static final double kGearboxRatio = 1/12.75;
+        public static final double kWheelDiameterInches = 6;
+        public static final double kInchesToMeters = 2.54 / 100;
+        public static final double kMotorRPMToMetersPerSecond = kGearboxRatio * Math.PI * kWheelDiameterInches * kInchesToMeters;     
 
         public static final int kPigeonId = 0;
         public static final int kEncoderCPR = 0;
@@ -82,6 +74,11 @@ public final class Constants {
         }
 
         public static double kDeadzone;
+
+        public static final int kLeftLeaderId = 12;
+        public static final int kLeftFollowerId = 14;
+        public static final int kRightLeaderId = 11;
+        public static final int kRightFollowerId = 13;
     }
 
     public static class GripperConstants {
