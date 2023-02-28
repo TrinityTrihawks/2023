@@ -46,10 +46,10 @@ public final class Constants {
             public static final int kRightFollowerId = 13;
         }
         public class SPARKMAX {
-            public static final int kLeftLeaderId = 12;
-            public static final int kLeftFollowerId = 14;
-            public static final int kRightLeaderId = 11;
-            public static final int kRightFollowerId = 13;
+            public static final int kLeftLeaderId = 11;
+            public static final int kLeftFollowerId = 13;
+            public static final int kRightLeaderId = 12;
+            public static final int kRightFollowerId = 14;
         }
 
         public static final int kPigeonId = 0;

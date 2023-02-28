@@ -78,7 +78,7 @@ public class Drivetrain extends SubsystemBase {
         axis = IMUAxis.kY;
         leftEncoder.setPositionConversionFactor(DriveConstants.kPositionConversionFactor);
         rightEncoder.setPositionConversionFactor(DriveConstants.kPositionConversionFactor);
-        rightMotorControllerGroup.setInverted(true);
+        leftMotorControllerGroup.setInverted(true);
     }
 
     public static Drivetrain getInstance() {

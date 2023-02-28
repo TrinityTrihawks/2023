@@ -90,7 +90,7 @@ public class RobotContainer {
         frodoBaggins_right.povUp().debounce(0.25).whileTrue(
             new RepeatCommand(
                 new InstantCommand(
-                    () -> drivetrain.driveArcadePercent(-OperatorConstants.kSlowWheelSpeedPercent, 0),
+                    () -> drivetrain.driveArcadePercent(OperatorConstants.kSlowWheelSpeedPercent, 0),
                     drivetrain
                 )
             ).andThen(
@@ -104,7 +104,7 @@ public class RobotContainer {
         frodoBaggins_right.povDown().debounce(0.25).whileTrue(
             new RepeatCommand(
                 new InstantCommand(
-                    () -> drivetrain.driveArcadePercent(OperatorConstants.kSlowWheelSpeedPercent, 0),
+                    () -> drivetrain.driveArcadePercent(-OperatorConstants.kSlowWheelSpeedPercent, 0),
                     drivetrain
                 )
             ).andThen(
