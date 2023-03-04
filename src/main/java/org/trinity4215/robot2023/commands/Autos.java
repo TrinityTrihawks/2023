@@ -28,7 +28,7 @@ public final class Autos {
         //);
     }
 
-    public static Command lowerArm(Drivetrain drive) {
+    public static Command jerkyBit(Drivetrain drive) {
         return new RepeatCommand(
             new InstantCommand(
                 () -> drive.driveArcadePercent(-1, 0),
@@ -43,7 +43,7 @@ public final class Autos {
     }
 
     public static Command balance(Drivetrain drive) {
-        return lowerArm(drive).andThen(
+        return jerkyBit(drive).andThen(
             new AutoLevel(drive)
         );
     }

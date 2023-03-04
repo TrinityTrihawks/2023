@@ -4,10 +4,10 @@
 
 package org.trinity4215.robot2023.commands;
 
+import org.trinity4215.robot2023.CombinedLogging;
 import org.trinity4215.robot2023.Constants.DriveConstants;
 import org.trinity4215.robot2023.subsystems.Drivetrain;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class TurnDegrees extends CommandBase {
@@ -34,20 +34,20 @@ public class TurnDegrees extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        SmartDashboard.putNumber("Target Angle", target);
+        CombinedLogging.putNumber("Target Angle", target);
         curAngle = drive.getGyroY();
-        SmartDashboard.putNumber("input angle", curAngle);
+        CombinedLogging.putNumber("input angle", curAngle);
         double speed = Math.sin((curAngle - target) * Math.PI / 180 / 2);
-        SmartDashboard.putNumber("sind(angle)", speed);
+        CombinedLogging.putNumber("sind(angle)", speed);
         int deadzoneScalar = Math.abs(speed) <= DriveConstants.kDeadzone? 0 : 1;
-        SmartDashboard.putBoolean("in dead zone", deadzoneScalar == 0);
+        CombinedLogging.putBoolean("in dead zone", deadzoneScalar == 0);
         double output = 
             -1 * speed 
             * deadzoneScalar 
             * DriveConstants.kMaxSpeedPercent
             * (1 - DriveConstants.kMinTurnSpeed) + DriveConstants.kMinTurnSpeed;
             
-        SmartDashboard.putNumber("output", output);
+        CombinedLogging.putNumber("output", output);
         drive.driveTankPercent(output, -output);
     }
 

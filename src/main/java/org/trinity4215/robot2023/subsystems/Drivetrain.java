@@ -15,8 +15,6 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
@@ -38,7 +36,8 @@ public class Drivetrain extends SubsystemBase {
     private final CANSparkMax rightFollower = new CANSparkMax(DriveConstants.kRightFollowerId,
             MotorType.kBrushless);
 
-    private final CANSparkMax[] sparks = new CANSparkMax[] 
+    private final CANSparkMax[] 
+    sparks = new CANSparkMax[] 
             { leftLeader,   rightLeader,
               leftFollower, rightFollower };
 
@@ -66,8 +65,8 @@ public class Drivetrain extends SubsystemBase {
 
     // TODO: This line requires you to set encoder.setPositionConversionFactor to a
     // value that will cause the encoder to return its position in meters
-    private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(new Rotation2d(getGyroZ()),
-            leftEncoder.getPosition(), rightEncoder.getPosition());
+    // private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(new Rotation2d(getGyroZ()),
+    //         leftEncoder.getPosition(), rightEncoder.getPosition());
 
     private DriveType driveType = null;
 
@@ -101,10 +100,14 @@ public class Drivetrain extends SubsystemBase {
 
     public void driveTankPercent(double left, double right) {
         drive.tankDrive(leftLimiter.calculate(left), rightLimiter.calculate(right));
+        CombinedLogging.putNumber("LeftEncoder", getWheelSpeeds().leftMetersPerSecond);
+        CombinedLogging.putNumber("RightEncoder", getWheelSpeeds().rightMetersPerSecond);
+        CombinedLogging.putNumber("inputs", left);
     }
 
     public void stop() {
         drive.stopMotor();
+        CombinedLogging.putNumber("inputs", Double.NaN);
     }
 
     public void resetGyro() {
@@ -127,8 +130,8 @@ public class Drivetrain extends SubsystemBase {
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
         return new DifferentialDriveWheelSpeeds(
-            leftEncoder.getVelocity(),
-            rightEncoder.getVelocity());
+            -leftEncoder.getVelocity() * DriveConstants.kMotorRPMToMetersPerSecond,
+            rightEncoder.getVelocity() * DriveConstants.kMotorRPMToMetersPerSecond);
     }
 
 
@@ -187,7 +190,7 @@ public class Drivetrain extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        var gyro_angle = new Rotation2d(getGyroZ());
+        // var gyro_angle = new Rotation2d(getGyroZ());
 
         // Update the robot pose periodically with encoder values and gyro angle
         // TODO: This line requires you to set encoder.setPositionConversionFactor to a
@@ -196,7 +199,7 @@ public class Drivetrain extends SubsystemBase {
         // More information:
         // https://github.com/wpilibsuite/allwpilib/tree/main/wpilibjExamples/src/main/java/edu/wpi/first/wpilibj/examples/differentialdrivebot
         // https://docs.wpilib.org/en/stable/docs/software/kinematics-and-odometry/differential-drive-odometry.html
-        robotPose = odometry.update(gyro_angle, leftEncoder.getPosition(),
-                rightEncoder.getPosition());
+        // robotPose = odometry.update(gyro_angle, leftEncoder.getPosition(),
+        //         rightEncoder.getPosition());
     }
 }

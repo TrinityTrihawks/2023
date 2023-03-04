@@ -5,10 +5,10 @@
 package org.trinity4215.robot2023;
 
 
-import org.trinity4215.robot2023.Constants.DriveConstants.DriveType;
 import org.trinity4215.robot2023.Constants.OperatorConstants;
 import org.trinity4215.robot2023.commands.Autos;
 import org.trinity4215.robot2023.commands.DriveJoystick;
+import org.trinity4215.robot2023.commands.TurnDegrees;
 import org.trinity4215.robot2023.subsystems.Drivetrain;
 import org.trinity4215.robot2023.subsystems.Gripper;
 import org.trinity4215.robot2023.subsystems.Limelight;
@@ -17,7 +17,6 @@ import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -38,18 +37,19 @@ public class RobotContainer {
     private Gripper gripper = Gripper.getInstance();
 
     // ==================== CONTROLLERS =====================
-    private final CommandXboxController gollum_subsys = new CommandXboxController(
+    private final CommandXboxController xbox = new CommandXboxController(
             OperatorConstants.kGollumSubsysPort);
 
-    private final CommandJoystick samwiseGamgee_left = new CommandJoystick(OperatorConstants.kSamwiseLeftStickPort);
-    private final CommandJoystick frodoBaggins_right = new CommandJoystick(OperatorConstants.kFrodoRightStickPort);
+    private final CommandJoystick left = new CommandJoystick(OperatorConstants.kSamwiseLeftStickPort);
+    private final CommandJoystick right = new CommandJoystick(OperatorConstants.kFrodoRightStickPort);
 
     // ==================== COMMANDS ========================
     private final DriveJoystick defaultDrive = new DriveJoystick(
             drivetrain,
-            samwiseGamgee_left::getY,
-            frodoBaggins_right::getY,
-            frodoBaggins_right::getTwist);
+            xbox::getRightY,
+            xbox::getLeftY,
+            xbox::getLeftX
+            );
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -57,7 +57,6 @@ public class RobotContainer {
     public RobotContainer() {
         configureBindings();
         configureDefaultCommands();
-        drivetrain.setDriveType(DriveType.DUAL);
         PortForwarder.add(5800, "10.42.15.11", 5800);
     }
 
@@ -87,7 +86,7 @@ public class RobotContainer {
     }
 
     private void configFrodo() {
-        frodoBaggins_right.povUp().debounce(0.25).whileTrue(
+        left.povUp().debounce(0.25).whileTrue(
             new RepeatCommand(
                 new InstantCommand(
                     () -> drivetrain.driveArcadePercent(OperatorConstants.kSlowWheelSpeedPercent, 0),
@@ -101,7 +100,7 @@ public class RobotContainer {
             )
         );
 
-        frodoBaggins_right.povDown().debounce(0.25).whileTrue(
+        left.povDown().debounce(0.25).whileTrue(
             new RepeatCommand(
                 new InstantCommand(
                     () -> drivetrain.driveArcadePercent(-OperatorConstants.kSlowWheelSpeedPercent, 0),
@@ -115,7 +114,7 @@ public class RobotContainer {
             )
         );
 
-        frodoBaggins_right.povLeft().debounce(0.25).whileTrue(
+        left.povLeft().debounce(0.25).whileTrue(
             new RepeatCommand(
                 new InstantCommand(
                     () -> drivetrain.driveArcadePercent(0, OperatorConstants.kSlowWheelSpeedPercent), // ccw is +
@@ -129,7 +128,7 @@ public class RobotContainer {
             )
         );
 
-        frodoBaggins_right.povRight().debounce(0.25).whileTrue(
+        left.povRight().debounce(0.25).whileTrue(
             new RepeatCommand(
                 new InstantCommand(
                     () -> drivetrain.driveArcadePercent(0, -OperatorConstants.kSlowWheelSpeedPercent),
@@ -143,7 +142,7 @@ public class RobotContainer {
             )
         );
 
-        frodoBaggins_right.povUpLeft().debounce(0.25).whileTrue(
+        left.povUpLeft().debounce(0.25).whileTrue(
             new RepeatCommand(
                 new InstantCommand(
                     () -> drivetrain.driveArcadePercent(
@@ -160,7 +159,7 @@ public class RobotContainer {
             )
         );
 
-        frodoBaggins_right.povUpRight().debounce(0.25).whileTrue(
+        left.povUpRight().debounce(0.25).whileTrue(
             new RepeatCommand(
                 new InstantCommand(
                     () -> drivetrain.driveArcadePercent(
@@ -177,7 +176,7 @@ public class RobotContainer {
             )
         );
 
-        frodoBaggins_right.povDownLeft().debounce(0.25).whileTrue(
+        left.povDownLeft().debounce(0.25).whileTrue(
             new RepeatCommand(
                 new InstantCommand(
                     () -> drivetrain.driveArcadePercent(
@@ -194,7 +193,7 @@ public class RobotContainer {
             )
         );
 
-        frodoBaggins_right.povDownRight().debounce(0.25).whileTrue(
+        left.povDownRight().debounce(0.25).whileTrue(
             new RepeatCommand(
                 new InstantCommand(
                     () -> drivetrain.driveArcadePercent(
@@ -214,7 +213,7 @@ public class RobotContainer {
 
     private void configGollum() {
         
-        gollum_subsys.a().onTrue(
+        xbox.a().onTrue(
             new InstantCommand(
                 () -> gripper.toggleGrab(),
                 gripper
@@ -222,13 +221,17 @@ public class RobotContainer {
         );
 
 
-        gollum_subsys.y().onTrue(
+        xbox.y().onTrue(
             new InstantCommand(
                 () -> {
                     gripper.toggleUp();
                 },
                 gripper
             )
+        );
+
+        xbox.leftBumper().onTrue(
+            new TurnDegrees(180, drivetrain)
         );
     }
 

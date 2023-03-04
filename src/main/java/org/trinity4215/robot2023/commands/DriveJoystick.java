@@ -6,6 +6,7 @@ package org.trinity4215.robot2023.commands;
 
 import java.util.function.DoubleSupplier;
 
+import org.trinity4215.robot2023.CombinedLogging;
 import org.trinity4215.robot2023.Constants.DriveConstants.DriveType;
 import org.trinity4215.robot2023.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -13,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 /** An example command that uses an example subsystem. */
 public class DriveJoystick extends CommandBase {
     private static final double kStaticJoystickScalar = 1;
-    private static final double kStaticInputPower = 2;
+
     private final Drivetrain drivetrain;
     private final DoubleSupplier leftYSupplier;
     private final DoubleSupplier rightYSupplier;
@@ -27,12 +28,13 @@ public class DriveJoystick extends CommandBase {
     public DriveJoystick(Drivetrain drivetrain,
                          DoubleSupplier leftY,
                          DoubleSupplier rightY,
-                         DoubleSupplier rightTwist) {
+                         DoubleSupplier rightTwist
+                          ) {
                             
         this.drivetrain = drivetrain;
-        leftYSupplier = () -> Math.pow(leftY.getAsDouble(), kStaticInputPower) * Math.signum(leftY.getAsDouble());
-        rightYSupplier = () -> Math.pow(rightY.getAsDouble(), kStaticInputPower) * Math.signum(rightY.getAsDouble());
-        rightTwistSupplier = rightTwist;
+        leftYSupplier = () -> -leftY.getAsDouble();
+        rightYSupplier = () -> -rightY.getAsDouble();
+        rightTwistSupplier =rightTwist;
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(drivetrain);
     }
@@ -40,21 +42,25 @@ public class DriveJoystick extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        drivetrain.setDriveType(DriveType.DUAL); // Init drive mode
+        drivetrain.setDriveType(DriveType.SINGLE); // Init drive mode
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        CombinedLogging.putString("driveType", drivetrain.getDriveType().toString());
         if (drivetrain.getDriveType() == DriveType.DUAL) {
             drivetrain.driveTankPercent(
-                leftYSupplier.getAsDouble()* kStaticJoystickScalar,
-                rightYSupplier.getAsDouble()* kStaticJoystickScalar);
+                rightYSupplier.getAsDouble()* kStaticJoystickScalar,
+                leftYSupplier.getAsDouble()* kStaticJoystickScalar);
         } else {
+            CombinedLogging.putNumber("rightYSupplier", rightYSupplier.getAsDouble());
+            CombinedLogging.putNumber("rightTwistSupplier", rightTwistSupplier.getAsDouble() *.7);
             drivetrain.driveArcadePercent(
                 rightYSupplier.getAsDouble(), 
-                rightTwistSupplier.getAsDouble());
+                rightTwistSupplier.getAsDouble() *.7);
         }
+
     }
 
     // Called once the command ends or is interrupted.

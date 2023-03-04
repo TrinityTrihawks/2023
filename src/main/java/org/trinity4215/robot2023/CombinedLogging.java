@@ -18,7 +18,7 @@ public class CombinedLogging {
         NONE
     };
 
-    private static final LoggingLevel loggingLevel = LoggingLevel.PRIORITY;
+    private static final LoggingLevel loggingLevel = LoggingLevel.ALL;
     private static final List<String> priorityKeys = Arrays.asList(
             "driveType" // Add priority keys here
             , "Error"
