@@ -100,9 +100,11 @@ public class Drivetrain extends SubsystemBase {
 
     public void driveTankPercent(double left, double right) {
         drive.tankDrive(leftLimiter.calculate(left), rightLimiter.calculate(right));
-        CombinedLogging.putNumber("LeftEncoder", getWheelSpeeds().leftMetersPerSecond);
-        CombinedLogging.putNumber("RightEncoder", getWheelSpeeds().rightMetersPerSecond);
         CombinedLogging.putNumber("inputs", left);
+    }
+
+    public void driveTankVelocity(double left, double right) {
+
     }
 
     public void stop() {
@@ -130,8 +132,8 @@ public class Drivetrain extends SubsystemBase {
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
         return new DifferentialDriveWheelSpeeds(
-            -leftEncoder.getVelocity() * DriveConstants.kMotorRPMToMetersPerSecond,
-            rightEncoder.getVelocity() * DriveConstants.kMotorRPMToMetersPerSecond);
+            -leftEncoder.getVelocity() * DriveConstants.kMotorRPMToMetersPerMinute / 60,
+            rightEncoder.getVelocity() * DriveConstants.kMotorRPMToMetersPerMinute / 60);
     }
 
 

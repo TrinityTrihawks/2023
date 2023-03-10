@@ -37,8 +37,8 @@ public final class Constants {
         public static final double kPerMinuteToPerSecond = 1; // TODO
         public static final double kGearboxRatio = 1 / 12.75;
         public static final double kWheelDiameterInches = 6;
-        public static final double kInchesToMeters = 2.54 / 100;
-        public static final double kMotorRPMToMetersPerSecond = (Math.PI * kWheelDiameterInches) * kPerMinuteToPerSecond * kGearboxRatio * kInchesToMeters;     
+        public static final double kInchesPerMeter = 2.54 / 100;
+        public static final double kMotorRPMToMetersPerMinute = (Math.PI * kWheelDiameterInches) * kPerMinuteToPerSecond * kGearboxRatio * kInchesPerMeter;     
 
         public static final int kPigeonId = 0;
         public static final int kEncoderCPR = 0;
@@ -76,6 +76,8 @@ public final class Constants {
         public static final int kRightLeaderId = 11;
         public static final int kRightFollowerId = 13;
         public static final double kBasicallyStoppedSpeed = 0.1;
+
+        public static final double kDriveFeedbackCoefficient = 0.1;
     }
 
     public static class GripperConstants {

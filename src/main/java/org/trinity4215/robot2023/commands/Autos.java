@@ -10,40 +10,45 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 
-public final class Autos { 
+public final class Autos {
 
-    public static Command justDrive(Drivetrain drive) {
-        return //lowerArm(drive).andThen(
-            new RepeatCommand(
+    public static Command mobility(Drivetrain drive) {
+        return new RepeatCommand(
                 new InstantCommand(
-                    () -> drive.driveArcadePercent(0.5, 0),
-                    drive
-                )
-            ).withTimeout(2).andThen(
-                new InstantCommand(
-                    () -> drive.stop(),
-                    drive
-                )
-            );
-        //);
+                        () -> drive.driveArcadePercent(0.5, 0),
+                        drive))
+                .withTimeout(2).andThen(
+                        new InstantCommand(
+                                () -> drive.stop(),
+                                drive));
     }
 
-    public static Command jerkyBit(Drivetrain drive) {
+    public static Command chirpyBit(Drivetrain drive) {
         return new RepeatCommand(
-            new InstantCommand(
-                () -> drive.driveArcadePercent(-1, 0),
-                drive
-            )
-        ).withTimeout(0.1).andThen(
-            new InstantCommand(
-                () -> drive.stop(),
-                drive
-            )
-        );
+                new InstantCommand(
+                        () -> drive.driveArcadePercent(-1, 0),
+                        drive))
+                .withTimeout(0.1).andThen(
+                        new InstantCommand(
+                                () -> drive.stop(),
+                                drive));
     }
 
     public static Command balance(Drivetrain drive) {
-        return jerkyBit(drive).andThen(
+        return chirpyBit(drive).andThen(
+                new AutoLevel(drive));
+    }
+
+    public static Command mobilityBackAndBalance(Drivetrain drive) {
+        return chirpyBit(drive).andThen(
+            new RepeatCommand(
+                new InstantCommand(
+                        () -> drive.driveArcadePercent(-0.75, 0),
+                        drive))
+                .withTimeout(1.7).andThen(
+                        new InstantCommand(
+                                () -> drive.stop(),
+                                drive)),
             new AutoLevel(drive)
         );
     }

@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
 public class DriveJoystick extends CommandBase {
-    private static final double kStaticJoystickScalar = 1;
+    private static final double kStaticJoystickScalar = 0.6;
 
     private final Drivetrain drivetrain;
     private final DoubleSupplier leftYSupplier;
@@ -34,7 +34,7 @@ public class DriveJoystick extends CommandBase {
         this.drivetrain = drivetrain;
         leftYSupplier = () -> -leftY.getAsDouble();
         rightYSupplier = () -> -rightY.getAsDouble();
-        rightTwistSupplier =rightTwist;
+        rightTwistSupplier = rightTwist;
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(drivetrain);
     }
@@ -42,23 +42,27 @@ public class DriveJoystick extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        drivetrain.setDriveType(DriveType.SINGLE); // Init drive mode
+        drivetrain.setDriveType(DriveType.DUAL); // Init drive mode
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
         CombinedLogging.putString("driveType", drivetrain.getDriveType().toString());
+        CombinedLogging.putNumber("rightEncoder", drivetrain.getWheelSpeeds().rightMetersPerSecond);
+        CombinedLogging.putNumber("leftEncoder", drivetrain.getWheelSpeeds().leftMetersPerSecond);
         if (drivetrain.getDriveType() == DriveType.DUAL) {
             drivetrain.driveTankPercent(
-                rightYSupplier.getAsDouble()* kStaticJoystickScalar,
-                leftYSupplier.getAsDouble()* kStaticJoystickScalar);
+                rightYSupplier.getAsDouble() * kStaticJoystickScalar,
+                leftYSupplier.getAsDouble() * kStaticJoystickScalar);
+            CombinedLogging.putNumber("rightYSupplier", rightYSupplier.getAsDouble());
+            CombinedLogging.putNumber("leftYSupplier", leftYSupplier.getAsDouble());
         } else {
             CombinedLogging.putNumber("rightYSupplier", rightYSupplier.getAsDouble());
-            CombinedLogging.putNumber("rightTwistSupplier", rightTwistSupplier.getAsDouble() *.7);
+            CombinedLogging.putNumber("rightTwistSupplier", rightTwistSupplier.getAsDouble() * 0.7);
             drivetrain.driveArcadePercent(
-                rightYSupplier.getAsDouble(), 
-                rightTwistSupplier.getAsDouble() *.7);
+                rightYSupplier.getAsDouble() * kStaticJoystickScalar, 
+                rightTwistSupplier.getAsDouble() * kStaticJoystickScalar * 0.7);
         }
 
     }

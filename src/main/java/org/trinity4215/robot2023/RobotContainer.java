@@ -14,6 +14,9 @@ import org.trinity4215.robot2023.subsystems.Gripper;
 import org.trinity4215.robot2023.subsystems.Limelight;
 
 import edu.wpi.first.net.PortForwarder;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
@@ -36,6 +39,7 @@ public class RobotContainer {
     private final Limelight limelight = Limelight.getInstance();
     private Gripper gripper = Gripper.getInstance();
 
+
     // ==================== CONTROLLERS =====================
     private final CommandXboxController xbox = new CommandXboxController(
             OperatorConstants.kGollumSubsysPort);
@@ -43,13 +47,17 @@ public class RobotContainer {
     private final CommandJoystick left = new CommandJoystick(OperatorConstants.kSamwiseLeftStickPort);
     private final CommandJoystick right = new CommandJoystick(OperatorConstants.kFrodoRightStickPort);
 
+
+    private final SendableChooser<Command> autonSwitch = new SendableChooser<>();
+
+
     // ==================== COMMANDS ========================
     private final DriveJoystick defaultDrive = new DriveJoystick(
             drivetrain,
-            xbox::getRightY,
             xbox::getLeftY,
+            xbox::getRightY,
             xbox::getLeftX
-            );
+    );
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -57,6 +65,7 @@ public class RobotContainer {
     public RobotContainer() {
         configureBindings();
         configureDefaultCommands();
+        configureAutonomoi();
         PortForwarder.add(5800, "10.42.15.11", 5800);
     }
 
@@ -230,9 +239,30 @@ public class RobotContainer {
             )
         );
 
-        xbox.leftBumper().onTrue(
-            new TurnDegrees(180, drivetrain)
+        // xbox.leftBumper().onTrue(
+        //     new TurnDegrees(180, drivetrain)
+        // );
+    }
+
+    private void configureAutonomoi() {
+
+        autonSwitch.setDefaultOption(
+            "Simple Mobility (2pts)", 
+            Autos.mobility(drivetrain)
         );
+
+        autonSwitch.addOption(
+            "Auto-Balance (12pts)", 
+            Autos.balance(drivetrain)
+        );
+
+        autonSwitch.addOption(
+            "Mobility & Auto-Balance (15pts)",
+            Autos.mobilityBackAndBalance(drivetrain)
+        );
+
+        SmartDashboard.putData("Autonomoi", autonSwitch);
+
     }
 
     /**
@@ -241,30 +271,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        // An example command will be run in autonomous
-        // return new TurnDegrees(180, drivetrain);
-        // return new AutoLevel(drivetrain);
-        return Autos.balance(drivetrain);
-        // return new SequentialCommandGroup(
-        // new RepeatCommand(
-        // new InstantCommand(() -> {
-        // SmartDashboard.putNumber("GyroX", drivetrain.getGyroX());
-        // SmartDashboard.putString("CurrentGyroAxis",
-        // drivetrain.getCurrentGyroAxis().toString());
-        // }, drivetrain)).withTimeout(10),
-        // new WaitCommand(1),
-        // new RepeatCommand(
-        // new InstantCommand(() -> {
-        // SmartDashboard.putNumber("GyroY", drivetrain.getGyroY());
-        // SmartDashboard.putString("CurrentGyroAxis",
-        // drivetrain.getCurrentGyroAxis().toString());
-        // }, drivetrain)).withTimeout(10),
-        // new WaitCommand(1),
-        // new RepeatCommand(
-        // new InstantCommand(() -> {
-        // SmartDashboard.putNumber("GyroZ", drivetrain.getGyroZ());
-        // SmartDashboard.putString("CurrentGyroAxis",
-        // drivetrain.getCurrentGyroAxis().toString());
-        // }, drivetrain)).withTimeout(10));
+        return autonSwitch.getSelected();
     }
 }
