@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
 public class DriveJoystick extends CommandBase {
-    private static final double kStaticJoystickScalar = 0.6;
+    private static final double kStaticJoystickScalar = 0.45;
 
     private final Drivetrain drivetrain;
     private final DoubleSupplier leftYSupplier;

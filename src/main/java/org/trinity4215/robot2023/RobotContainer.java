@@ -4,13 +4,13 @@
 
 package org.trinity4215.robot2023;
 
-
 import org.trinity4215.robot2023.Constants.OperatorConstants;
 import org.trinity4215.robot2023.commands.Autos;
 import org.trinity4215.robot2023.commands.DriveJoystick;
 import org.trinity4215.robot2023.commands.TurnDegrees;
 import org.trinity4215.robot2023.subsystems.Drivetrain;
 import org.trinity4215.robot2023.subsystems.Gripper;
+import org.trinity4215.robot2023.subsystems.Intake;
 import org.trinity4215.robot2023.subsystems.Limelight;
 
 import edu.wpi.first.net.PortForwarder;
@@ -37,8 +37,8 @@ public class RobotContainer {
     // ==================== SUBSYSTEMS ======================
     private final Drivetrain drivetrain = Drivetrain.getInstance();
     private final Limelight limelight = Limelight.getInstance();
+    private final Intake intake = Intake.getInstance();
     private Gripper gripper = Gripper.getInstance();
-
 
     // ==================== CONTROLLERS =====================
     private final CommandXboxController xbox = new CommandXboxController(
@@ -47,17 +47,14 @@ public class RobotContainer {
     private final CommandJoystick left = new CommandJoystick(OperatorConstants.kSamwiseLeftStickPort);
     private final CommandJoystick right = new CommandJoystick(OperatorConstants.kFrodoRightStickPort);
 
-
     private final SendableChooser<Command> autonSwitch = new SendableChooser<>();
-
 
     // ==================== COMMANDS ========================
     private final DriveJoystick defaultDrive = new DriveJoystick(
             drivetrain,
             xbox::getLeftY,
             xbox::getRightY,
-            xbox::getLeftX
-    );
+            xbox::getLeftX);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -68,7 +65,6 @@ public class RobotContainer {
         configureAutonomoi();
         PortForwarder.add(5800, "10.42.15.11", 5800);
     }
-
 
     private void configureDefaultCommands() {
         drivetrain.setDefaultCommand(defaultDrive);
@@ -96,170 +92,129 @@ public class RobotContainer {
 
     private void configFrodo() {
         left.povUp().debounce(0.25).whileTrue(
-            new RepeatCommand(
-                new InstantCommand(
-                    () -> drivetrain.driveArcadePercent(OperatorConstants.kSlowWheelSpeedPercent, 0),
-                    drivetrain
-                )
-            ).andThen(
-                new InstantCommand(
-                    () -> drivetrain.stop(),
-                    drivetrain
-                )
-            )
-        );
+                new RepeatCommand(
+                        new InstantCommand(
+                                () -> drivetrain.driveArcadePercent(OperatorConstants.kSlowWheelSpeedPercent, 0),
+                                drivetrain))
+                        .andThen(
+                                new InstantCommand(
+                                        () -> drivetrain.stop(),
+                                        drivetrain)));
 
         left.povDown().debounce(0.25).whileTrue(
-            new RepeatCommand(
-                new InstantCommand(
-                    () -> drivetrain.driveArcadePercent(-OperatorConstants.kSlowWheelSpeedPercent, 0),
-                    drivetrain
-                )
-            ).andThen(
-                new InstantCommand(
-                    () -> drivetrain.stop(),
-                    drivetrain
-                )
-            )
-        );
+                new RepeatCommand(
+                        new InstantCommand(
+                                () -> drivetrain.driveArcadePercent(-OperatorConstants.kSlowWheelSpeedPercent, 0),
+                                drivetrain))
+                        .andThen(
+                                new InstantCommand(
+                                        () -> drivetrain.stop(),
+                                        drivetrain)));
 
         left.povLeft().debounce(0.25).whileTrue(
-            new RepeatCommand(
-                new InstantCommand(
-                    () -> drivetrain.driveArcadePercent(0, OperatorConstants.kSlowWheelSpeedPercent), // ccw is +
-                    drivetrain
-                )
-            ).andThen(
-                new InstantCommand(
-                    () -> drivetrain.stop(),
-                    drivetrain
-                )
-            )
-        );
+                new RepeatCommand(
+                        new InstantCommand(
+                                () -> drivetrain.driveArcadePercent(0, OperatorConstants.kSlowWheelSpeedPercent), // ccw
+                                                                                                                  // is
+                                                                                                                  // +
+                                drivetrain))
+                        .andThen(
+                                new InstantCommand(
+                                        () -> drivetrain.stop(),
+                                        drivetrain)));
 
         left.povRight().debounce(0.25).whileTrue(
-            new RepeatCommand(
-                new InstantCommand(
-                    () -> drivetrain.driveArcadePercent(0, -OperatorConstants.kSlowWheelSpeedPercent),
-                    drivetrain
-                )
-            ).andThen(
-                new InstantCommand(
-                    () -> drivetrain.stop(),
-                    drivetrain
-                )
-            )
-        );
+                new RepeatCommand(
+                        new InstantCommand(
+                                () -> drivetrain.driveArcadePercent(0, -OperatorConstants.kSlowWheelSpeedPercent),
+                                drivetrain))
+                        .andThen(
+                                new InstantCommand(
+                                        () -> drivetrain.stop(),
+                                        drivetrain)));
 
         left.povUpLeft().debounce(0.25).whileTrue(
-            new RepeatCommand(
-                new InstantCommand(
-                    () -> drivetrain.driveArcadePercent(
-                        OperatorConstants.kSlowWheelSpeedPercent, 
-                        OperatorConstants.kSlowWheelSpeedPercent
-                    ),
-                    drivetrain
-                )
-            ).andThen(
-                new InstantCommand(
-                    () -> drivetrain.stop(),
-                    drivetrain
-                )
-            )
-        );
+                new RepeatCommand(
+                        new InstantCommand(
+                                () -> drivetrain.driveArcadePercent(
+                                        OperatorConstants.kSlowWheelSpeedPercent,
+                                        OperatorConstants.kSlowWheelSpeedPercent),
+                                drivetrain))
+                        .andThen(
+                                new InstantCommand(
+                                        () -> drivetrain.stop(),
+                                        drivetrain)));
 
         left.povUpRight().debounce(0.25).whileTrue(
-            new RepeatCommand(
-                new InstantCommand(
-                    () -> drivetrain.driveArcadePercent(
-                        OperatorConstants.kSlowWheelSpeedPercent, 
-                        -OperatorConstants.kSlowWheelSpeedPercent
-                    ),
-                    drivetrain
-                )
-            ).andThen(
-                new InstantCommand(
-                    () -> drivetrain.stop(),
-                    drivetrain
-                )
-            )
-        );
+                new RepeatCommand(
+                        new InstantCommand(
+                                () -> drivetrain.driveArcadePercent(
+                                        OperatorConstants.kSlowWheelSpeedPercent,
+                                        -OperatorConstants.kSlowWheelSpeedPercent),
+                                drivetrain))
+                        .andThen(
+                                new InstantCommand(
+                                        () -> drivetrain.stop(),
+                                        drivetrain)));
 
         left.povDownLeft().debounce(0.25).whileTrue(
-            new RepeatCommand(
-                new InstantCommand(
-                    () -> drivetrain.driveArcadePercent(
-                        -OperatorConstants.kSlowWheelSpeedPercent, 
-                        OperatorConstants.kSlowWheelSpeedPercent
-                    ),
-                    drivetrain
-                )
-            ).andThen(
-                new InstantCommand(
-                    () -> drivetrain.stop(),
-                    drivetrain
-                )
-            )
-        );
+                new RepeatCommand(
+                        new InstantCommand(
+                                () -> drivetrain.driveArcadePercent(
+                                        -OperatorConstants.kSlowWheelSpeedPercent,
+                                        OperatorConstants.kSlowWheelSpeedPercent),
+                                drivetrain))
+                        .andThen(
+                                new InstantCommand(
+                                        () -> drivetrain.stop(),
+                                        drivetrain)));
 
         left.povDownRight().debounce(0.25).whileTrue(
-            new RepeatCommand(
-                new InstantCommand(
-                    () -> drivetrain.driveArcadePercent(
-                        -OperatorConstants.kSlowWheelSpeedPercent, 
-                        -OperatorConstants.kSlowWheelSpeedPercent
-                    ),
-                    drivetrain
-                )
-            ).andThen(
-                new InstantCommand(
-                    () -> drivetrain.stop(),
-                    drivetrain
-                )
-            )
-        );
+                new RepeatCommand(
+                        new InstantCommand(
+                                () -> drivetrain.driveArcadePercent(
+                                        -OperatorConstants.kSlowWheelSpeedPercent,
+                                        -OperatorConstants.kSlowWheelSpeedPercent),
+                                drivetrain))
+                        .andThen(
+                                new InstantCommand(
+                                        () -> drivetrain.stop(),
+                                        drivetrain)));
     }
 
     private void configGollum() {
-        
-        xbox.a().onTrue(
-            new InstantCommand(
-                () -> gripper.toggleGrab(),
-                gripper
-            )
-        );
 
+        xbox.a().onTrue(
+                new InstantCommand(
+                        () -> gripper.toggleGrab(),
+                        gripper));
 
         xbox.y().onTrue(
-            new InstantCommand(
-                () -> {
-                    gripper.toggleUp();
-                },
-                gripper
-            )
-        );
+                new InstantCommand(
+                        () -> {
+                            gripper.toggleUp();
+                        },
+                        gripper));
 
         // xbox.leftBumper().onTrue(
-        //     new TurnDegrees(180, drivetrain)
+        // new TurnDegrees(180, drivetrain)
         // );
     }
 
     private void configureAutonomoi() {
 
         autonSwitch.setDefaultOption(
-            "Simple Mobility (2pts)", 
-            Autos.mobility(drivetrain)
-        );
+                "Simple Mobility (2pts)",
+                Autos.mobility(drivetrain));
 
         autonSwitch.addOption(
-            "Auto-Balance (12pts)", 
-            Autos.balance(drivetrain)
-        );
+                "Auto-Balance (12pts)",
+                Autos.balance(drivetrain));
 
         autonSwitch.addOption(
-            "Mobility & Auto-Balance (15pts)",
-            Autos.mobilityBackAndBalance(drivetrain)
-        );
+                "Mobility & Auto-Balance (15pts)",
+                Autos.mobilityBackAndBalance(drivetrain));
+        autonSwitch.addOption("Test Intake Raising", Autos.testPositionalIntakeRaise(intake));
 
         SmartDashboard.putData("Autonomoi", autonSwitch);
 

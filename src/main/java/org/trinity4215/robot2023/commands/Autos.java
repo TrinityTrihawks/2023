@@ -5,6 +5,7 @@
 package org.trinity4215.robot2023.commands;
 
 import org.trinity4215.robot2023.subsystems.Drivetrain;
+import org.trinity4215.robot2023.subsystems.Intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -23,37 +24,38 @@ public final class Autos {
                                 drive));
     }
 
-    public static Command chirpyBit(Drivetrain drive) {
-        return new RepeatCommand(
-                new InstantCommand(
-                        () -> drive.driveArcadePercent(-1, 0),
-                        drive))
-                .withTimeout(0.1).andThen(
-                        new InstantCommand(
-                                () -> drive.stop(),
-                                drive));
-    }
+    // public static Command chirpyBit(Drivetrain drive) {
+    // return new RepeatCommand(
+    // new InstantCommand(
+    // () -> drive.driveArcadePercent(-1, 0),
+    // drive))
+    // .withTimeout(0.1).andThen(
+    // new InstantCommand(
+    // () -> drive.stop(),
+    // drive));
+    // }
 
     public static Command balance(Drivetrain drive) {
-        return chirpyBit(drive).andThen(
-                new AutoLevel(drive));
+        return new AutoLevel(drive);
     }
 
     public static Command mobilityBackAndBalance(Drivetrain drive) {
-        return chirpyBit(drive).andThen(
-            new RepeatCommand(
+        return new RepeatCommand(
                 new InstantCommand(
                         () -> drive.driveArcadePercent(-0.75, 0),
                         drive))
                 .withTimeout(1.7).andThen(
                         new InstantCommand(
                                 () -> drive.stop(),
-                                drive)),
-            new AutoLevel(drive)
-        );
+                                drive),
+                        new AutoLevel(drive));
+    }
+
+    public static Command testPositionalIntakeRaise(Intake intake) {
+        return new PositionalIntakeTest(intake);
     }
 
     private Autos() {
-        throw new UnsupportedOperationException("This is a utility class!");
+        throw new UnsupportedOperationException(this.toString() + " is a utility class!");
     }
 }

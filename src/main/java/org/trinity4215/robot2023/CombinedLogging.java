@@ -18,14 +18,22 @@ public class CombinedLogging {
         NONE
     };
 
+    private static enum LoggingDestination {
+        SMART_DASHBOARD,
+        COMMAND_LINE,
+        BOTH
+    }
+
     private static final LoggingLevel loggingLevel = LoggingLevel.NONE;
+    private static final LoggingDestination loggingDestination = LoggingDestination.SMART_DASHBOARD;
     private static final List<String> priorityKeys = Arrays.asList(
             "driveType" // Add priority keys here
-            , "Error"
-    );
+            , "Error");
 
     private static void print(String key, Object value) {
-        System.out.println(key + ": " + value.toString());
+        if (loggingDestination == LoggingDestination.BOTH | loggingDestination == LoggingDestination.COMMAND_LINE) {
+            System.out.println(key + ": " + value.toString());
+        }
     }
 
     public static void putNumber(String key, double number) {
