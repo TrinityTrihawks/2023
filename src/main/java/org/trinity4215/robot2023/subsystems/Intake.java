@@ -23,20 +23,25 @@ enum IntakeDriveDirection {
 public class Intake extends SubsystemBase {
 
   private static Intake subsystemInst = null;
-  private CANSparkMax intakeRunSparkMax = new CANSparkMax(IntakeConstants.kRunSparkID, MotorType.kBrushed);
-  private CANSparkMax intakeRaiseSparkMax = new CANSparkMax(IntakeConstants.kRaiseSparkID, MotorType.kBrushed);
-  private RelativeEncoder intakeRaiseEncoder = intakeRaiseSparkMax.getEncoder(Type.kQuadrature, IntakeConstants.kRevEncoderCountsPerRevolution);
+
+  private CANSparkMax spinMotor = new CANSparkMax(IntakeConstants.kRunSparkID, MotorType.kBrushed);
+  private RelativeEncoder spinEncoder = spinMotor.getEncoder(Type.kQuadrature,
+      IntakeConstants.kRevEncoderCountsPerRevolution);
+
+  private CANSparkMax raiseMotor = new CANSparkMax(IntakeConstants.kRaiseSparkID, MotorType.kBrushed);
+  private RelativeEncoder raiseEncoder = raiseMotor.getEncoder(Type.kQuadrature,
+      IntakeConstants.kRevEncoderCountsPerRevolution);
 
   /** Creates a new Intake. */
   public Intake() {
 
-    intakeRunSparkMax.restoreFactoryDefaults();
-    intakeRunSparkMax.setIdleMode(IdleMode.kBrake);
+    spinMotor.restoreFactoryDefaults();
+    spinMotor.setIdleMode(IdleMode.kBrake);
+    spinEncoder.setPositionConversionFactor(IntakeConstants.kPositionConversionFactor);
 
-    intakeRaiseSparkMax.restoreFactoryDefaults();
-    // intakeRaiseSparkMax.setIdleMode(IdleMode.kBrake);
-
-    intakeRaiseEncoder.setPositionConversionFactor(IntakeConstants.kPositionConversionFactor);
+    raiseMotor.restoreFactoryDefaults();
+    raiseMotor.setIdleMode(IdleMode.kCoast);
+    raiseEncoder.setPositionConversionFactor(IntakeConstants.kPositionConversionFactor);
 
     System.out.println("Intake initialized!");
 
@@ -50,47 +55,61 @@ public class Intake extends SubsystemBase {
   }
 
   public void runIntake(double speed) {
-    intakeRunSparkMax.set(speed);
+    spinMotor.set(speed);
   }
 
   public double getAbsoluteEncoderPosition() {
-    return intakeRaiseEncoder.getPosition();
+    return raiseEncoder.getPosition();
   }
 
   public void driveToDegrees(double targetPosition, double speed) {
-    double currentPosition = intakeRaiseEncoder.getPosition();
+    double currentPosition = raiseEncoder.getPosition();
     CombinedLogging.putNumber("IntakeRaiseEncoderPosition", currentPosition);
 
     if (currentPosition > 10000) {
-      intakeRaiseSparkMax.set(speed);
+      raiseMotor.set(speed);
       return;
     }
 
-    if ((Math.abs(currentPosition) - Math.abs(targetPosition) < IntakeConstants.kOuterDeadzoneArea/2 ) && ( Math.abs(currentPosition) - Math.abs(targetPosition) > -IntakeConstants.kOuterDeadzoneArea/2)) {
-      speed = .3  *speed;
-      SmartDashboard.putBoolean("5deg", true); 
+    if ((Math.abs(currentPosition) - Math.abs(targetPosition) < IntakeConstants.kOuterDeadzoneArea / 2)
+        && (Math.abs(currentPosition) - Math.abs(targetPosition) > -IntakeConstants.kOuterDeadzoneArea / 2)) {
+      speed = .3 * speed;
+      SmartDashboard.putBoolean("5deg", true);
     } else {
       SmartDashboard.putBoolean("5deg", false);
     }
 
-    if (currentPosition < targetPosition - (IntakeConstants.kInnerDeadzoneArea/2)) {
-      intakeRaiseSparkMax.set(speed);
-    } else if (currentPosition > targetPosition + (IntakeConstants.kInnerDeadzoneArea/2)) {
-      intakeRaiseSparkMax.set(-speed);
+    if (currentPosition < targetPosition - (IntakeConstants.kInnerDeadzoneArea / 2)) {
+      raiseMotor.set(speed);
+    } else if (currentPosition > targetPosition + (IntakeConstants.kInnerDeadzoneArea / 2)) {
+      raiseMotor.set(-speed);
     } else {
       stop();
     }
   }
 
-  public void spit() {
-    intakeRunSparkMax.set(IntakeConstants.kIntakeSpitSpeed);
+  enum IntakeType {
+    CONE, CUBE
   }
-  public void suck() {
-    intakeRunSparkMax.set(IntakeConstants.kIntakeSuckSpeed);
+
+  public void spit(IntakeType intakeType) {
+    spinMotor.set(IntakeConstants.kIntakeSpitSpeed * (intakeType == IntakeType.CONE ? 1 : -1));
+  }
+
+  public void suck(IntakeType intakeType) {
+    spinMotor.set(IntakeConstants.kIntakeSuckSpeed * (intakeType == IntakeType.CONE ? 1 : -1));
+  }
+
+  public boolean hasCone(IntakeType intakeType) {
+
+    if (intakeType == IntakeType.CONE) {
+
+    }
+    return false;
   }
 
   public void stop() {
-    intakeRunSparkMax.set(0);
+    spinMotor.set(0);
   }
 
   @Override

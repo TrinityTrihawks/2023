@@ -82,8 +82,8 @@ public class RobotContainer {
 
     private void configGollum() {
 
-        xbox.leftTrigger().whileTrue(new StartEndCommand(() -> {intake.spit();}, () -> {intake.stop();}, intake));
-        xbox.rightTrigger().whileTrue(new StartEndCommand(() -> {intake.suck();}, () -> {intake.stop();}, intake));
+        xbox.leftTrigger().whileTrue(new StartEndCommand(() -> {intake.spit(null);}, () -> {intake.stop();}, intake));
+        xbox.rightTrigger().whileTrue(new StartEndCommand(() -> {intake.suck(null);}, () -> {intake.stop();}, intake));
    
     }
 
