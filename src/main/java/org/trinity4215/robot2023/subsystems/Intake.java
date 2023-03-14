@@ -4,16 +4,16 @@
 
 package org.trinity4215.robot2023.subsystems;
 
-import java.security.InvalidKeyException;
-
 import org.trinity4215.robot2023.CombinedLogging;
+import org.trinity4215.robot2023.Constants.IntakeConstants;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxRelativeEncoder.Type;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 enum IntakeDriveDirection {
@@ -23,9 +23,9 @@ enum IntakeDriveDirection {
 public class Intake extends SubsystemBase {
 
   private static Intake subsystemInst = null;
-  private CANSparkMax intakeRunSparkMax = new CANSparkMax(17, MotorType.kBrushed);
-  private CANSparkMax intakeRaiseSparkMax = new CANSparkMax(18, MotorType.kBrushed);
-  private RelativeEncoder intakeRaiseEncoder = intakeRaiseSparkMax.getEncoder(Type.kQuadrature, 8192);
+  private CANSparkMax intakeRunSparkMax = new CANSparkMax(IntakeConstants.kRunSparkID, MotorType.kBrushed);
+  private CANSparkMax intakeRaiseSparkMax = new CANSparkMax(IntakeConstants.kRaiseSparkID, MotorType.kBrushed);
+  private RelativeEncoder intakeRaiseEncoder = intakeRaiseSparkMax.getEncoder(Type.kQuadrature, IntakeConstants.kRevEncoderCountsPerRevolution);
 
   /** Creates a new Intake. */
   public Intake() {
@@ -36,7 +36,7 @@ public class Intake extends SubsystemBase {
     intakeRaiseSparkMax.restoreFactoryDefaults();
     // intakeRaiseSparkMax.setIdleMode(IdleMode.kBrake);
 
-    intakeRaiseEncoder.setPositionConversionFactor(180);
+    intakeRaiseEncoder.setPositionConversionFactor(IntakeConstants.kPositionConversionFactor);
 
     System.out.println("Intake initialized!");
 
@@ -60,13 +60,37 @@ public class Intake extends SubsystemBase {
   public void driveToDegrees(double targetPosition, double speed) {
     double currentPosition = intakeRaiseEncoder.getPosition();
     CombinedLogging.putNumber("IntakeRaiseEncoderPosition", currentPosition);
-    if (currentPosition < targetPosition - 1) {
+
+    if (currentPosition > 10000) {
       intakeRaiseSparkMax.set(speed);
-    } else if (currentPosition > targetPosition + 1) {
+      return;
+    }
+
+    if ((Math.abs(currentPosition) - Math.abs(targetPosition) < IntakeConstants.kOuterDeadzoneArea/2 ) && ( Math.abs(currentPosition) - Math.abs(targetPosition) > -IntakeConstants.kOuterDeadzoneArea/2)) {
+      speed = .3  *speed;
+      SmartDashboard.putBoolean("5deg", true); 
+    } else {
+      SmartDashboard.putBoolean("5deg", false);
+    }
+
+    if (currentPosition < targetPosition - (IntakeConstants.kInnerDeadzoneArea/2)) {
+      intakeRaiseSparkMax.set(speed);
+    } else if (currentPosition > targetPosition + (IntakeConstants.kInnerDeadzoneArea/2)) {
       intakeRaiseSparkMax.set(-speed);
     } else {
-       intakeRaiseSparkMax.set(0);
+      stop();
     }
+  }
+
+  public void spit() {
+    intakeRunSparkMax.set(IntakeConstants.kIntakeSpitSpeed);
+  }
+  public void suck() {
+    intakeRunSparkMax.set(IntakeConstants.kIntakeSuckSpeed);
+  }
+
+  public void stop() {
+    intakeRunSparkMax.set(0);
   }
 
   @Override
