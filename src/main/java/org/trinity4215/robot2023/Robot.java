@@ -2,7 +2,10 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.trinity4215.bilbotbaggins;
+package org.trinity4215.robot2023;
+
+import org.trinity4215.robot2023.Constants.DriveConstants;
+import org.trinity4215.robot2023.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,6 +25,8 @@ public class Robot extends TimedRobot {
 
     private RobotContainer robotContainer;
 
+    private boolean shouldBrake = false;
+
     /**
      * This function is run when the robot is first started up and should be used
      * for any
@@ -32,7 +37,6 @@ public class Robot extends TimedRobot {
         // Instantiate our RobotContainer. This will perform all our button bindings,
         // and put our
         // autonomous chooser on the dashboard.
-        BotSwitcher.assertCorrectRobot();
         robotContainer = new RobotContainer();
     }
 
@@ -56,16 +60,26 @@ public class Robot extends TimedRobot {
         // robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
+        if (shouldBrake) {
+            Drivetrain.getInstance().brakeIdle();
+        } else {
+            Drivetrain.getInstance().releaseBrake();
+        }
     }
 
     /** This function is called once each time the robot enters Disabled mode. */
     @Override
     public void disabledInit() {
-        System.out.println("============ Disable ============");
+        shouldBrake = true;
     }
 
     @Override
     public void disabledPeriodic() {
+        var speeds = Drivetrain.getInstance().getWheelSpeeds();
+        if (Math.abs(speeds.leftMetersPerSecond) < DriveConstants.kBasicallyStoppedSpeed
+            && Math.abs(speeds.rightMetersPerSecond) < DriveConstants.kBasicallyStoppedSpeed) {
+            shouldBrake = false;
+        } 
     }
 
     /**
@@ -74,13 +88,13 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
+        shouldBrake = true;
         autonomousCommand = robotContainer.getAutonomousCommand();
 
         // schedule the autonomous command (example)
         if (autonomousCommand != null) {
             autonomousCommand.schedule();
         }
-        System.out.println("============ Auton enable ============");
     }
 
     /** This function is called periodically during autonomous. */
@@ -97,7 +111,7 @@ public class Robot extends TimedRobot {
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
-        System.out.println("============ Teleop enable ============");
+        shouldBrake = false;
     }
 
     /** This function is called periodically during operator control. */

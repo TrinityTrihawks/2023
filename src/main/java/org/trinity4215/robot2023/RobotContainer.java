@@ -2,15 +2,19 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.trinity4215.bilbotbaggins;
+package org.trinity4215.robot2023;
 
-import org.trinity4215.bilbotbaggins.Constants.OperatorConstants;
-import org.trinity4215.bilbotbaggins.commands.DriveJoystick;
-import org.trinity4215.bilbotbaggins.commands.TurnDegrees;
-import org.trinity4215.bilbotbaggins.subsystems.Drivetrain;
+import org.trinity4215.robot2023.Constants.OperatorConstants;
+import org.trinity4215.robot2023.commands.Autos;
+import org.trinity4215.robot2023.commands.DriveJoystick;
+import org.trinity4215.robot2023.subsystems.Drivetrain;
+import org.trinity4215.robot2023.subsystems.Intake;
 
+import edu.wpi.first.net.PortForwarder;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -25,24 +29,22 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
     // ==================== SUBSYSTEMS ======================
-    private final Drivetrain drivetrain = BotSwitcher.getDrivetrain();
+    private final Drivetrain drivetrain = Drivetrain.getInstance();
+    private final Intake intake = Intake.getInstance();
 
     // ==================== CONTROLLERS =====================
-    private final CommandXboxController gollum = new CommandXboxController(
-            OperatorConstants.kXboxPort);
+    private final CommandXboxController xbox = new CommandXboxController(
+            OperatorConstants.kGollumDrivePort);
 
-    private final ZeroableJoystick samwiseGamgee = new ZeroableJoystick(OperatorConstants.kLeftStickPort,
-            "Samwise Gamgee");
-    private final ZeroableJoystick frodoBaggins = new ZeroableJoystick(OperatorConstants.kRightStickPort,
-            "Frodo Baggins");
+
+    private final SendableChooser<Command> autonSwitch = new SendableChooser<>();
 
     // ==================== COMMANDS ========================
     private final DriveJoystick defaultDrive = new DriveJoystick(
             drivetrain,
-            samwiseGamgee::getZeroedY,
-            frodoBaggins::getZeroedY,
-            frodoBaggins::getZeroedTwist
-    );
+            xbox::getLeftY,
+            xbox::getRightY,
+            xbox::getLeftX);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -50,18 +52,12 @@ public class RobotContainer {
     public RobotContainer() {
         configureBindings();
         configureDefaultCommands();
+        configureAutonomoi();
+        PortForwarder.add(5800, "10.42.15.11", 5800);
     }
 
     private void configureDefaultCommands() {
-
-        drivetrain.setDefaultCommand(
-            new InstantCommand(
-                () -> {
-                    frodoBaggins.zero();
-                    samwiseGamgee.zero();
-                }
-            ).andThen(defaultDrive)
-        );
+        drivetrain.setDefaultCommand(defaultDrive);
     }
 
     /**
@@ -79,14 +75,34 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-        // new Trigger(exampleSubsystem::exampleCondition)
-        // .onTrue(new ExampleCommand(exampleSubsystem));
 
-        // Schedule `exampleMethodCommand` when the Xbox controller's B button is
-        // pressed,
-        // cancelling on release.
-        // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+        configGollum();
+    }
+
+
+    private void configGollum() {
+
+        xbox.leftTrigger().whileTrue(new StartEndCommand(() -> {intake.spit();}, () -> {intake.stop();}, intake));
+        xbox.rightTrigger().whileTrue(new StartEndCommand(() -> {intake.suck();}, () -> {intake.stop();}, intake));
+   
+    }
+
+    private void configureAutonomoi() {
+
+        autonSwitch.setDefaultOption(
+                "Simple Mobility (2pts)",
+                Autos.mobility(drivetrain));
+
+        autonSwitch.addOption(
+                "Auto-Balance (12pts)",
+                Autos.balance(drivetrain));
+
+        autonSwitch.addOption(
+                "Mobility & Auto-Balance (15pts)",
+                Autos.mobilityBackAndBalance(drivetrain));
+        autonSwitch.addOption("Test Intake Raising", Autos.testPositionalIntakeRaise(intake));
+
+        SmartDashboard.putData("Autonomoi", autonSwitch);
 
     }
 
@@ -96,7 +112,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return  new TurnDegrees(180, drivetrain);
+        return autonSwitch.getSelected();
     }
-
 }
