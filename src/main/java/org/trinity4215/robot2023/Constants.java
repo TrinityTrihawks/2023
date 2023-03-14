@@ -81,12 +81,6 @@ public final class Constants {
     }
 
     public static class IntakeConstants {
-
-        public static final int kRaiseEncCountsPerRev = 8192;
-
-    }
-
-    public static class IntakeConstants {
          public static final double kIntakeSpitSpeed = 0.5;
          public static final double kIntakeSuckSpeed = 0.5;
          public static final double kInnerDeadzoneArea = 1; //deg
