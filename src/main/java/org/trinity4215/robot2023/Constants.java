@@ -18,7 +18,7 @@ package org.trinity4215.robot2023;
  */
 public final class Constants {
     public static class OperatorConstants {
-        public static final int kGollumSubsysPort = 2;
+        public static final int kGollumDrivePort = 2;
         public static final int kSamwiseLeftStickPort = 1;
         public static final int kFrodoRightStickPort = 0;
 
@@ -80,11 +80,10 @@ public final class Constants {
         public static final double kDriveFeedbackCoefficient = 0.1;
     }
 
-    public static class GripperConstants {
-        public static final int kSqeezeSolenoidPort0 = 0; //14;
-        public static final int kSqeezeSolenoidPort1 = 1; //15;
-        public static final int kRaiseSolenoidPort0 = 2;
-        public static final int kRaiseSolenoidPort1 = 3;
+    public static class IntakeConstants {
+
+        public static final int kRaiseEncCountsPerRev = 8192;
+
     }
 
     public static class IntakeConstants {

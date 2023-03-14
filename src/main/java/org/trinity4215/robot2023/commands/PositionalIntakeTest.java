@@ -4,8 +4,6 @@
 
 package org.trinity4215.robot2023.commands;
 
-import org.ejml.equation.IntegerSequence.Combined;
-import org.trinity4215.robot2023.CombinedLogging;
 import org.trinity4215.robot2023.subsystems.Intake;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
