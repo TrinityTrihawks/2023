@@ -21,7 +21,7 @@ public class Limelight extends SubsystemBase {
         } 
         return subsystemInst;
     }
-    public Limelight() {
+    private Limelight() {
         
     }
     

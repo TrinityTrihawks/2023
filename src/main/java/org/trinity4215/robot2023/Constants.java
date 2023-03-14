@@ -82,8 +82,8 @@ public final class Constants {
 
     public static class IntakeConstants {
          public static final double kIntakeSpitSpeed = 0.5;
-         public static final double kIntakeSuckSpeed = 0.5;
-         public static final double kInnerDeadzoneArea = 1; //deg
+         public static final double kIntakeSuckSpeed = -0.5;
+         public static final double kInnerDeadzoneArea = 1.5; //deg
          public static final double kOuterDeadzoneArea = 10; //deg
          public static final int kRaiseSparkID = 18;
          public static final int kRunSparkID = 17;
