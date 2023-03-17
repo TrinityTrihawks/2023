@@ -4,47 +4,52 @@
 
 package org.trinity4215.robot2023.commands;
 
-import org.trinity4215.robot2023.CombinedLogging;
 import org.trinity4215.robot2023.subsystems.Intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class PositionalIntakeTest extends CommandBase {
 
-    private Intake intake;
+public class MoveIntakeArmDegreesRelative extends CommandBase {
 
-    
-    public PositionalIntakeTest(Intake intake) {
-        // Use addRequirements() here to declare subsystem dependencies.
+    // flebphjk mjnhbogfvdcx
+    // ng'i^lut i^ch'u i^yu
+
+    private double targetPosition = Double.NaN;
+    private final double kArmSpeed = .5;
+
+    private final Intake intake;
+
+    /**
+     * @param relativeDegrees -- + is towards deployed, - towards retracted
+     */
+    public MoveIntakeArmDegreesRelative(double relativeDegrees, Intake intake) {
+        targetPosition = relativeDegrees;
         this.intake = intake;
-
         addRequirements(intake);
-
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-
+        // convert target from relative to absolute
+        targetPosition = targetPosition + intake.getAbsoluteEncoderPosition();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-
-        CombinedLogging.putNumber("IntakeAbsolutEncoderPosition", intake.getAbsoluteEncoderPosition());
-        intake.driveToDegrees(115, 0.1);
-
+        intake.driveToDegrees(targetPosition, kArmSpeed);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
+        intake.stopRaise();
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return false;
+        return intake.isArmInDeadzone() || intake.isArmDown();
     }
 }

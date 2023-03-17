@@ -4,16 +4,22 @@
 
 package org.trinity4215.robot2023;
 
+import java.util.Random;
+
+import org.trinity4215.robot2023.Constants.IntakeConstants;
 import org.trinity4215.robot2023.Constants.OperatorConstants;
 import org.trinity4215.robot2023.commands.Autos;
 import org.trinity4215.robot2023.commands.DriveJoystick;
+import org.trinity4215.robot2023.commands.MoveIntakeArmDegreesRelative;
 import org.trinity4215.robot2023.subsystems.Drivetrain;
 import org.trinity4215.robot2023.subsystems.Intake;
+import org.trinity4215.robot2023.subsystems.Intake.IntakeType;
 
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -28,16 +34,20 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+
+    private final Random random = new Random();
+
     // ==================== SUBSYSTEMS ======================
     private final Drivetrain drivetrain = Drivetrain.getInstance();
     private final Intake intake = Intake.getInstance();
+
 
     // ==================== CONTROLLERS =====================
     private final CommandXboxController xbox = new CommandXboxController(
             OperatorConstants.kGollumDrivePort);
 
-
     private final SendableChooser<Command> autonSwitch = new SendableChooser<>();
+
 
     // ==================== COMMANDS ========================
     private final DriveJoystick defaultDrive = new DriveJoystick(
@@ -82,9 +92,25 @@ public class RobotContainer {
 
     private void configGollum() {
 
-        xbox.leftTrigger().whileTrue(new StartEndCommand(() -> {intake.spit(null);}, () -> {intake.stop();}, intake));
-        xbox.rightTrigger().whileTrue(new StartEndCommand(() -> {intake.suck(null);}, () -> {intake.stop();}, intake));
-   
+        xbox.leftTrigger().whileTrue(
+            new StartEndCommand(
+                () -> intake.spit(null),
+                () -> intake.stopSpin(), 
+                intake
+            )
+        );
+
+        xbox.rightTrigger().whileTrue(
+            new StartEndCommand(
+                () -> intake.suck(null), 
+                () -> intake.stopSpin(), 
+                intake));
+        
+        xbox.a().onTrue(new ProxyCommand(
+            () -> new MoveIntakeArmDegreesRelative(10, intake)
+        ));
+
+       
     }
 
     private void configureAutonomoi() {
