@@ -4,6 +4,7 @@
 
 package org.trinity4215.robot2023.commands;
 
+import org.trinity4215.robot2023.Constants.IntakeConstants;
 import org.trinity4215.robot2023.subsystems.Intake;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,15 +26,17 @@ public class PositionalIntakeTest extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    SmartDashboard.putNumber("IntakeTargetPosition", 48);
+
     
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    double targetPosition = SmartDashboard.getNumber("IntakeTargetPosition", IntakeConstants.kDefaultTargetPosition);
+    intake.driveToDegrees(targetPosition, 0.1);
 
-    SmartDashboard.putNumber("IntakeAbsolutEncoderPosition",intake.getAbsoluteEncoderPosition());
-    intake.driveToDegrees(115, 0.1);
 
   }
 

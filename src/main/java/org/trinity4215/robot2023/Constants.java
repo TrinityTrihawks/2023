@@ -88,6 +88,7 @@ public final class Constants {
          public static final int kRaiseSparkID = 18;
          public static final int kRunSparkID = 17;
          public static final int kRevEncoderCountsPerRevolution = 8192;
-         public static final int kPositionConversionFactor =180; // "pi-radians" to degrees;
+         public static final int kPositionConversionFactor = 180; // "pi-radians" to degrees;
+         public static final int kDefaultTargetPosition = 115;
     }
 }

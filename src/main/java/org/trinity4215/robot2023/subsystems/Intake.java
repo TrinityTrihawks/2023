@@ -32,6 +32,7 @@ public class Intake extends SubsystemBase {
   private RelativeEncoder raiseEncoder = raiseMotor.getEncoder(Type.kQuadrature,
       IntakeConstants.kRevEncoderCountsPerRevolution);
 
+
   /** Creates a new Intake. */
   public Intake() {
 
@@ -67,7 +68,7 @@ public class Intake extends SubsystemBase {
     CombinedLogging.putNumber("IntakeRaiseEncoderPosition", currentPosition);
 
     if (currentPosition > 10000) {
-      raiseMotor.set(speed);
+      raiseMotor.set(-speed);
       return;
     }
 
@@ -80,9 +81,9 @@ public class Intake extends SubsystemBase {
     }
 
     if (currentPosition < targetPosition - (IntakeConstants.kInnerDeadzoneArea / 2)) {
-      raiseMotor.set(speed);
-    } else if (currentPosition > targetPosition + (IntakeConstants.kInnerDeadzoneArea / 2)) {
       raiseMotor.set(-speed);
+    } else if (currentPosition > targetPosition + (IntakeConstants.kInnerDeadzoneArea / 2)) {
+      raiseMotor.set(speed);
     } else {
       stop();
     }
@@ -115,5 +116,7 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("IntakeAbsolutEncoderPosition", getAbsoluteEncoderPosition());
+
   }
 }
