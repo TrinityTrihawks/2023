@@ -113,6 +113,7 @@ public class Robot extends TimedRobot {
             autonomousCommand.cancel();
         }
         shouldBrake = false;
+        Drivetrain.getInstance().configVelocityMode(false);
     }
 
     /** This function is called periodically during operator control. */
