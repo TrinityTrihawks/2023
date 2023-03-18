@@ -40,6 +40,9 @@ public final class Constants {
         public static final double kInchesPerMeter = 2.54 / 100;
         public static final double kMotorRPMToMetersPerMinute = (Math.PI * kWheelDiameterInches) * kPerMinuteToPerSecond * kGearboxRatio * kInchesPerMeter;     
 
+        public static final double kRPMToPercentage = 1/8000; // TODO: rpm percent this with a good battery
+        public static final double kPorportionalDriveFeedback = 0.1; // TODO: tune this
+
         public static final int kPigeonId = 0;
         public static final int kEncoderCPR = 0;
         public static final double kSlewValue = 2.5;

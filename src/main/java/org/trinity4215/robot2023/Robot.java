@@ -71,6 +71,7 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledInit() {
         shouldBrake = true;
+        Drivetrain.getInstance().configVelocityMode(false);
     }
 
     @Override

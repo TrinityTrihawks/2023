@@ -33,7 +33,7 @@ public class Intake extends SubsystemBase {
       IntakeConstants.kRevEncoderCountsPerRevolution);
 
   /** Creates a new Intake. */
-  public Intake() {
+  private Intake() {
 
     spinMotor.restoreFactoryDefaults();
     spinMotor.setIdleMode(IdleMode.kBrake);

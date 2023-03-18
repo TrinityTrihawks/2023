@@ -63,6 +63,10 @@ public class Drivetrain extends SubsystemBase {
 
     private final DifferentialDrive drive = new DifferentialDrive(leftMotorControllerGroup, rightMotorControllerGroup);
 
+    private double leftTargetVelocity = 0;
+    private double rightTargetVelocity = 0;
+    private boolean velocityMode = false;
+
     // TODO: This line requires you to set encoder.setPositionConversionFactor to a
     // value that will cause the encoder to return its position in meters
     // private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(new Rotation2d(getGyroZ()),
@@ -79,7 +83,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     /** Creates a new Drivetrain. */
-    public Drivetrain() {
+    private Drivetrain() {
         axis = IMUAxis.kY;
         leftEncoder.setPositionConversionFactor(DriveConstants.kPositionConversionFactor);
         rightEncoder.setPositionConversionFactor(DriveConstants.kPositionConversionFactor);
@@ -94,17 +98,39 @@ public class Drivetrain extends SubsystemBase {
         return subsystemInst; // Ensures that only one Drivetrain instance exists at once
     }
 
+    /**
+     * n. b. this calles configVelocityMode(false)
+     */
     public void driveArcadePercent(double speed, double twist) {
+        configVelocityMode(false);
         drive.arcadeDrive(speedLimiter.calculate(speed), twistLimiter.calculate(twist));
     }
 
+    /**
+     * n. b. this calles configVelocityMode(false)
+     */
     public void driveTankPercent(double left, double right) {
+        configVelocityMode(false);
         drive.tankDrive(leftLimiter.calculate(left), rightLimiter.calculate(right));
         CombinedLogging.putNumber("inputs", left);
     }
 
+    /**
+     * sets the target wheel speeds for the drivetrain.
+     * PLEASE NOTE THIS IS A SET-AND-FORGET FUNCTION. WHEN CALLED
+     * IT WILL CONFIGURE THE DRIVETRAIN TO TARGET THeSe VELOCITies
+     * continuously until `configVelocityMode(boolean)` is called 
+     * with `false`.
+     * inputs are in RPM (at least for the time being)
+     */
     public void driveTankVelocity(double left, double right) {
+        configVelocityMode(true);
+        leftTargetVelocity = left;
+        rightTargetVelocity = right;
+    }
 
+    public void configVelocityMode(boolean on) {
+        velocityMode = on;
     }
 
     public void stop() {
@@ -203,5 +229,24 @@ public class Drivetrain extends SubsystemBase {
         // https://docs.wpilib.org/en/stable/docs/software/kinematics-and-odometry/differential-drive-odometry.html
         // robotPose = odometry.update(gyro_angle, leftEncoder.getPosition(),
         //         rightEncoder.getPosition());
+
+        // be careful. e-stop judiciously...
+        if (velocityMode) {
+            updateWheelSpeeds();
+        }
+    }
+
+    private void updateWheelSpeeds() {
+        double distanceToTargetLeft = leftTargetVelocity - leftEncoder.getVelocity();
+        double distanceToTargetRight = rightTargetVelocity - rightEncoder.getVelocity();
+        
+        driveTankPercent(
+            distanceToTargetLeft 
+                * DriveConstants.kPorportionalDriveFeedback
+                * DriveConstants.kRPMToPercentage, 
+            distanceToTargetRight 
+                * DriveConstants.kPorportionalDriveFeedback
+                * DriveConstants.kRPMToPercentage
+        );
     }
 }
