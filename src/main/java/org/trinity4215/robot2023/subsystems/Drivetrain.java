@@ -16,11 +16,13 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Drivetrain extends SubsystemBase {
@@ -36,14 +38,11 @@ public class Drivetrain extends SubsystemBase {
     private final CANSparkMax rightFollower = new CANSparkMax(DriveConstants.kRightFollowerId,
             MotorType.kBrushless);
 
-    private final CANSparkMax[] 
-    sparks = new CANSparkMax[] 
-            { leftLeader,   rightLeader,
-              leftFollower, rightFollower };
+    private final CANSparkMax[] sparks = new CANSparkMax[] { leftLeader, rightLeader,
+            leftFollower, rightFollower };
 
     private final MotorControllerGroup leftMotorControllerGroup = new MotorControllerGroup(leftLeader, leftFollower);
     private final MotorControllerGroup rightMotorControllerGroup = new MotorControllerGroup(rightLeader, rightFollower);
-
 
     // Initialize Spark Max encoders
     private final RelativeEncoder leftEncoder = leftLeader.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor,
@@ -65,8 +64,9 @@ public class Drivetrain extends SubsystemBase {
 
     // TODO: This line requires you to set encoder.setPositionConversionFactor to a
     // value that will cause the encoder to return its position in meters
-    // private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(new Rotation2d(getGyroZ()),
-    //         leftEncoder.getPosition(), rightEncoder.getPosition());
+    // private final DifferentialDriveOdometry odometry = new
+    // DifferentialDriveOdometry(new Rotation2d(getGyroZ()),
+    // leftEncoder.getPosition(), rightEncoder.getPosition());
 
     private DriveType driveType = null;
 
@@ -84,6 +84,9 @@ public class Drivetrain extends SubsystemBase {
         leftEncoder.setPositionConversionFactor(DriveConstants.kPositionConversionFactor);
         rightEncoder.setPositionConversionFactor(DriveConstants.kPositionConversionFactor);
         leftMotorControllerGroup.setInverted(true);
+        for (CANSparkMax spark : sparks) {
+            spark.clearFaults();
+        }
     }
 
     public static Drivetrain getInstance() {
@@ -116,7 +119,6 @@ public class Drivetrain extends SubsystemBase {
         gyro.reset();
     }
 
-
     public void brakeIdle() {
         for (CANSparkMax spark : sparks) {
             spark.setIdleMode(IdleMode.kBrake);
@@ -129,13 +131,11 @@ public class Drivetrain extends SubsystemBase {
         }
     }
 
-
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
         return new DifferentialDriveWheelSpeeds(
-            -leftEncoder.getVelocity() * DriveConstants.kMotorRPMToMetersPerMinute / 60,
-            rightEncoder.getVelocity() * DriveConstants.kMotorRPMToMetersPerMinute / 60);
+                -leftEncoder.getVelocity() * DriveConstants.kMotorRPMToMetersPerMinute / 60,
+                rightEncoder.getVelocity() * DriveConstants.kMotorRPMToMetersPerMinute / 60);
     }
-
 
     public double getGyroY() {
         IMUAxis curAxis = gyro.getYawAxis();
@@ -202,6 +202,15 @@ public class Drivetrain extends SubsystemBase {
         // https://github.com/wpilibsuite/allwpilib/tree/main/wpilibjExamples/src/main/java/edu/wpi/first/wpilibj/examples/differentialdrivebot
         // https://docs.wpilib.org/en/stable/docs/software/kinematics-and-odometry/differential-drive-odometry.html
         // robotPose = odometry.update(gyro_angle, leftEncoder.getPosition(),
-        //         rightEncoder.getPosition());
+        // rightEncoder.getPosition());
+
+        double[] sparkTemps = {
+            leftLeader.getMotorTemperature()*2+30,
+            leftFollower.getMotorTemperature()*2+30,
+            rightLeader.getMotorTemperature()*2+30,
+            rightFollower.getMotorTemperature()*2+30,
+        };
+
+        SmartDashboard.putNumberArray("SparkMotorTemps", sparkTemps);
     }
 }

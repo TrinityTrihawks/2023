@@ -28,7 +28,6 @@ public final class Constants {
 
     public static class DriveConstants {
 
-
         public static enum AutoLevelState {
             LEVEL_GROUND,
             CLIMB
@@ -38,7 +37,8 @@ public final class Constants {
         public static final double kGearboxRatio = 1 / 12.75;
         public static final double kWheelDiameterInches = 6;
         public static final double kInchesPerMeter = 2.54 / 100;
-        public static final double kMotorRPMToMetersPerMinute = (Math.PI * kWheelDiameterInches) * kPerMinuteToPerSecond * kGearboxRatio * kInchesPerMeter;     
+        public static final double kMotorRPMToMetersPerMinute = (Math.PI * kWheelDiameterInches) * kPerMinuteToPerSecond
+                * kGearboxRatio * kInchesPerMeter;
 
         public static final int kPigeonId = 0;
         public static final int kEncoderCPR = 0;
@@ -81,14 +81,15 @@ public final class Constants {
     }
 
     public static class IntakeConstants {
-         public static final double kIntakeSpitSpeed = 0.5;
-         public static final double kIntakeSuckSpeed = -0.5;
-         public static final double kInnerDeadzoneArea = 1.5; //deg
-         public static final double kOuterDeadzoneArea = 10; //deg
-         public static final int kRaiseSparkID = 18;
-         public static final int kRunSparkID = 17;
-         public static final int kRevEncoderCountsPerRevolution = 8192;
-         public static final int kPositionConversionFactor = 180; // "pi-radians" to degrees;
-         public static final int kDefaultTargetPosition = 115;
+        public static final double kIntakeSpitSpeed = 0.5;
+        public static final double kIntakeSuckSpeed = -0.5;
+        public static final double kInnerDeadzoneArea = 1.5; // deg
+        public static final double kOuterDeadzoneArea = 10; // deg
+        public static final double kInnerDeadzoneSpeedReductionScalar = .4;
+        public static final int kRaiseSparkID = 18;
+        public static final int kRunSparkID = 17;
+        public static final int kRevEncoderCountsPerRevolution = 8192;
+        public static final int kPositionConversionFactor = 180; // "pi-radians" to degrees;
+        public static final int kDefaultTargetPosition = 115;
     }
 }

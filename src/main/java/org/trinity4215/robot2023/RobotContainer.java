@@ -14,6 +14,8 @@ import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -35,6 +37,7 @@ public class RobotContainer {
     // ==================== CONTROLLERS =====================
     private final CommandXboxController xbox = new CommandXboxController(
             OperatorConstants.kGollumDrivePort);
+    private final CommandXboxController whiteXbox = new CommandXboxController(3);
 
 
     private final SendableChooser<Command> autonSwitch = new SendableChooser<>();
@@ -82,9 +85,10 @@ public class RobotContainer {
 
     private void configGollum() {
 
-        xbox.leftTrigger().whileTrue(new StartEndCommand(() -> {intake.spit(null);}, () -> {intake.stop();}, intake));
-        xbox.rightTrigger().whileTrue(new StartEndCommand(() -> {intake.suck(null);}, () -> {intake.stop();}, intake));
-   
+        whiteXbox.leftTrigger().whileTrue(new StartEndCommand(() -> {intake.spit(null);}, () -> {intake.stop();}, intake));
+        whiteXbox.rightTrigger().whileTrue(new StartEndCommand(() -> {intake.suck(null);}, () -> {intake.stop();}, intake));
+        // xbox.a().whileTrue(new RepeatCommand(new InstantCommand(() -> {intake.driveToDegrees(90, .1);}, intake)));
+        // xbox.y().whileTrue(new RepeatCommand(new InstantCommand(() -> {intake.driveToDegrees(10, .1);}, intake)));
     }
 
     private void configureAutonomoi() {

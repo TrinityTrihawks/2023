@@ -13,6 +13,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxRelativeEncoder.Type;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -32,6 +33,11 @@ public class Intake extends SubsystemBase {
   private RelativeEncoder raiseEncoder = raiseMotor.getEncoder(Type.kQuadrature,
       IntakeConstants.kRevEncoderCountsPerRevolution);
 
+  private DigitalInput zeroLimitSwitch = new DigitalInput(8);
+  private DigitalInput bottomLimitSwitch = new DigitalInput(9);
+
+  private double zeroOffset = 0;
+
 
   /** Creates a new Intake. */
   public Intake() {
@@ -48,6 +54,11 @@ public class Intake extends SubsystemBase {
 
   }
 
+  public void zeroIntakeCurrentPosition() {
+    this.zeroOffset = getAbsoluteEncoderPosition();
+    SmartDashboard.putNumber("ZeroOffset", this.zeroOffset);
+  }
+
   public static Intake getInstance() {
     if (subsystemInst == null) {
       subsystemInst = new Intake();
@@ -60,21 +71,28 @@ public class Intake extends SubsystemBase {
   }
 
   public double getAbsoluteEncoderPosition() {
-    return raiseEncoder.getPosition();
+    return raiseEncoder.getPosition() - zeroOffset;
   }
 
   public void driveToDegrees(double targetPosition, double speed) {
-    double currentPosition = raiseEncoder.getPosition();
+    double currentPosition = getAbsoluteEncoderPosition();
     CombinedLogging.putNumber("IntakeRaiseEncoderPosition", currentPosition);
+
+    if (getBottomLimitSwitch()) {
+      raiseMotor.stopMotor();
+      return;
+    }
 
     if (currentPosition > 10000) {
       raiseMotor.set(-speed);
       return;
+    } else if (currentPosition < 98865) {
+      raiseMotor.set(-speed * IntakeConstants.kInnerDeadzoneSpeedReductionScalar);
     }
 
     if ((Math.abs(currentPosition) - Math.abs(targetPosition) < IntakeConstants.kOuterDeadzoneArea / 2)
         && (Math.abs(currentPosition) - Math.abs(targetPosition) > -IntakeConstants.kOuterDeadzoneArea / 2)) {
-      speed = .3 * speed;
+      speed = IntakeConstants.kInnerDeadzoneSpeedReductionScalar * speed;
       SmartDashboard.putBoolean("5deg", true);
     } else {
       SmartDashboard.putBoolean("5deg", false);
@@ -113,10 +131,24 @@ public class Intake extends SubsystemBase {
     spinMotor.set(0);
   }
 
+  public boolean getZeroLimitSwitch() {
+    return !zeroLimitSwitch.get();
+  }
+  public boolean getBottomLimitSwitch() {
+    return !bottomLimitSwitch.get();
+  }
+
   @Override
   public void periodic() {
+
+    if (getZeroLimitSwitch()) {
+      zeroIntakeCurrentPosition();
+    }
+
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("IntakeAbsolutEncoderPosition", getAbsoluteEncoderPosition());
-
+    SmartDashboard.putBoolean("ZeroLimitSwitch", getZeroLimitSwitch());
+    SmartDashboard.putBoolean("BottomLimitSwitch", getBottomLimitSwitch());
+    SmartDashboard.putNumber("ZeroOffset", zeroOffset);
   }
 }
