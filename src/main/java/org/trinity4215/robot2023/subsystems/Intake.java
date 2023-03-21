@@ -14,6 +14,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxRelativeEncoder.Type;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -33,11 +34,8 @@ public class Intake extends SubsystemBase {
   private RelativeEncoder raiseEncoder = raiseMotor.getEncoder(Type.kQuadrature,
       IntakeConstants.kRevEncoderCountsPerRevolution);
 
-  private DigitalInput zeroLimitSwitch = new DigitalInput(8);
+  private DigitalInput topLimitSwitch = new DigitalInput(8);
   private DigitalInput bottomLimitSwitch = new DigitalInput(9);
-
-  private double zeroOffset = 0;
-
 
   /** Creates a new Intake. */
   public Intake() {
@@ -54,11 +52,6 @@ public class Intake extends SubsystemBase {
 
   }
 
-  public void zeroIntakeCurrentPosition() {
-    this.zeroOffset = getAbsoluteEncoderPosition();
-    SmartDashboard.putNumber("ZeroOffset", this.zeroOffset);
-  }
-
   public static Intake getInstance() {
     if (subsystemInst == null) {
       subsystemInst = new Intake();
@@ -70,41 +63,52 @@ public class Intake extends SubsystemBase {
     spinMotor.set(speed);
   }
 
-  public double getAbsoluteEncoderPosition() {
-    return raiseEncoder.getPosition() - zeroOffset;
+  public double getAbsoluteEncoderRawPositionDegrees() {
+    return raiseEncoder.getPosition();
+  }
+
+  public double getConditionedAbsoluteEncoderPosition() {
+    double rawPos = getAbsoluteEncoderRawPositionDegrees();
+    double outputPos;
+    if (rawPos > 10000) {
+      outputPos = rawPos - 98876;
+    } else {
+      outputPos = rawPos;
+    }
+    return outputPos;
   }
 
   public void driveToDegrees(double targetPosition, double speed) {
-    double currentPosition = getAbsoluteEncoderPosition();
+    double currentPosition = getConditionedAbsoluteEncoderPosition();
     CombinedLogging.putNumber("IntakeRaiseEncoderPosition", currentPosition);
 
-    if (getBottomLimitSwitch()) {
+    boolean goingUp = !((targetPosition - currentPosition) > 0);
+    SmartDashboard.putBoolean("GoingUp", goingUp);
+    
+    if (goingUp && getTopLimitSwitch()) {
+      raiseMotor.stopMotor();
+      return;
+    }
+    if ((!goingUp) && getBottomLimitSwitch()) {
       raiseMotor.stopMotor();
       return;
     }
 
-    if (currentPosition > 10000) {
-      raiseMotor.set(-speed);
-      return;
-    } else if (currentPosition < 98865) {
-      raiseMotor.set(-speed * IntakeConstants.kInnerDeadzoneSpeedReductionScalar);
-    }
-
-    if ((Math.abs(currentPosition) - Math.abs(targetPosition) < IntakeConstants.kOuterDeadzoneArea / 2)
-        && (Math.abs(currentPosition) - Math.abs(targetPosition) > -IntakeConstants.kOuterDeadzoneArea / 2)) {
-      speed = IntakeConstants.kInnerDeadzoneSpeedReductionScalar * speed;
+    if ((currentPosition - targetPosition < IntakeConstants.kOuterDeadzoneArea / 2)
+        && (currentPosition - targetPosition > -IntakeConstants.kOuterDeadzoneArea / 2)) {
+      speed = IntakeConstants.kInnerSlowzoneSpeedReductionScalar * speed;
       SmartDashboard.putBoolean("5deg", true);
     } else {
       SmartDashboard.putBoolean("5deg", false);
     }
 
-    if (currentPosition < targetPosition - (IntakeConstants.kInnerDeadzoneArea / 2)) {
-      raiseMotor.set(-speed);
-    } else if (currentPosition > targetPosition + (IntakeConstants.kInnerDeadzoneArea / 2)) {
-      raiseMotor.set(speed);
-    } else {
-      stop();
-    }
+    // if (currentPosition < targetPosition - (IntakeConstants.kInnerSlowzoneArea / 2)) {
+    //   raiseMotor.set(-speed);
+    // } else if (currentPosition > targetPosition + (IntakeConstants.kInnerSlowzoneArea / 2)) {
+    //   raiseMotor.set(speed);
+    // } else {
+    //   stop();
+    // }
   }
 
   enum IntakeType {
@@ -131,24 +135,20 @@ public class Intake extends SubsystemBase {
     spinMotor.set(0);
   }
 
-  public boolean getZeroLimitSwitch() {
-    return !zeroLimitSwitch.get();
+  public boolean getTopLimitSwitch() {
+    return !topLimitSwitch.get();
   }
+
   public boolean getBottomLimitSwitch() {
-    return !bottomLimitSwitch.get();
+    return bottomLimitSwitch.get();
   }
 
   @Override
   public void periodic() {
 
-    if (getZeroLimitSwitch()) {
-      zeroIntakeCurrentPosition();
-    }
-
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("IntakeAbsolutEncoderPosition", getAbsoluteEncoderPosition());
-    SmartDashboard.putBoolean("ZeroLimitSwitch", getZeroLimitSwitch());
+    SmartDashboard.putNumber("IntakeAbsolutEncoderPosition", getConditionedAbsoluteEncoderPosition());
+    SmartDashboard.putBoolean("TopLimitSwitch", getTopLimitSwitch());
     SmartDashboard.putBoolean("BottomLimitSwitch", getBottomLimitSwitch());
-    SmartDashboard.putNumber("ZeroOffset", zeroOffset);
   }
 }
