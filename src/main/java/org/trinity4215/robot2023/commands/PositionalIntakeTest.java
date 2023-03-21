@@ -38,7 +38,7 @@ public class PositionalIntakeTest extends CommandBase {
     
 
     double targetPosition = SmartDashboard.getNumber("IntakeTargetPosition", IntakeConstants.kDefaultTargetPosition);
-    intake.driveToDegrees(targetPosition, 0.1);
+    intake.driveToDegrees(targetPosition, 0.05);
 
 
   }
