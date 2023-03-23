@@ -37,6 +37,8 @@ public class Intake extends SubsystemBase {
   private DigitalInput topLimitSwitch = new DigitalInput(8);
   private DigitalInput bottomLimitSwitch = new DigitalInput(9);
 
+  private double manualZeroOffset = 0;
+
   /** Creates a new Intake. */
   public Intake() {
 
@@ -63,7 +65,7 @@ public class Intake extends SubsystemBase {
     spinMotor.set(speed);
   }
 
-  public double getAbsoluteEncoderRawPositionDegrees() {
+  private double getAbsoluteEncoderRawPositionDegrees() {
     return raiseEncoder.getPosition();
   }
 
@@ -78,18 +80,26 @@ public class Intake extends SubsystemBase {
     return outputPos;
   }
 
+  public double getZeroedConditionedAbsoluteEncoderPosition() {
+    return getConditionedAbsoluteEncoderPosition() + manualZeroOffset;
+  }
+
+  public void setManualZeroOffset(double offset) {
+    manualZeroOffset = offset;
+  }
+
   public void driveToDegrees(double targetPosition, double speed) {
-    double currentPosition = getConditionedAbsoluteEncoderPosition();
+    double currentPosition = getZeroedConditionedAbsoluteEncoderPosition();
     CombinedLogging.putNumber("IntakeRaiseEncoderPosition", currentPosition);
 
     boolean goingUp = !((targetPosition - currentPosition) > 0);
     SmartDashboard.putBoolean("GoingUp", goingUp);
     
-    if (goingUp && getTopLimitSwitch()) {
+    if (goingUp & getTopLimitSwitch()) {
       raiseMotor.stopMotor();
       return;
     }
-    if ((!goingUp) && getBottomLimitSwitch()) {
+    if ((!goingUp) & getBottomLimitSwitch()) {
       raiseMotor.stopMotor();
       return;
     }
@@ -102,13 +112,13 @@ public class Intake extends SubsystemBase {
       SmartDashboard.putBoolean("5deg", false);
     }
 
-    // if (currentPosition < targetPosition - (IntakeConstants.kInnerSlowzoneArea / 2)) {
-    //   raiseMotor.set(-speed);
-    // } else if (currentPosition > targetPosition + (IntakeConstants.kInnerSlowzoneArea / 2)) {
-    //   raiseMotor.set(speed);
-    // } else {
-    //   stop();
-    // }
+    if (currentPosition < targetPosition - (IntakeConstants.kInnerDeadzoneArea / 2)) {
+      raiseMotor.set(-speed);
+    } else if (currentPosition > targetPosition + (IntakeConstants.kInnerDeadzoneArea / 2)) {
+      raiseMotor.set(speed);
+    } else {
+      stop();
+    }
   }
 
   enum IntakeType {
@@ -148,6 +158,8 @@ public class Intake extends SubsystemBase {
 
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("IntakeAbsolutEncoderPosition", getConditionedAbsoluteEncoderPosition());
+    SmartDashboard.putNumber("IntakeZeroedAbsEncPos", getZeroedConditionedAbsoluteEncoderPosition());
+    SmartDashboard.putNumber("ManualZeroOffset", manualZeroOffset);
     SmartDashboard.putBoolean("TopLimitSwitch", getTopLimitSwitch());
     SmartDashboard.putBoolean("BottomLimitSwitch", getBottomLimitSwitch());
   }

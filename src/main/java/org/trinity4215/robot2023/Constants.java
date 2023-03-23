@@ -33,7 +33,7 @@ public final class Constants {
             CLIMB
         }
 
-        public static final double kPerMinuteToPerSecond = 1; // TODO
+        public static final double kPerMinuteToPerSecond = 1.0/60.0; // TODO
         public static final double kGearboxRatio = 1 / 12.75;
         public static final double kWheelDiameterInches = 6;
         public static final double kInchesPerMeter = 2.54 / 100;
@@ -83,7 +83,7 @@ public final class Constants {
     public static class IntakeConstants {
         public static final double kIntakeSpitSpeed = 0.5;
         public static final double kIntakeSuckSpeed = -0.5;
-        public static final double kInnerSlowzoneArea = 1.5; // deg
+        public static final double kInnerDeadzoneArea = 1.5; // deg
         public static final double kOuterDeadzoneArea = 10; // deg
         public static final double kInnerSlowzoneSpeedReductionScalar = .4;
         public static final int kRaiseSparkID = 18;
