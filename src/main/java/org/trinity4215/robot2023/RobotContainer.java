@@ -89,7 +89,7 @@ public class RobotContainer {
         gandalfTheWhiteXbox.leftTrigger().whileTrue(
             new StartEndCommand(
                 () -> intake.spit(null), 
-                () -> intake.stopHoldyMotor(), 
+                () -> intake.stopSpinMotor(), 
                 intake
             )
         );
@@ -97,7 +97,7 @@ public class RobotContainer {
         gandalfTheWhiteXbox.rightTrigger().whileTrue(
             new StartEndCommand(
                 () -> intake.suck(null), 
-                () -> intake.stopHoldyMotor(), 
+                () -> intake.stopSpinMotor(), 
                 intake
             )
         );
@@ -140,7 +140,7 @@ public class RobotContainer {
                 )
             ).withTimeout(0.5).andThen(
                 new InstantCommand(
-                    intake::stopHoldyMotor,
+                    intake::stopSpinMotor,
                     intake
                 )
             )
