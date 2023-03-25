@@ -37,7 +37,7 @@ public class RobotContainer {
     // ==================== CONTROLLERS =====================
     private final CommandXboxController xbox = new CommandXboxController(
             OperatorConstants.kGollumDrivePort);
-    private final CommandXboxController whiteXbox = new CommandXboxController(3);
+    private final CommandXboxController gandalfTheWhiteXbox = new CommandXboxController(3);
 
 
     private final SendableChooser<Command> autonSwitch = new SendableChooser<>();
@@ -61,6 +61,7 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         drivetrain.setDefaultCommand(defaultDrive);
+        intake.setDefaultCommand(Autos.testPositionalIntakeRaise(intake));
     }
 
     /**
@@ -79,16 +80,71 @@ public class RobotContainer {
      */
     private void configureBindings() {
 
-        configGollum();
+        configGandalf();
     }
 
 
-    private void configGollum() {
+    private void configGandalf() {
 
-        whiteXbox.leftTrigger().whileTrue(new StartEndCommand(() -> {intake.spit(null);}, () -> {intake.stop();}, intake));
-        whiteXbox.rightTrigger().whileTrue(new StartEndCommand(() -> {intake.suck(null);}, () -> {intake.stop();}, intake));
-        // xbox.a().whileTrue(new RepeatCommand(new InstantCommand(() -> {intake.driveToDegrees(90, .1);}, intake)));
-        // xbox.y().whileTrue(new RepeatCommand(new InstantCommand(() -> {intake.driveToDegrees(10, .1);}, intake)));
+        gandalfTheWhiteXbox.leftTrigger().whileTrue(
+            new StartEndCommand(
+                () -> intake.spit(null), 
+                () -> intake.stopHoldyMotor(), 
+                intake
+            )
+        );
+
+        gandalfTheWhiteXbox.rightTrigger().whileTrue(
+            new StartEndCommand(
+                () -> intake.suck(null), 
+                () -> intake.stopHoldyMotor(), 
+                intake
+            )
+        );
+
+        gandalfTheWhiteXbox.x().onTrue(
+            new InstantCommand(
+                () -> {
+                    intake.setTargetPosition(-30);
+                    SmartDashboard.putNumber("IntakeTargetPosition (Actual)", intake.getTargetPosition());
+                },
+                intake
+            )
+        );
+
+        gandalfTheWhiteXbox.y().onTrue(
+            new InstantCommand(
+                () -> {
+                    intake.setTargetPosition(95);
+                    SmartDashboard.putNumber("IntakeTargetPosition (Actual)", intake.getTargetPosition());
+                },
+                intake
+            )
+        );
+
+        gandalfTheWhiteXbox.a().onTrue(
+            new InstantCommand(
+                () -> {
+                    intake.setTargetPosition(-10);
+                    SmartDashboard.putNumber("IntakeTargetPosition (Actual)", intake.getTargetPosition());
+                },
+                intake
+            )
+        );
+
+        gandalfTheWhiteXbox.b().onTrue(
+            new RepeatCommand(
+                new InstantCommand(
+                    intake::shoot,
+                    intake
+                )
+            ).withTimeout(0.5).andThen(
+                new InstantCommand(
+                    intake::stopHoldyMotor,
+                    intake
+                )
+            )
+        );
     }
 
     private void configureAutonomoi() {
@@ -116,6 +172,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return autonSwitch.getSelected();
+        return null;
     }
 }
