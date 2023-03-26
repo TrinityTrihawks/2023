@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** Add your docs here. */
 public class CombinedLogging {
-
     private static enum LoggingLevel {
         ALL,
         PRIORITY,
