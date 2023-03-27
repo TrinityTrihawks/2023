@@ -201,7 +201,7 @@ public class Intake extends SubsystemBase {
   }
 
   public boolean getTopLimitSwitch() {
-    return !topLimitSwitch.get();
+    return topLimitSwitch.get();
   }
 
   public boolean getBottomLimitSwitch() {
