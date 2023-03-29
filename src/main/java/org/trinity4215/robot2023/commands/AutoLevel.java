@@ -18,8 +18,8 @@ public class AutoLevel extends CommandBase {
     private AutoLevelState state;
 
     private static final double initialClimbThreshold = 11;
-    private static final double initialDriveSpeed = 0.3;
-    private static final double climbSpeed = 0.3;
+    private static final double initialDriveSpeed = 0.45;
+    private static final double climbSpeed = 0.55;
     private static final double kMinDriveSpeed = 0.15;
     private static final double kClimbPorportionalCoefficient = 0.07;
     private static final double endClimbThreshold = 10;
@@ -44,8 +44,6 @@ public class AutoLevel extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        // drivetrain.driveDualJoystickPercent(initialDriveSpeed, initialDriveSpeed);
-        // System.out.println(initialDriveSpeed);
 
         double currentAngleX = -drivetrain.getGyroX();
         CombinedLogging.putNumber("CurrentAngleX", currentAngleX);
@@ -70,7 +68,7 @@ public class AutoLevel extends CommandBase {
                     climbSpeed 
                     * kClimbPorportionalCoefficient 
                     * currentAngleX;
-
+//hi Xavior, this is Isaac. I have now contributed to the code!
                 curSpeed 
                     = Math.abs(curSpeed) > 1
                     ? 1 

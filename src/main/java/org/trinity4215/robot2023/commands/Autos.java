@@ -45,7 +45,7 @@ public final class Autos {
                 new InstantCommand(
                         () -> drive.driveArcadePercent(-0.5, 0),
                         drive))
-                .withTimeout(3.4).andThen(
+                .withTimeout(3.6).andThen(
                         new InstantCommand(
                                 () -> drive.stop(),
                                 drive),
