@@ -105,7 +105,7 @@ public class RobotContainer {
         gandalfTheWhiteXbox.x().onTrue(
             new InstantCommand(
                 () -> {
-                    intake.setTargetPosition(-30);
+                    intake.setTargetPosition(-35);
                     SmartDashboard.putNumber("IntakeTargetPosition (Actual)", intake.getTargetPosition());
                 },
                 intake
@@ -160,7 +160,9 @@ public class RobotContainer {
         autonSwitch.addOption(
                 "Mobility & Auto-Balance (15pts)",
                 Autos.mobilityBackAndBalance(drivetrain));
-        autonSwitch.addOption("Test Intake Raising", Autos.testPositionalIntakeRaise(intake));
+
+        autonSwitch.addOption("Cube, Mobility & Auto-Balance (18pts)",
+                Autos.cubeMobilityAndBalance(drivetrain, intake));
 
         SmartDashboard.putData("Autonomoi", autonSwitch);
 
@@ -172,6 +174,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return null;
+        return autonSwitch.getSelected();
     }
 }

@@ -10,6 +10,7 @@ import org.trinity4215.robot2023.subsystems.Intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public final class Autos {
 
@@ -42,13 +43,35 @@ public final class Autos {
     public static Command mobilityBackAndBalance(Drivetrain drive) {
         return new RepeatCommand(
                 new InstantCommand(
-                        () -> drive.driveArcadePercent(-0.75, 0),
+                        () -> drive.driveArcadePercent(-0.5, 0),
                         drive))
-                .withTimeout(1.7).andThen(
+                .withTimeout(3.4).andThen(
                         new InstantCommand(
                                 () -> drive.stop(),
                                 drive),
+                        new InstantCommand(
+                                () -> System.out.println("############# BALANCING #############")
+                        ),
                         new AutoLevel(drive));
+    }
+
+    public static Command cubeMobilityAndBalance(Drivetrain drive, Intake intake) {
+        return new SequentialCommandGroup(
+
+                new RepeatCommand(
+                        new InstantCommand(
+                                () -> intake.spit(null),
+                                intake
+                        )
+                ).withTimeout(0.5),
+
+                new InstantCommand(
+                        intake::stopSpinMotor,
+                        intake
+                ),
+
+                mobilityBackAndBalance(drive)
+        );
     }
 
     public static Command testPositionalIntakeRaise(Intake intake) {

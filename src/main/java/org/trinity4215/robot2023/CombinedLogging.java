@@ -23,7 +23,7 @@ public class CombinedLogging {
         BOTH
     }
 
-    private static final LoggingLevel loggingLevel = LoggingLevel.NONE;
+    private static final LoggingLevel loggingLevel = LoggingLevel.ALL;
     private static final LoggingDestination loggingDestination = LoggingDestination.SMART_DASHBOARD;
     private static final List<String> priorityKeys = Arrays.asList(
             "driveType" // Add priority keys here
