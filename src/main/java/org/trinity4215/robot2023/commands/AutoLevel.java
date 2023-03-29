@@ -18,9 +18,9 @@ public class AutoLevel extends CommandBase {
     private AutoLevelState state;
 
     private static final double initialClimbThreshold = 11;
-    private static final double initialDriveSpeed = 0.4;
-    private static final double climbSpeed = 0.4;
-    private static final double kMinDriveSpeed = 0.2;
+    private static final double initialDriveSpeed = 0.3;
+    private static final double climbSpeed = 0.3;
+    private static final double kMinDriveSpeed = 0.15;
     private static final double kClimbPorportionalCoefficient = 0.07;
     private static final double endClimbThreshold = 10;
     private static final double levelDeadzone = 1;

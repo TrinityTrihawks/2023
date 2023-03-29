@@ -6,7 +6,6 @@ package org.trinity4215.robot2023.commands;
 
 import org.trinity4215.robot2023.subsystems.Intake;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class PositionalIntakeTest extends CommandBase {
@@ -24,7 +23,6 @@ public class PositionalIntakeTest extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        SmartDashboard.putNumber("IntakeTargetPosition", 48);
 
     }
 

@@ -39,7 +39,7 @@ public class Intake extends SubsystemBase {
 
   private double manualZeroOffset = 0;
 
-  private double targetPosition = 90;
+  private double targetPosition = -30;
 
   /** Creates a new Intake. */
   public Intake() {
@@ -77,7 +77,7 @@ public class Intake extends SubsystemBase {
   }
 
   private double getAbsoluteEncoderRawPositionDegrees() {
-    return raiseEncoder.getPosition();
+    return -raiseEncoder.getPosition() + 98876;
   }
 
   public double getConditionedAbsoluteEncoderPosition() {
@@ -132,13 +132,13 @@ public class Intake extends SubsystemBase {
 
   private double forwardSpeedAt(double degrees) {
     if (degrees < -15) {
-      return .2;
+      return .3;
     } else if (degrees >= -15 && degrees < 0) {
-      return .15;
+      return .25;
     } else if (degrees >= 0 && degrees < 20) {
-      return .07;
-    } else if (degrees >= 20 && degrees < 45) {
-      return 0;
+      return .17;
+    } else if (degrees >= 20 && degrees < 55) {
+      return 0.07;
     } else {
       return -.04;
     }
@@ -148,13 +148,13 @@ public class Intake extends SubsystemBase {
     if (degrees < -15) {
       return .03;
     } else if (degrees >= -15 && degrees < 0) {
-      return .05;
+      return .03;
     } else if (degrees >= 0 && degrees < 25) {
       return .08;
     } else if (degrees >= 25 && degrees < 50) {
-      return .13;
+      return .17;
     } else {
-      return .25;
+      return .3;
     }
   }
 
@@ -220,7 +220,7 @@ public class Intake extends SubsystemBase {
       setManualZeroOffset(90 - curPos);
     } else if (getTopLimitSwitch()) {
       double curPos = getConditionedAbsoluteEncoderPosition();
-      setManualZeroOffset(-30 - curPos);
+      setManualZeroOffset(-35 - curPos);
     }
     SmartDashboard.putNumber("ManualZeroOffset", manualZeroOffset);
 
@@ -231,6 +231,6 @@ public class Intake extends SubsystemBase {
   }
 
   public void setTargetPosition(double degrees) {
-    targetPosition = degrees > 95 ? 95 : (degrees < -35 ? -35 : degrees);
+    targetPosition = degrees > 95 ? 95 : (degrees < -45 ? -45 : degrees);
   }
 }
