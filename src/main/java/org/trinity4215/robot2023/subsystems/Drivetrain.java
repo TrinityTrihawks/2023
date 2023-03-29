@@ -102,8 +102,29 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void driveTankPercent(double left, double right) {
-        drive.tankDrive(leftLimiter.calculate(left), rightLimiter.calculate(right));
-        CombinedLogging.putNumber("inputs", left);
+        double turn, a, s2, b2, x = 2;
+        double speed = (left + right) / 2;
+        double diff = left - right;
+        double t1 = 0.08;
+        double t2 = 0.25;
+        double m = 0.15;
+
+        a = m * (t1 - t2);
+        turn = m * diff - (m * t1);
+
+        s2 = (1 - a) / (x - t2);
+        b2 = m * (t2 - t1) - t2 * (1 - a) / (2 - t2);
+        a = s2 * t2 + b2;
+
+        turn = diff * (1 - a) / (2 - t2) + m * (t2 - t1) - t2 * (1 - a) / (2 - t2);
+
+        driveArcadePercent(speed, turn);
+        SmartDashboard.putNumber("drivetest/Output Speed", speed);
+        SmartDashboard.putNumber("drivetest/Output Turn", turn);
+        SmartDashboard.putNumber("drivetest/Differential", diff);
+        SmartDashboard.putNumber("drivetest/InputLeft", left);
+        SmartDashboard.putNumber("drivetest/InputRight", right);
+        // SmartDashboard.putNumber(getName(), a);
     }
 
     public void driveTankVelocity(double left, double right) {
@@ -205,10 +226,10 @@ public class Drivetrain extends SubsystemBase {
         // rightEncoder.getPosition());
 
         double[] sparkTemps = {
-            leftLeader.getMotorTemperature()*2+30,
-            leftFollower.getMotorTemperature()*2+30,
-            rightLeader.getMotorTemperature()*2+30,
-            rightFollower.getMotorTemperature()*2+30,
+                leftLeader.getMotorTemperature() * 2 + 30,
+                leftFollower.getMotorTemperature() * 2 + 30,
+                rightLeader.getMotorTemperature() * 2 + 30,
+                rightFollower.getMotorTemperature() * 2 + 30,
         };
 
         SmartDashboard.putNumberArray("SparkMotorTemps", sparkTemps);
