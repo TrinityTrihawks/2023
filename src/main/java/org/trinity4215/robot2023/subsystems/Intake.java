@@ -44,6 +44,7 @@ public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
   public Intake() {
 
+
     spinMotor.restoreFactoryDefaults();
     spinMotor.setIdleMode(IdleMode.kBrake);
     spinEncoder.setPositionConversionFactor(IntakeConstants.kPositionConversionFactor);
@@ -62,6 +63,8 @@ public class Intake extends SubsystemBase {
               SmartDashboard.putNumber("IntakeTargetPosition (Actual)", targetPosition);
             },
             this));
+
+    SmartDashboard.putBoolean("EnableLimitSwitches", true);
 
   }
 
@@ -109,11 +112,13 @@ public class Intake extends SubsystemBase {
         ? backwardSpeedAt(currentPosition)
         : forwardSpeedAt(currentPosition);
 
-    if (goingUp & getTopLimitSwitch()) {
+    boolean switchesEnabled = SmartDashboard.getBoolean("EnableLimitSwitches", true);
+
+    if (goingUp && getTopLimitSwitch() && switchesEnabled) {
       raiseMotor.stopMotor();
       return;
     }
-    if ((!goingUp) & getBottomLimitSwitch()) {
+    if ((!goingUp) && getBottomLimitSwitch() && switchesEnabled) {
       raiseMotor.stopMotor();
       return;
     }
