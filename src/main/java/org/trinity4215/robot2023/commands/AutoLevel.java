@@ -15,16 +15,18 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class AutoLevel extends CommandBase {
     /** Creates a new AutoLevel. */
     private Drivetrain drivetrain;
-    private AutoLevelState state;
-
+    
     private static final double initialClimbThreshold = 11;
-    private static final double initialDriveSpeed = 0.45;
-    private static final double climbSpeed = 0.55;
-    private static final double kMinDriveSpeed = 0.15;
-    private static final double kClimbPorportionalCoefficient = 0.07;
-    private static final double endClimbThreshold = 10;
+    private static final double initialDriveSpeed = 0.6;
+    private static final double climbSpeed = 0.6;
+    private static final double kMinDriveSpeed = 0.3;
+    private static final double kHighAngleClimbPorportionalCoefficient = 0.05;
+    private static final double kLowAngleClimbPCoeff = 0.02;
+    private static final double kHighLowThresholdDegrees = 12d;
+    private static final double endClimbThreshold = 14;
     private static final double levelDeadzone = 1;
-
+    
+    private AutoLevelState state;
     private double maxDegreesUpX = 0.0;
 
     public AutoLevel(Drivetrain drivetrain) {
@@ -66,7 +68,9 @@ public class AutoLevel extends CommandBase {
                 
                 double curSpeed = 
                     climbSpeed 
-                    * kClimbPorportionalCoefficient 
+                    * (Math.abs(currentAngleX) < kHighLowThresholdDegrees
+                        ? kLowAngleClimbPCoeff
+                        : kHighAngleClimbPorportionalCoefficient)
                     * currentAngleX;
 //hi Xavior, this is Isaac. I have now contributed to the code!
                 curSpeed 
