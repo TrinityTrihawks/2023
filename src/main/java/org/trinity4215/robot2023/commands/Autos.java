@@ -18,24 +18,29 @@ public final class Autos {
     public static Command mobility(Drivetrain drive) {
         return new RepeatCommand(
                 new InstantCommand(
-                        () -> drive.driveArcadePercent(0.5, 0),
+                        () -> drive.driveArcadePercent(-0.5, 0),
                         drive))
-                .withTimeout(2).andThen(
+                .withTimeout(2.5).andThen(
                         new InstantCommand(
                                 () -> drive.stop(),
                                 drive));
     }
 
-    // public static Command chirpyBit(Drivetrain drive) {
-    // return new RepeatCommand(
-    // new InstantCommand(
-    // () -> drive.driveArcadePercent(-1, 0),
-    // drive))
-    // .withTimeout(0.1).andThen(
-    // new InstantCommand(
-    // () -> drive.stop(),
-    // drive));
-    // }
+    public static Command cubeAndMobility(Drivetrain drive, Intake intake) {
+
+        return cube(intake).andThen(mobility(drive));
+    }
+
+    public static Command cube(Intake intake) {
+        return new RepeatCommand(
+                new InstantCommand(
+                        () -> intake.spit(null),
+                        intake))
+                .withTimeout(0.5).andThen(
+                        new InstantCommand(
+                                intake::stopSpinMotor,
+                                intake));
+    }
 
     public static Command balance(Drivetrain drive) {
         return new AutoLevel(drive);
@@ -46,13 +51,11 @@ public final class Autos {
                 new InstantCommand(
                         () -> drive.driveArcadePercent(-0.5, 0),
                         drive))
-                .withTimeout(3.6).andThen(
+                .withTimeout(3.8).andThen(
                         new InstantCommand(
                                 () -> drive.stop(),
                                 drive),
-                        new InstantCommand(
-                                () -> System.out.println("############# BALANCING #############")
-                        ),
+
                         new WaitCommand(0.3),
                         new AutoLevel(drive));
     }
@@ -60,20 +63,9 @@ public final class Autos {
     public static Command cubeMobilityAndBalance(Drivetrain drive, Intake intake) {
         return new SequentialCommandGroup(
 
-                new RepeatCommand(
-                        new InstantCommand(
-                                () -> intake.spit(null),
-                                intake
-                        )
-                ).withTimeout(0.5),
+                cube(intake),
 
-                new InstantCommand(
-                        intake::stopSpinMotor,
-                        intake
-                ),
-
-                mobilityBackAndBalance(drive)
-        );
+                mobilityBackAndBalance(drive));
     }
 
     public static Command testPositionalIntakeRaise(Intake intake) {

@@ -99,7 +99,7 @@ public class Drivetrain extends SubsystemBase {
     public void driveTankPercent(double left, double right) {
         double turn, a, s2, b2, x = 2;
         double speed = (left + right) / 2;
-        double diff = left - right;
+        double diff = right - left;
         double t1 = 0.08;
         double t2 = 0.25;
         double m = 0.15;
@@ -149,8 +149,8 @@ public class Drivetrain extends SubsystemBase {
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
         return new DifferentialDriveWheelSpeeds(
-                -leftEncoder.getVelocity() * DriveConstants.kMotorRPMToMetersPerMinute / 60,
-                rightEncoder.getVelocity() * DriveConstants.kMotorRPMToMetersPerMinute / 60);
+                -leftEncoder.getVelocity() * DriveConstants.kMotorRPMToMetersPerMinute,
+                rightEncoder.getVelocity() * DriveConstants.kMotorRPMToMetersPerMinute);
     }
 
     public double getGyroY() {

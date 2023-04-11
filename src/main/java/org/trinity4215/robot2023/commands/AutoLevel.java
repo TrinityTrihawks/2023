@@ -22,7 +22,7 @@ public class AutoLevel extends CommandBase {
     private static final double kMinDriveSpeed = 0.3;
     private static final double kHighAngleClimbPorportionalCoefficient = 0.05;
     private static final double kLowAngleClimbPCoeff = 0.02;
-    private static final double kHighLowThresholdDegrees = 12d;
+    private static final double kHighLowThresholdDegrees = 12.0;
     private static final double endClimbThreshold = 14;
     private static final double levelDeadzone = 1;
     
