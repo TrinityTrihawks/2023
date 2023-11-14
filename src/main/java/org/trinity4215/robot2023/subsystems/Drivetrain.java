@@ -59,8 +59,10 @@ public class Drivetrain extends SubsystemBase {
     }
 
     /** Creates a new Drivetrain. */
-    public Drivetrain() {
+    private Drivetrain() {
         axis = IMUAxis.kY;
+        rightLeader.setInverted(true);
+        rightFollower.setInverted(true);
     }
 
     public static Drivetrain getInstance() {
