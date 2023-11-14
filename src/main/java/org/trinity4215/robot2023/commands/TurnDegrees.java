@@ -5,7 +5,6 @@
 package org.trinity4215.robot2023.commands;
 
 import org.trinity4215.robot2023.Constants.DriveConstants;
-import org.trinity4215.robot2023.Constants.OperatorConstants;
 import org.trinity4215.robot2023.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -36,7 +35,7 @@ public class TurnDegrees extends CommandBase {
     @Override
     public void execute() {
         SmartDashboard.putNumber("Target Angle", target);
-        curAngle = drive.getGyroAngle();
+        curAngle = drive.getGyroZ();
         SmartDashboard.putNumber("input angle", curAngle);
         double speed = Math.sin((curAngle - target) * Math.PI / 180 / 2);
         SmartDashboard.putNumber("sind(angle)", speed);

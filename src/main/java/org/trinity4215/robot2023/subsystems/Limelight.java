@@ -6,13 +6,14 @@ package org.trinity4215.robot2023.subsystems;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
+import org.trinity4215.robot2023.Constants.VisionConstants;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Limelight extends SubsystemBase {
     private static Limelight subsystemInst = null;
 
-    PhotonCamera photonCamera = new PhotonCamera("visioncam");
+    PhotonCamera photonCamera = new PhotonCamera(VisionConstants.kCameraNickname);
 
     /** Creates a new LimelightPhotonVision. */
     public static Limelight getInstance() {

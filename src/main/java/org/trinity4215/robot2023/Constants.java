@@ -4,10 +4,6 @@
 
 package org.trinity4215.robot2023;
 
-import com.ctre.phoenix.motorcontrol.InvertType;
-
-import edu.wpi.first.wpilibj.DigitalSource;
-
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -25,6 +21,11 @@ public final class Constants {
         public static final int kXboxPort = 2;
         public static final int kLeftStickPort = 1;
         public static final int kRightStickPort = 0;
+    }
+
+    public static class VisionConstants {
+
+        public static final String kCameraNickname = "saurons-other-eye";
     }
 
     public static class DriveConstants {
