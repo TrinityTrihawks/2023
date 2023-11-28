@@ -40,12 +40,13 @@ public class FollowLimelight extends CommandBase {
         NetworkTableEntry tx = table.getEntry("tx");
         NetworkTableEntry ty = table.getEntry("ty");
         NetworkTableEntry ta = table.getEntry("ta");
+        NetworkTableEntry tid = table.getEntry("tid");
         double x = tx.getDouble(0.0);
         double y = ty.getDouble(0.0);
         double area = ta.getDouble(0.0);
-        double fwdSpeed = (10-area)/10;
-        double rotSpeed = x/30;
-            
+        double fwdSpeed = (10-area)/7;
+        double rotSpeed = x/50;
+         double id = tid.getDouble(0.0);   
             double finalLeft = 0;
             double finalRight = 0;
             
@@ -54,9 +55,13 @@ public class FollowLimelight extends CommandBase {
             SmartDashboard.putNumber("LimelightArea" , area);
             SmartDashboard.putNumber("rotSpeed", rotSpeed);
             SmartDashboard.putNumber("fwdSpeed", fwdSpeed);
+            SmartDashboard.putNumber("id", id);
 
             
-            
+            if ((id != 4) || (id !=5));{
+                fwdSpeed = 0;
+                rotSpeed = 0;
+            }
             if (area == 0){
                 fwdSpeed = 0;
                 rotSpeed = 0;
@@ -71,8 +76,8 @@ public class FollowLimelight extends CommandBase {
                     rotSpeed = 0;
                 }
             }
-            finalRight = -rotSpeed + fwdSpeed;
-            finalLeft = rotSpeed + fwdSpeed;
+            finalRight = (-rotSpeed + fwdSpeed)/3;
+            finalLeft = (rotSpeed + fwdSpeed)/3;
             // SmartDashboard.putNumber("Speed", (curAngle - tagYaw - limelightZeroAngle));
             // SmartDashboard.putNumber("sind(angle)", rotSpeed);
             // int deadzoneScalar = Math.abs(rotSpeed) <= DriveConstants.kDeadzone ? 0 : 1;
@@ -84,7 +89,7 @@ public class FollowLimelight extends CommandBase {
 
             SmartDashboard.putNumber("OutputL", finalLeft);
             SmartDashboard.putNumber("OutputR", finalRight);
-            drivetrain.driveDualJoystickPercent(finalLeft, finalRight);
+            //drivetrain.driveDualJoystickPercent(finalLeft, finalRight);
 
        
         // System.out.println(r);
